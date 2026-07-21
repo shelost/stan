@@ -1,0 +1,90 @@
+@use 'variables' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: $font-ui;
+  color: $ink;
+  background: #161040;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// Stanley assistant chip, bottom-left like Stripe Press's "?" button
+.stanley {
+  position: fixed;
+  bottom: 26px;
+  left: 30px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 10px;
+
+  &__chip {
+    border: none;
+    border-radius: 999px;
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 1px 3px rgba(0, 0, 20, 0.4);
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+  }
+
+  &__bubble {
+    width: min(280px, 78vw);
+    background: #fff;
+    color: $navy;
+    border-radius: 16px 16px 16px 4px;
+    padding: 14px 16px;
+    box-shadow: 0 14px 34px rgba(0, 0, 20, 0.45);
+
+    p {
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+  }
+
+  &__next {
+    margin-top: 8px;
+    border: none;
+    background: none;
+    padding: 0;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: $purple;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
