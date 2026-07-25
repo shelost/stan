@@ -23,7 +23,7 @@ export default function OrbitApp() {
 
   return (
     <div className="orb">
-      <VersionSwitcher current="orbit" />
+      <VersionSwitcher current="orbit" tone="light" />
       <OrbitScene editions={editions} selected={sel} onSelect={setSel} />
 
       <header className="orb__head">

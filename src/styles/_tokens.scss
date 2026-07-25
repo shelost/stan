@@ -1,32 +1,35 @@
 // Shared design system for every version.
-// Warm neutral surfaces, Inter with tight negative tracking, light
-// weights. Colour is used sparingly and never decoratively.
+// Light purple surfaces, one purple highlight, Inter with tight
+// negative tracking and light weights.
 
 $font: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 $mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 $serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
 
-// paper
-$bone: #f7f7f4;
-$surface: #f2f1ed;
+// the single highlight — interactive and active states only
+$accent: #6355ff;
+$accent-soft: #8a80ff;
+$accent-wash: rgba(99, 85, 255, 0.09);
+
+// light purple surfaces
+$bone: #f6f5ff;
+$surface: #efedfc;
 $raised: #ffffff;
-$line: #e4e3dd;
-$line-2: #d7d6cf;
-$ink: #26251e;
-$ink-2: rgba(38, 37, 30, 0.64);
-$ink-3: rgba(38, 37, 30, 0.42);
-$ink-4: rgba(38, 37, 30, 0.16);
+$line: #e3e0f6;
+$line-2: #d4d0ee;
+$ink: #1d1b2e;
+$ink-2: rgba(29, 27, 46, 0.64);
+$ink-3: rgba(29, 27, 46, 0.42);
+$ink-4: rgba(29, 27, 46, 0.16);
 
-// night — for the dimensional scenes
-$night: #16161a;
-$night-2: #1d1d21;
-$night-3: #26262b;
+// night surfaces, carrying the same purple cast
+$night: #16151d;
+$night-2: #1d1c26;
+$night-3: #262532;
 $night-line: rgba(255, 255, 255, 0.11);
-$chalk: #f4f4f1;
-$chalk-2: rgba(244, 244, 241, 0.62);
-$chalk-3: rgba(244, 244, 241, 0.38);
-
-$accent: #b0563a;
+$chalk: #f3f2fb;
+$chalk-2: rgba(243, 242, 251, 0.62);
+$chalk-3: rgba(243, 242, 251, 0.38);
 
 @mixin display {
   font-size: clamp(38px, 4.6vw, 68px);
@@ -102,9 +105,12 @@ $accent: #b0563a;
     color: inherit;
     text-decoration: none;
   }
+
+  ::selection {
+    background: rgba(99, 85, 255, 0.22);
+  }
 }
 
-// pill buttons, matching the reference's restraint
 @mixin pill-dark {
   display: inline-flex;
   align-items: center;
@@ -112,15 +118,15 @@ $accent: #b0563a;
   padding: 10px 18px;
   border: none;
   border-radius: 999px;
-  background: $ink;
-  color: $bone;
+  background: $accent;
+  color: #fff;
   font-size: 14px;
   font-weight: 450;
   letter-spacing: -0.008em;
-  transition: opacity 0.16s ease;
+  transition: background 0.16s ease;
 
   &:hover {
-    opacity: 0.84;
+    background: #5648e8;
   }
 }
 
@@ -131,14 +137,14 @@ $accent: #b0563a;
   padding: 10px 18px;
   border: none;
   border-radius: 999px;
-  background: rgba(38, 37, 30, 0.07);
-  color: $ink;
+  background: $accent-wash;
+  color: $accent;
   font-size: 14px;
   font-weight: 450;
   letter-spacing: -0.008em;
   transition: background 0.16s ease;
 
   &:hover {
-    background: rgba(38, 37, 30, 0.12);
+    background: rgba(99, 85, 255, 0.16);
   }
 }

@@ -4,8 +4,8 @@
 @include reset;
 
 body {
-  background: $night;
-  color: $chalk;
+  background: $bone;
+  color: $ink;
   overflow: hidden;
 }
 
@@ -37,13 +37,13 @@ body {
 
   &__eyebrow {
     @include label;
-    color: $chalk-2;
+    color: $ink-2;
   }
 
   &__sub {
     margin-top: 5px;
     @include small;
-    color: $chalk-3;
+    color: $ink-3;
   }
 
   // details, bottom left
@@ -61,7 +61,7 @@ body {
     align-items: center;
     gap: 8px;
     @include label;
-    color: $chalk-3;
+    color: $ink-3;
   }
 
   &__swatch {
@@ -74,8 +74,8 @@ body {
     font-style: normal;
     @include label;
     font-size: 10px;
-    background: $chalk;
-    color: $night;
+    background: $accent;
+    color: #fff;
     border-radius: 999px;
     padding: 2px 7px;
   }
@@ -91,21 +91,21 @@ body {
   &__blurb {
     margin-top: 10px;
     @include small;
-    color: $chalk-2;
+    color: $ink-2;
   }
 
   &__list {
     list-style: none;
     margin-top: 14px;
-    border-top: 1px solid $night-line;
+    border-top: 1px solid $line;
 
     li {
       font-size: 12.5px;
       letter-spacing: -0.004em;
       line-height: 1.45;
-      color: $chalk-3;
+      color: $ink-3;
       padding: 8px 0;
-      border-bottom: 1px solid $night-line;
+      border-bottom: 1px solid $line;
     }
   }
 
@@ -113,8 +113,6 @@ body {
     display: inline-block;
     margin-top: 16px;
     @include pill-dark;
-    background: $chalk;
-    color: $night;
     font-size: 13px;
     padding: 9px 16px;
   }
@@ -139,17 +137,17 @@ body {
     border: none;
     background: none;
     padding: 5px 2px;
-    color: $chalk-3;
+    color: $ink-3;
     font-size: 12px;
     letter-spacing: -0.006em;
     transition: color 0.16s ease;
 
     &:hover {
-      color: $chalk;
+      color: $ink;
     }
 
     &--on {
-      color: $chalk;
+      color: $ink;
     }
   }
 
@@ -176,7 +174,7 @@ body {
   &__tick--on &__tickdot {
     opacity: 1;
     transform: scale(1.35);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.09);
+    box-shadow: 0 0 0 3px $accent-wash;
   }
 
   &__hint {
@@ -186,7 +184,7 @@ body {
     transform: translateX(-50%);
     z-index: 5;
     font-size: 11.5px;
-    color: $chalk-3;
+    color: $ink-3;
     pointer-events: none;
   }
 }

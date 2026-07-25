@@ -64,22 +64,22 @@ function panelTexture(edition, index, total) {
 
   // frosted glass slab
   const g = ctx.createLinearGradient(0, 0, w, h);
-  g.addColorStop(0, 'rgba(34,34,38,0.96)');
-  g.addColorStop(1, 'rgba(21,21,24,0.96)');
+  g.addColorStop(0, 'rgba(255,255,255,0.99)');
+  g.addColorStop(1, 'rgba(246,245,255,0.99)');
   ctx.fillStyle = g;
   roundRect(ctx, 8, 8, w - 16, h - 16, 46);
   ctx.fill();
 
   // accent wash from the edition's tone
   const wash = ctx.createRadialGradient(w * 0.5, 250, 40, w * 0.5, 250, 620);
-  wash.addColorStop(0, `${c1}55`);
+  wash.addColorStop(0, `${c1}1c`);
   wash.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = wash;
   ctx.fill();
 
   // hairline border
   ctx.lineWidth = 3;
-  ctx.strokeStyle = 'rgba(255,255,255,0.22)';
+  ctx.strokeStyle = 'rgba(29,27,46,0.12)';
   roundRect(ctx, 8, 8, w - 16, h - 16, 46);
   ctx.stroke();
 
@@ -88,13 +88,13 @@ function panelTexture(edition, index, total) {
 
   // index + quarter row
   ctx.font = `450 25px ${FONT}`;
-  ctx.fillStyle = 'rgba(255,255,255,0.45)';
+  ctx.fillStyle = 'rgba(29,27,46,0.45)';
   ctx.fillText(String(index + 1).padStart(2, '0'), 66, 92);
   ctx.textAlign = 'right';
   ctx.fillText(`${edition.quarter} ${edition.year}`, w - 66, 92);
   ctx.textAlign = 'left';
 
-  ctx.strokeStyle = 'rgba(255,255,255,0.16)';
+  ctx.strokeStyle = 'rgba(29,27,46,0.1)';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(66, 126);
@@ -111,34 +111,34 @@ function panelTexture(edition, index, total) {
   ctx.fill();
   ctx.font = `300 84px ${FONT}`;
   ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.fillStyle = '#ffffff';
   ctx.fillText(edition.name.charAt(0).toUpperCase(), w / 2, 322);
 
   // name
   ctx.font = `450 78px ${FONT}`;
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#1d1b2e';
   ctx.fillText(edition.name, w / 2, 486);
 
   if (edition.isNew) {
     ctx.font = `500 22px ${FONT}`;
     const label = 'NEW THIS QUARTER';
     const tw = ctx.measureText(label).width;
-    ctx.fillStyle = '#e8e6dd';
+    ctx.fillStyle = '#6355ff';
     roundRect(ctx, w / 2 - tw / 2 - 24, 534, tw + 48, 46, 23);
     ctx.fill();
-    ctx.fillStyle = '#26251e';
+    ctx.fillStyle = '#ffffff';
     ctx.fillText(label, w / 2, 558);
   }
 
   // blurb
   ctx.textAlign = 'left';
   ctx.font = `400 32px ${FONT}`;
-  ctx.fillStyle = 'rgba(255,255,255,0.86)';
+  ctx.fillStyle = 'rgba(29,27,46,0.82)';
   let y = wrap(ctx, edition.blurb, 66, edition.isNew ? 654 : 622, w - 132, 46) + 84;
 
   // highlights
   edition.highlights.forEach((hl) => {
-    ctx.fillStyle = `${c1}2e`;
+    ctx.fillStyle = `${c1}14`;
     roundRect(ctx, 60, y - 40, w - 120, 96, 22);
     ctx.fill();
 
@@ -146,27 +146,27 @@ function panelTexture(edition, index, total) {
     ctx.beginPath();
     ctx.arc(108, y + 8, 15, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#1a1a1d';
+    ctx.fillStyle = '#ffffff';
     ctx.font = `500 18px ${FONT}`;
     ctx.textAlign = 'center';
     ctx.fillText('✓', 108, y + 9);
 
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(255,255,255,0.76)';
+    ctx.fillStyle = 'rgba(29,27,46,0.7)';
     ctx.font = `400 25px ${FONT}`;
     wrap(ctx, hl, 146, y - 2, w - 230, 32);
     y += 118;
   });
 
   // footer rule
-  ctx.strokeStyle = 'rgba(255,255,255,0.14)';
+  ctx.strokeStyle = 'rgba(29,27,46,0.1)';
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(66, h - 108);
   ctx.lineTo(w - 66, h - 108);
   ctx.stroke();
   ctx.font = `450 23px ${FONT}`;
-  ctx.fillStyle = 'rgba(255,255,255,0.42)';
+  ctx.fillStyle = 'rgba(29,27,46,0.42)';
   ctx.fillText('THE STANDARD', 66, h - 68);
   ctx.textAlign = 'right';
   ctx.fillText(`${index + 1} / ${total}`, w - 66, h - 68);
@@ -190,8 +190,8 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const N = editions.length;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#131316');
-    scene.fog = new THREE.FogExp2('#131316', 0.034);
+    scene.background = new THREE.Color('#f6f5ff');
+    scene.fog = new THREE.FogExp2('#f6f5ff', 0.03);
 
     const camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.1, 200);
     camera.position.set(0, 0, CAM_Z);
@@ -204,29 +204,6 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
 
     scene.add(new THREE.AmbientLight('#ffffff', 2.4));
 
-    // ---- starfield ----
-    const starCount = 1400;
-    const starPos = new Float32Array(starCount * 3);
-    for (let i = 0; i < starCount; i += 1) {
-      starPos[i * 3] = (Math.random() - 0.5) * 90;
-      starPos[i * 3 + 1] = (Math.random() - 0.5) * 60;
-      starPos[i * 3 + 2] = -Math.random() * 120 + 10;
-    }
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
-    const stars = new THREE.Points(
-      starGeo,
-      new THREE.PointsMaterial({
-        color: '#cfcfc7',
-        size: 0.09,
-        transparent: true,
-        opacity: 0.75,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      })
-    );
-    scene.add(stars);
-
     // ---- the rail the cards ride ----
     // starts just ahead of the focus point — carried further forward the
     // tube swings past the lens and reads as a stray band
@@ -236,10 +213,9 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const rail = new THREE.Mesh(
       new THREE.TubeGeometry(railCurve, 420, 0.035, 8, false),
       new THREE.MeshBasicMaterial({
-        color: '#8f8f86',
+        color: '#6355ff',
         transparent: true,
-        opacity: 0.4,
-        blending: THREE.AdditiveBlending,
+        opacity: 0.3,
         depthWrite: false,
       })
     );
@@ -248,10 +224,9 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const halo = new THREE.Mesh(
       new THREE.TubeGeometry(railCurve, 220, 0.13, 6, false),
       new THREE.MeshBasicMaterial({
-        color: '#6f6f68',
+        color: '#6355ff',
         transparent: true,
-        opacity: 0.12,
-        blending: THREE.AdditiveBlending,
+        opacity: 0.07,
         depthWrite: false,
       })
     );
@@ -261,10 +236,9 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(2.45, 0.01, 8, 96),
       new THREE.MeshBasicMaterial({
-        color: '#c9c7bd',
+        color: '#6355ff',
         transparent: true,
-        opacity: 0.34,
-        blending: THREE.AdditiveBlending,
+        opacity: 0.28,
         depthWrite: false,
       })
     );
@@ -390,7 +364,7 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
         pointAt(d, pos);
         m.position.copy(pos);
         m.lookAt(camTarget);
-        m.rotation.z += d * 0.05;
+        m.rotation.z += d * 0.02;
 
         const focus = Math.max(0, 1 - Math.abs(d));
         m.scale.setScalar(0.78 + focus * 0.32);
@@ -413,15 +387,12 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
 
       const settle = 1 - Math.min(1, Math.abs(progress - Math.round(progress)) * 3);
       ring.material.opacity = 0.16 + settle * 0.4;
-      ring.scale.setScalar(1 + (1 - settle) * 0.06 + Math.sin(time * 1.6) * 0.006);
-      ring.rotation.z = time * 0.12;
-
-      stars.rotation.z = time * 0.006;
-      stars.position.z = (progress * DZ * 0.35) % 40;
+      ring.scale.setScalar(1 + (1 - settle) * 0.04);
+      ring.rotation.z = time * 0.05;
 
       // gentle parallax from the cursor
-      camera.position.x += (pointer.x * 0.45 - camera.position.x) * f;
-      camera.position.y += (pointer.y * 0.3 - camera.position.y) * f;
+      camera.position.x += (pointer.x * 0.22 - camera.position.x) * f;
+      camera.position.y += (pointer.y * 0.15 - camera.position.y) * f;
       camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);

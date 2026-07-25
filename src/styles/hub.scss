@@ -19,21 +19,15 @@ body {
   }
 
   &__title {
-    margin-top: 20px;
+    margin-top: 18px;
     @include display;
-    max-width: 21ch;
-  }
-
-  &__lede {
-    margin-top: 22px;
-    @include body;
-    color: $ink-2;
-    max-width: 60ch;
+    max-width: 22ch;
+    text-wrap: balance;
   }
 
   &__list {
     list-style: none;
-    margin-top: clamp(40px, 7vh, 72px);
+    margin-top: clamp(34px, 6vh, 60px);
     border-top: 1px solid $line;
   }
 

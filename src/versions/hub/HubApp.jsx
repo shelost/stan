@@ -6,14 +6,7 @@ export default function HubApp() {
     <div className="hub">
       <header className="hub__head">
         <p className="hub__eyebrow">Stan · The Standard</p>
-        <h1 className="hub__title">
-          Everything new across Stan, every quarter — presented nine ways.
-        </h1>
-        <p className="hub__lede">
-          One set of {editions.length} quarterly editions, from Q2 2024 to Q2 2026, rendered
-          through {versions.length} different interfaces. Same data, nine arguments about how
-          release notes should feel.
-        </p>
+        <h1 className="hub__title">Everything new, nine ways.</h1>
       </header>
 
       <ol className="hub__list">

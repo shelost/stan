@@ -4,8 +4,8 @@
 @include reset;
 
 body {
-  background: $night;
-  color: $chalk;
+  background: $bone;
+  color: $ink;
   overflow: hidden;
 }
 
@@ -45,8 +45,8 @@ body {
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: $chalk;
-    color: $night;
+    background: $accent;
+    color: #fff;
     font-size: 15px;
     font-weight: 500;
   }
@@ -66,7 +66,7 @@ body {
       font-size: 12.5px;
       font-weight: 400;
       letter-spacing: -0.004em;
-      color: $chalk-3;
+      color: $ink-3;
     }
   }
 }
@@ -84,13 +84,13 @@ body {
 
   &__idx {
     @include label;
-    color: $chalk-3;
+    color: $ink-3;
     padding-top: 9px;
   }
 
   &__meta {
     @include label;
-    color: $chalk-2;
+    color: $ink-2;
   }
 
   &__name {
@@ -125,8 +125,8 @@ body {
   font-size: 13.5px;
   font-weight: 450;
   letter-spacing: -0.008em;
-  color: $chalk-2;
-  border-bottom: 1px solid $night-line;
+  color: $ink-2;
+  border-bottom: 1px solid $line;
   padding-bottom: 3px;
   transition: color 0.15s ease, border-color 0.15s ease;
 
@@ -136,8 +136,8 @@ body {
   }
 
   &:hover {
-    color: $chalk;
-    border-color: $chalk;
+    color: $accent;
+    border-color: $accent;
   }
 }
 
@@ -159,7 +159,7 @@ body {
     top: 4px;
     bottom: 4px;
     width: 1px;
-    background: $night-line;
+    background: $line;
   }
 
   &__fill {
@@ -168,7 +168,7 @@ body {
     left: 0;
     width: 100%;
     height: 0;
-    background: $chalk;
+    background: $accent;
   }
 
   &__tick {
@@ -185,17 +185,17 @@ body {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.34);
+    background: $ink-4;
     transition: transform 0.2s ease, background 0.2s ease;
   }
 
   &__tick:hover &__dot {
-    background: $chalk-2;
+    background: $ink-3;
     transform: scale(1.3);
   }
 
   &__tick--on &__dot {
-    background: $chalk;
+    background: $accent;
     transform: scale(1.6);
   }
 
@@ -208,9 +208,9 @@ body {
     font-size: 11.5px;
     font-weight: 450;
     letter-spacing: -0.006em;
-    color: $chalk-2;
-    background: rgba(22, 22, 26, 0.94);
-    border: 1px solid $night-line;
+    color: $ink-2;
+    background: $raised;
+    border: 1px solid $line;
     border-radius: 999px;
     padding: 5px 11px;
     opacity: 0;
@@ -231,7 +231,7 @@ body {
   z-index: 5;
   font-size: 12px;
   font-weight: 500;
-  color: $chalk-3;
+  color: $ink-3;
   pointer-events: none;
 }
 

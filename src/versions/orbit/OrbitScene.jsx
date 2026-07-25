@@ -13,7 +13,7 @@ function labelSprite(text, dim = false) {
   ctx.font = '500 27px Inter, system-ui, sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = dim ? 'rgba(244,244,241,0.42)' : 'rgba(244,244,241,0.94)';
+  ctx.fillStyle = dim ? 'rgba(29,27,46,0.4)' : 'rgba(29,27,46,0.92)';
   ctx.fillText(text, w / 2, h / 2);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
@@ -32,8 +32,8 @@ export default function OrbitScene({ editions, selected, onSelect }) {
     const state = stateRef.current;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#16161a');
-    scene.fog = new THREE.Fog('#16161a', 26, 54);
+    scene.background = new THREE.Color('#f6f5ff');
+    scene.fog = new THREE.Fog('#f6f5ff', 30, 62);
 
     const camera = new THREE.PerspectiveCamera(38, 16 / 9, 0.1, 120);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -41,32 +41,10 @@ export default function OrbitScene({ editions, selected, onSelect }) {
     renderer.setSize(mount.clientWidth || window.innerWidth, mount.clientHeight || window.innerHeight);
     mount.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight('#ffffff', 1.5));
-    const key = new THREE.DirectionalLight('#ffffff', 1.5);
+    scene.add(new THREE.AmbientLight('#ffffff', 2.1));
+    const key = new THREE.DirectionalLight('#ffffff', 1.1);
     key.position.set(6, 12, 8);
     scene.add(key);
-
-    // faint starfield
-    const sGeo = new THREE.BufferGeometry();
-    const sPos = new Float32Array(600 * 3);
-    for (let i = 0; i < 600; i += 1) {
-      sPos[i * 3] = (Math.random() - 0.5) * 110;
-      sPos[i * 3 + 1] = (Math.random() - 0.5) * 70;
-      sPos[i * 3 + 2] = (Math.random() - 0.5) * 110;
-    }
-    sGeo.setAttribute('position', new THREE.BufferAttribute(sPos, 3));
-    scene.add(
-      new THREE.Points(
-        sGeo,
-        new THREE.PointsMaterial({
-          color: '#ffffff',
-          size: 0.07,
-          transparent: true,
-          opacity: 0.32,
-          depthWrite: false,
-        })
-      )
-    );
 
     const system = new THREE.Group();
     scene.add(system);
@@ -75,19 +53,17 @@ export default function OrbitScene({ editions, selected, onSelect }) {
     const core = new THREE.Mesh(
       new THREE.SphereGeometry(0.44, 32, 32),
       new THREE.MeshStandardMaterial({
-        color: '#f4f4f1',
-        roughness: 0.4,
-        emissive: '#8a8a80',
-        emissiveIntensity: 0.35,
+        color: '#6355ff',
+        roughness: 0.45,
       })
     );
     system.add(core);
     const halo = new THREE.Mesh(
       new THREE.RingGeometry(0.6, 1.5, 48),
       new THREE.MeshBasicMaterial({
-        color: '#ffffff',
+        color: '#6355ff',
         transparent: true,
-        opacity: 0.045,
+        opacity: 0.05,
         side: THREE.DoubleSide,
         depthWrite: false,
       })
@@ -109,9 +85,9 @@ export default function OrbitScene({ editions, selected, onSelect }) {
       const ring = new THREE.Line(
         new THREE.BufferGeometry().setFromPoints(pts),
         new THREE.LineBasicMaterial({
-          color: '#ffffff',
+          color: '#1d1b2e',
           transparent: true,
-          opacity: 0.1,
+          opacity: 0.12,
         })
       );
       system.add(ring);
@@ -219,7 +195,7 @@ export default function OrbitScene({ editions, selected, onSelect }) {
         );
         p.ring.material.opacity = THREE.MathUtils.lerp(
           p.ring.material.opacity,
-          on ? 0.32 : 0.1,
+          on ? 0.42 : 0.12,
           f
         );
         p.label.material.opacity = THREE.MathUtils.lerp(
@@ -239,11 +215,11 @@ export default function OrbitScene({ editions, selected, onSelect }) {
         lastLabel = sel;
       }
 
-      core.rotation.y += dt * 0.2;
-      system.rotation.y += dt * 0.012;
+      core.rotation.y += dt * 0.1;
+      system.rotation.y += dt * 0.006;
 
-      camera.position.x += (camBase.x + ptr.x * 1.1 - camera.position.x) * f;
-      camera.position.y += (camBase.y - ptr.y * 0.7 - camera.position.y) * f;
+      camera.position.x += (camBase.x + ptr.x * 0.5 - camera.position.x) * f;
+      camera.position.y += (camBase.y - ptr.y * 0.3 - camera.position.y) * f;
       camera.position.z += (camBase.z - camera.position.z) * f;
       camera.lookAt(lookAt);
 

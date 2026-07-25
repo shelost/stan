@@ -38,7 +38,7 @@ export default function AtlasApp() {
         </div>
       </header>
 
-      <VersionSwitcher current="atlas" />
+      <VersionSwitcher current="atlas" tone="light" />
 
       <AtlasScene
         editions={editions}
