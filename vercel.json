@@ -4,22 +4,22 @@
   "rewrites": [
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "(books\\..*|the-standard-books\\.vercel\\.app)" }],
+      "has": [{ "type": "host", "value": "books\\..*" }],
       "destination": "/books.html"
     },
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "(editions\\..*|the-standard-editions\\.vercel\\.app)" }],
+      "has": [{ "type": "host", "value": "editions\\..*" }],
       "destination": "/editions.html"
     },
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "(phone\\..*|the-standard-phone\\.vercel\\.app)" }],
+      "has": [{ "type": "host", "value": "phone\\..*" }],
       "destination": "/phone.html"
     },
     {
       "source": "/",
-      "has": [{ "type": "host", "value": "(atlas\\..*|the-standard-atlas\\.vercel\\.app)" }],
+      "has": [{ "type": "host", "value": "atlas\\..*" }],
       "destination": "/atlas.html"
     }
   ]

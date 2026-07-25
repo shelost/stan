@@ -1,21 +1,6 @@
 import { useEffect, useState } from 'react';
 import { versions } from '../data/versions';
 
-// Subdomains and paths both resolve to the same page, so links stay on
-// whichever scheme the visitor arrived through.
-function hrefFor(version) {
-  if (typeof window === 'undefined') return version.path;
-  const { hostname, protocol, port } = window.location;
-  const parts = hostname.split('.');
-  const isSubdomainScheme =
-    parts.length > 2 && versions.some((v) => v.id === parts[0]);
-  if (isSubdomainScheme) {
-    const root = parts.slice(1).join('.');
-    return `${protocol}//${version.id}.${root}${port ? `:${port}` : ''}/`;
-  }
-  return version.path;
-}
-
 export default function VersionSwitcher({ current, tone = 'dark' }) {
   const [open, setOpen] = useState(false);
 
@@ -54,7 +39,7 @@ export default function VersionSwitcher({ current, tone = 'dark' }) {
             <li key={v.id}>
               <a
                 className={`vswitch__item${v.id === current ? ' vswitch__item--on' : ''}`}
-                href={hrefFor(v)}
+                href={v.path}
               >
                 <span className="vswitch__dot" style={{ background: v.accent }} />
                 <span>
@@ -64,6 +49,11 @@ export default function VersionSwitcher({ current, tone = 'dark' }) {
               </a>
             </li>
           ))}
+          <li>
+            <a className="vswitch__home" href="/">
+              See all four side by side ↗
+            </a>
+          </li>
         </ul>
       )}
     </div>
