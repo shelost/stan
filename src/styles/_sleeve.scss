@@ -7,7 +7,9 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
   aspect-ratio: 1;
   flex-shrink: 0;
   position: relative;
-  perspective: 1200px;
+  padding: 0;
+  border: none;
+  background: none;
   transform: rotate(var(--tilt, 0deg));
   transform-origin: 50% 100%;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -22,126 +24,11 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
   &__inner {
     position: absolute;
     inset: 0;
-    transform-style: preserve-3d;
-    transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.2, 1);
+    display: block;
     box-shadow:
-      0 1px 2px rgba(38, 37, 30, 0.14),
-      0 10px 22px rgba(38, 37, 30, 0.16),
-      0 28px 50px rgba(38, 37, 30, 0.1);
-  }
-
-  &--flipped &__inner {
-    transform: rotateY(180deg);
-  }
-
-  &__face {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    overflow: hidden;
-
-    &--back {
-      transform: rotateY(180deg);
-      background: $raised;
-      display: flex;
-      flex-direction: column;
-      padding: 9%;
-      gap: 5px;
-    }
-  }
-
-  &__meta {
-    font-size: 10.5px;
-    font-weight: 450;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: $ink-3;
-  }
-
-  &__name {
-    font-size: clamp(15px, 1.45vw, 20px);
-    font-weight: 450;
-    letter-spacing: -0.026em;
-  }
-
-  &__blurb {
-    font-size: clamp(10.5px, 0.95vw, 12.5px);
-    font-weight: 400;
-    letter-spacing: -0.004em;
-    line-height: 1.45;
-    color: $ink-2;
-  }
-
-  &__list {
-    list-style: none;
-    margin: 2px 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-
-    li {
-      display: flex;
-      gap: 6px;
-      font-size: clamp(9px, 0.8vw, 11px);
-      font-weight: 500;
-      line-height: 1.35;
-      color: $ink-3;
-
-      &::before {
-        content: '—';
-        font-weight: 400;
-        color: $ink-4;
-      }
-    }
-  }
-
-  &__actions {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 8%;
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-  }
-
-  &:hover &__actions,
-  &--active &__actions {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  &__btn {
-    border: none;
-    border-radius: 999px;
-    padding: 8px 18px;
-    font-family: $font;
-    font-size: 12px;
-    font-weight: 450;
-    letter-spacing: -0.008em;
-    line-height: 1;
-    transition: transform 0.15s ease;
-
-    &:hover {
-      transform: scale(1.06);
-    }
-
-    &--open {
-      background: $raised;
-      color: $ink;
-      box-shadow: 0 2px 8px rgba(38, 37, 30, 0.2);
-    }
-
-    &--details {
-      background: rgba(38, 37, 30, 0.86);
-      color: $bone;
-      backdrop-filter: blur(4px);
-      align-self: flex-start;
-    }
+      0 1px 2px rgba(29, 27, 46, 0.14),
+      0 10px 22px rgba(29, 27, 46, 0.16),
+      0 28px 50px rgba(29, 27, 46, 0.1);
   }
 
   // quiet marker on the newest sleeve
@@ -150,8 +37,8 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
     top: 7%;
     right: 7%;
     z-index: 2;
-    background: $ink;
-    color: $bone;
+    background: $accent;
+    color: #fff;
     border-radius: 999px;
     padding: 3px 8px;
 
@@ -160,10 +47,129 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
       font-weight: 500;
       letter-spacing: 0.09em;
       text-transform: uppercase;
+    }
+  }
+}
 
-      br {
-        display: none;
-      }
+// ---- expanded sleeve ----
+.emodal-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(29, 27, 46, 0.36);
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vh, 48px);
+  animation: emodal-fade 0.2s ease;
+}
+
+.emodal {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  width: min(720px, 100%);
+  max-height: 84vh;
+  background: $raised;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(29, 27, 46, 0.34);
+  transform-origin: center;
+
+  // fills its grid column exactly — an aspect-ratio here would widen the
+  // panel past the column and run under the text
+  &__art {
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__body {
+    position: relative;
+    padding: 26px 26px 24px;
+    overflow-y: auto;
+  }
+
+  &__close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    @include pill-quiet;
+    padding: 6px 13px;
+    font-size: 12.5px;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    @include label;
+    color: $ink-3;
+  }
+
+  &__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  &__new {
+    font-style: normal;
+    @include label;
+    font-size: 10px;
+    background: $accent;
+    color: #fff;
+    border-radius: 999px;
+    padding: 2px 7px;
+  }
+
+  &__name {
+    margin-top: 10px;
+    @include title;
+    font-size: clamp(26px, 3vw, 36px);
+    letter-spacing: -0.03em;
+  }
+
+  &__blurb {
+    margin-top: 10px;
+    @include body;
+    color: $ink-2;
+    max-width: 42ch;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 18px 0 22px;
+    border-top: 1px solid $line;
+
+    li {
+      @include small;
+      color: $ink-2;
+      padding: 10px 0;
+      border-bottom: 1px solid $line;
+    }
+  }
+
+  &__cta {
+    @include pill-dark;
+  }
+}
+
+@keyframes emodal-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .emodal {
+    grid-template-columns: 1fr;
+
+    &__art {
+      max-height: 200px;
+      aspect-ratio: auto;
     }
   }
 }

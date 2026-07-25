@@ -1,0 +1,244 @@
+@use 'tokens' as *;
+@use 'switcher';
+
+@include reset;
+
+body {
+  background: $bone;
+  color: $ink;
+  overflow: hidden;
+}
+
+.pad {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(70% 55% at 20% 5%, rgba(255, 255, 255, 0.9), transparent 62%),
+    radial-gradient(60% 50% at 88% 95%, rgba(99, 85, 255, 0.1), transparent 58%),
+    $surface;
+
+  // right padding clears the fixed version switcher
+  &__status {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 130px 0 22px;
+    @include label;
+    color: $ink-3;
+  }
+
+  &__screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(24px, 6vh, 64px) clamp(20px, 6vw, 90px) 20px;
+  }
+
+  &__apps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: clamp(18px, 3vw, 40px) clamp(14px, 2vw, 28px);
+    align-content: start;
+    max-width: 880px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  &__dock {
+    align-self: center;
+    display: flex;
+    gap: 16px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.62);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 24px;
+  }
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: none;
+  padding: 0;
+
+  &__icon {
+    position: relative;
+    width: clamp(56px, 6vw, 68px);
+    aspect-ratio: 1;
+    border-radius: 24%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, var(--soft), var(--tone));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.32),
+      0 4px 12px rgba(29, 27, 46, 0.14);
+    transition: transform 0.16s ease;
+  }
+
+  &:hover &__icon {
+    transform: translateY(-3px);
+  }
+
+  &:active &__icon {
+    transform: scale(0.95);
+  }
+
+  &__mark {
+    color: #fff;
+    font-size: clamp(20px, 2.2vw, 25px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  &__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: #e5484d;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    display: grid;
+    place-items: center;
+    border: 2px solid $surface;
+  }
+
+  &__label {
+    font-size: 12px;
+    font-weight: 450;
+    letter-spacing: -0.008em;
+    color: $ink-2;
+    text-align: center;
+  }
+
+  &--dock &__icon {
+    width: clamp(48px, 5vw, 56px);
+  }
+}
+
+// ---- opened "app" ----
+.sheet-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(29, 27, 46, 0.34);
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  padding: clamp(16px, 4vh, 48px);
+  animation: fade 0.16s ease;
+}
+
+.sheet {
+  width: min(560px, 100%);
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  background: $raised;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(29, 27, 46, 0.3);
+  animation: pop 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &__bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    background: var(--paper);
+  }
+
+  &__mark {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: 24%;
+    display: grid;
+    place-items: center;
+    background: var(--tone);
+    color: #fff;
+    font-size: 17px;
+  }
+
+  &__title {
+    flex: 1;
+
+    strong {
+      display: block;
+      @include heading;
+    }
+
+    em {
+      display: block;
+      font-style: normal;
+      @include label;
+      color: $ink-3;
+      margin-top: 2px;
+    }
+  }
+
+  &__close {
+    @include pill-quiet;
+    padding: 7px 14px;
+    font-size: 13px;
+  }
+
+  &__body {
+    padding: 18px;
+    overflow-y: auto;
+  }
+
+  &__blurb {
+    @include body;
+    color: $ink-2;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 14px 0 18px;
+    border-top: 1px solid $line;
+
+    li {
+      @include small;
+      color: $ink-2;
+      padding: 10px 0;
+      border-bottom: 1px solid $line;
+    }
+  }
+
+  &__cta {
+    @include pill-dark;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

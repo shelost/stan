@@ -1,5 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import EditionCard from './EditionCard';
+import EditionModal from './EditionModal';
 import { editions } from '../../data/editions';
 import VersionSwitcher from '../../shared/VersionSwitcher';
 
@@ -7,7 +8,10 @@ const TILTS = [-3, 2, -1.5, 2.5, -2, 1.5, -2.5, 2, -1.5];
 
 export default function EditionsApp() {
   const [activeId, setActiveId] = useState(null);
+  const [open, setOpen] = useState(null);
   const timerRef = useRef(null);
+
+  const handleOpen = (index, rect) => setOpen({ index, rect });
 
   // four sleeves on the upper shelf, five below, like the original
   const shelves = useMemo(() => [editions.slice(0, 4), editions.slice(4)], []);
@@ -65,6 +69,7 @@ export default function EditionsApp() {
                   index={i * 4 + j}
                   tilt={TILTS[(i * 4 + j) % TILTS.length]}
                   active={activeId === e.id}
+                  onOpen={handleOpen}
                 />
               ))}
             </div>
@@ -92,6 +97,15 @@ export default function EditionsApp() {
           ))}
         </div>
       </footer>
+
+      {open && (
+        <EditionModal
+          edition={editions[open.index]}
+          index={open.index}
+          origin={open.rect}
+          onClose={() => setOpen(null)}
+        />
+      )}
     </div>
   );
 }
