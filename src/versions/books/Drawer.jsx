@@ -21,7 +21,7 @@ export default function Drawer({ editions, onClose }) {
           {editions.map((e) => (
             <article key={e.id} className={`gcard gcard--${e.tone}`}>
               <div className="gcard__top">
-                <span className="gcard__thumb">{e.emoji}</span>
+                <span className="gcard__thumb">{e.name.charAt(0)}</span>
                 <span className="gcard__meta">
                   {e.quarter} {e.year} · Edition
                   {e.isNew && <em className="gcard__new">New</em>}

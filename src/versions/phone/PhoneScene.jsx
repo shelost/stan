@@ -1,19 +1,12 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { TONES as PALETTE } from '../../data/tones';
 
-const TONES = {
-  purple: ['#8a7bff', '#6355f1'],
-  navy: ['#3d4fae', '#131f60'],
-  lilac: ['#d3b3f6', '#a97ee4'],
-  peach: ['#ffcb8a', '#ff7e5c'],
-  mint: ['#7dffd0', '#30dfa0'],
-  blue: ['#8ab8ff', '#3d6bff'],
-  green: ['#8ce9ae', '#2fae6b'],
-  pink: ['#ffb3dc', '#ff5ca8'],
-  sunrise: ['#ffd28a', '#ff5ca8'],
-};
+const TONES = Object.fromEntries(
+  Object.entries(PALETTE).map(([k, v]) => [k, [v.soft, v.base]])
+);
 
-const FONT = '"Plus Jakarta Sans", sans-serif';
+const FONT = 'Inter, system-ui, sans-serif';
 
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
@@ -42,7 +35,7 @@ function screenTexture(edition) {
   const ctx = c.getContext('2d');
   const [c1, c2] = TONES[edition.tone];
 
-  ctx.fillStyle = '#f6f5fb';
+  ctx.fillStyle = '#f7f7f4';
   ctx.fillRect(0, 0, w, h);
 
   // tinted header
@@ -54,7 +47,7 @@ function screenTexture(edition) {
 
   // status bar
   ctx.fillStyle = 'rgba(255,255,255,0.92)';
-  ctx.font = `700 24px ${FONT}`;
+  ctx.font = `450 23px ${FONT}`;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillText('9:41', 42, 54);
@@ -63,7 +56,7 @@ function screenTexture(edition) {
 
   // masthead + avatar
   ctx.textAlign = 'center';
-  ctx.font = `700 22px ${FONT}`;
+  ctx.font = `500 21px ${FONT}`;
   ctx.globalAlpha = 0.82;
   ctx.fillText('THE STANDARD', w / 2, 116);
   ctx.globalAlpha = 1;
@@ -75,13 +68,13 @@ function screenTexture(edition) {
   ctx.lineWidth = 3;
   ctx.strokeStyle = 'rgba(255,255,255,0.6)';
   ctx.stroke();
-  ctx.font = `400 54px ${FONT}`;
+  ctx.font = `300 46px ${FONT}`;
   ctx.fillStyle = '#fff';
-  ctx.fillText(edition.emoji, w / 2, 222);
+  ctx.fillText(edition.name.charAt(0).toUpperCase(), w / 2, 224);
 
-  ctx.font = `800 46px ${FONT}`;
+  ctx.font = `450 44px ${FONT}`;
   ctx.fillText(edition.name, w / 2, 316);
-  ctx.font = `500 25px ${FONT}`;
+  ctx.font = `450 24px ${FONT}`;
   ctx.globalAlpha = 0.85;
   ctx.fillText(`${edition.quarter} ${edition.year} · Edition`, w / 2, 362);
   ctx.globalAlpha = 1;
@@ -91,8 +84,8 @@ function screenTexture(edition) {
   ctx.fillStyle = '#fff';
   roundRect(ctx, 34, y, w - 68, 168, 26);
   ctx.fill();
-  ctx.fillStyle = '#131f60';
-  ctx.font = `700 27px ${FONT}`;
+  ctx.fillStyle = '#26251e';
+  ctx.font = `450 26px ${FONT}`;
   ctx.textAlign = 'left';
   const words = edition.blurb.split(' ');
   let line = '';
@@ -123,13 +116,13 @@ function screenTexture(edition) {
     roundRect(ctx, 62, y + 26, 70, 70, 20);
     ctx.fill();
     ctx.fillStyle = '#fff';
-    ctx.font = `700 34px ${FONT}`;
+    ctx.font = `500 32px ${FONT}`;
     ctx.textAlign = 'center';
     ctx.fillText('✓', 97, y + 63);
 
     ctx.textAlign = 'left';
-    ctx.fillStyle = 'rgba(19,31,96,0.82)';
-    ctx.font = `600 23px ${FONT}`;
+    ctx.fillStyle = 'rgba(38,37,30,0.78)';
+    ctx.font = `400 22px ${FONT}`;
     const parts = hl.split(' ');
     let l2 = '';
     let y2 = y + 52;
@@ -148,16 +141,16 @@ function screenTexture(edition) {
   });
 
   // CTA
-  ctx.fillStyle = '#30ffb4';
+  ctx.fillStyle = '#26251e';
   roundRect(ctx, 34, h - 168, w - 68, 96, 48);
   ctx.fill();
-  ctx.fillStyle = '#131f60';
-  ctx.font = `700 30px ${FONT}`;
+  ctx.fillStyle = '#f7f7f4';
+  ctx.font = `500 29px ${FONT}`;
   ctx.textAlign = 'center';
   ctx.fillText('Open in Stan', w / 2, h - 118);
 
   // home indicator
-  ctx.fillStyle = 'rgba(19,31,96,0.3)';
+  ctx.fillStyle = 'rgba(38,37,30,0.28)';
   roundRect(ctx, w / 2 - 70, h - 38, 140, 9, 5);
   ctx.fill();
 
@@ -188,13 +181,13 @@ function cardTexture(edition) {
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = `400 132px ${FONT}`;
-  ctx.fillStyle = '#fff';
-  ctx.fillText(edition.emoji, w / 2, 168);
+  ctx.font = `300 116px ${FONT}`;
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.fillText(edition.name.charAt(0).toUpperCase(), w / 2, 172);
 
-  ctx.font = `800 54px ${FONT}`;
+  ctx.font = `450 52px ${FONT}`;
   ctx.fillText(edition.name, w / 2, 686);
-  ctx.font = `600 28px ${FONT}`;
+  ctx.font = `400 27px ${FONT}`;
   ctx.globalAlpha = 0.85;
   ctx.fillText(`${edition.quarter} ${edition.year}`, w / 2, 736);
 
@@ -228,8 +221,8 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
     const STEP = (Math.PI * 2) / N;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#0d0a2b');
-    scene.fog = new THREE.Fog('#0d0a2b', 15, 33);
+    scene.background = new THREE.Color('#16161a');
+    scene.fog = new THREE.Fog('#16161a', 15, 33);
 
     const camera = new THREE.PerspectiveCamera(36, 16 / 9, 0.1, 100);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -237,11 +230,11 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
     renderer.setSize(mount.clientWidth || window.innerWidth, mount.clientHeight || window.innerHeight);
     mount.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight('#a9a2ff', 1.5));
+    scene.add(new THREE.AmbientLight('#ffffff', 1.45));
     const key = new THREE.DirectionalLight('#ffffff', 2.2);
     key.position.set(3, 8, 9);
     scene.add(key);
-    const fill = new THREE.DirectionalLight('#6355f1', 1.3);
+    const fill = new THREE.DirectionalLight('#9a9a92', 1.1);
     fill.position.set(-7, 2, 4);
     scene.add(fill);
 
@@ -261,7 +254,7 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
     bodyGeo.center();
     const body = new THREE.Mesh(
       bodyGeo,
-      new THREE.MeshStandardMaterial({ color: '#2b2b38', roughness: 0.34, metalness: 0.85 })
+      new THREE.MeshStandardMaterial({ color: '#2a2a2e', roughness: 0.34, metalness: 0.85 })
     );
     phone.add(body);
 
@@ -271,7 +264,7 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
         bevelEnabled: false,
         curveSegments: 24,
       }),
-      new THREE.MeshStandardMaterial({ color: '#07060f', roughness: 0.18, metalness: 0.4 })
+      new THREE.MeshStandardMaterial({ color: '#0b0b0d', roughness: 0.18, metalness: 0.4 })
     );
     glass.position.z = 0.2;
     phone.add(glass);
@@ -295,7 +288,7 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
 
     // side buttons
     const btnMat = new THREE.MeshStandardMaterial({
-      color: '#3a3a48',
+      color: '#3a3a3e',
       roughness: 0.3,
       metalness: 0.9,
     });
@@ -314,7 +307,7 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
     // glow puck under the device
     const puck = new THREE.Mesh(
       new THREE.CircleGeometry(4.9, 48),
-      new THREE.MeshBasicMaterial({ color: '#6355f1', transparent: true, opacity: 0.13 })
+      new THREE.MeshBasicMaterial({ color: '#8a8a80', transparent: true, opacity: 0.1 })
     );
     puck.rotation.x = -Math.PI / 2;
     puck.position.y = -3.9;
@@ -346,7 +339,7 @@ export default function PhoneScene({ editions, activeIndex, onActive, spinRef })
           bevelSegments: 2,
           curveSegments: 16,
         }),
-        new THREE.MeshStandardMaterial({ color: '#171436', roughness: 0.5 })
+        new THREE.MeshStandardMaterial({ color: '#232327', roughness: 0.5 })
       );
       plate.geometry.center();
       holder.add(plate);

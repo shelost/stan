@@ -1,5 +1,7 @@
-@use 'reset';
+@use 'tokens' as *;
 @use 'gallery';
 @use 'sleeve';
 @use 'art';
 @use 'switcher';
+
+@include reset;

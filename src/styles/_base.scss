@@ -1,32 +1,7 @@
-@use 'variables' as *;
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html,
-body {
-  height: 100%;
-}
+@use 'tokens' as *;
 
 body {
-  font-family: $font-ui;
-  color: $ink;
-  background: #161040;
+  background: $night;
+  color: $chalk;
   overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }

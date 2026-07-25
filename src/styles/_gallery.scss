@@ -1,12 +1,12 @@
-@use 'variables' as *;
+@use 'tokens' as *;
 
 .gallery {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: radial-gradient(120% 90% at 50% 42%, #ededed 0%, #dcdcdc 45%, #c6c6c6 100%);
+  background: radial-gradient(118% 88% at 50% 40%, #fbfaf7 0%, $bone 44%, #e8e7e1 100%);
   background-attachment: fixed;
-  color: #111;
+  color: $ink;
 }
 
 .ghead {
@@ -23,9 +23,9 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 17px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
   }
 
   &__coin {
@@ -34,10 +34,10 @@
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: #111;
-    color: #fff;
-    font-size: 14px;
-    font-weight: 800;
+    background: $ink;
+    color: $bone;
+    font-size: 12px;
+    font-weight: 500;
   }
 
   &__search {
@@ -46,9 +46,10 @@
     gap: 8px;
     border: none;
     background: none;
-    font-size: 16px;
-    font-weight: 600;
-    color: #111;
+    font-size: 14px;
+    font-weight: 450;
+    letter-spacing: -0.008em;
+    color: $ink-2;
 
     svg {
       width: 17px;
@@ -66,10 +67,11 @@
   top: 70px;
   left: 26px;
   z-index: 5;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.45;
-  color: #666;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.006em;
+  line-height: 1.5;
+  color: $ink-3;
   pointer-events: none;
 }
 
@@ -94,7 +96,7 @@
     inset: -14% -3% -8%;
     background: radial-gradient(
       58% 74% at 50% 58%,
-      rgba(255, 255, 255, 0.78) 0%,
+      rgba(255, 255, 255, 0.72) 0%,
       rgba(255, 255, 255, 0) 70%
     );
     pointer-events: none;
@@ -117,12 +119,12 @@
 
   &__top {
     height: 7px;
-    background: linear-gradient(180deg, #fff 0%, #f1f1f1 100%);
+    background: linear-gradient(180deg, #fff 0%, #f0efe9 100%);
   }
 
   &__front {
     height: 11px;
-    background: linear-gradient(180deg, #fdfdfd 0%, #e8e8e8 70%, #dcdcdc 100%);
+    background: linear-gradient(180deg, #fdfcfa 0%, #e9e8e2 70%, #dedcd5 100%);
     border-radius: 0 0 2px 2px;
     box-shadow:
       0 10px 18px rgba(0, 0, 0, 0.15),
@@ -131,7 +133,7 @@
 }
 
 .gindex {
-  border-top: 1px solid rgba(0, 0, 0, 0.14);
+  border-top: 1px solid $line;
   padding: 20px 24px 28px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
 
@@ -166,16 +168,18 @@
 
   &__year,
   &__q {
-    font-size: 13px;
-    font-weight: 500;
-    color: #6b6b6b;
-    line-height: 1.35;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: -0.004em;
+    color: $ink-3;
+    line-height: 1.4;
   }
 
   &__name {
     margin-top: 5px;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 13px;
+    font-weight: 450;
+    letter-spacing: -0.012em;
     line-height: 1.3;
   }
 }

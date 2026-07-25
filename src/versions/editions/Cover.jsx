@@ -1,104 +1,90 @@
-// Each edition gets its own art direction so the shelf reads like a row
-// of distinct album sleeves rather than one template in nine colours.
+import { toneOf } from '../../data/tones';
+
+// Nine sleeve designs built from type and geometry only — no pictograms,
+// so the shelf reads as a considered set rather than a sticker sheet.
 const ART = {
-  stanley: (e) => (
+  stanley: () => (
     <>
-      <div className="art__aurora" />
-      <div className="art__spark">{e.emoji}</div>
-      <span className="art__script">{e.name}</span>
+      <span className="art__rings" />
+      <span className="art__dot" />
     </>
   ),
-  'creator-os': (e) => (
-    <>
-      <div className="art__grid" />
-      <div className="art__window">
-        <span className="art__dots">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="art__emoji">{e.emoji}</span>
-      </div>
-      <span className="art__mono">{e.name}</span>
-    </>
+  'creator-os': () => (
+    <span className="art__grid">
+      {Array.from({ length: 16 }).map((_, i) => (
+        <i key={i} />
+      ))}
+    </span>
   ),
-  storefront: (e) => (
-    <>
-      <div className="art__layers">
-        <div />
-        <div />
-        <div />
-      </div>
-      <span className="art__emoji art__emoji--corner">{e.emoji}</span>
-      <span className="art__slab">{e.name}</span>
-    </>
+  storefront: () => (
+    <span className="art__stack">
+      <i />
+      <i />
+      <i />
+    </span>
   ),
-  classroom: (e) => (
-    <>
-      <div className="art__bars">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} />
-        ))}
-      </div>
-      <span className="art__emoji">{e.emoji}</span>
-      <span className="art__serif">{e.name}</span>
-    </>
+  classroom: () => (
+    <span className="art__bars">
+      <i />
+      <i />
+      <i />
+      <i />
+    </span>
   ),
-  booked: (e) => (
-    <>
-      <div className="art__cal">
-        {Array.from({ length: 20 }).map((_, i) => (
-          <i key={i} className={i === 9 ? 'on' : undefined} />
-        ))}
-      </div>
-      <span className="art__slab art__slab--dark">{e.name}</span>
-      <span className="art__emoji art__emoji--corner">{e.emoji}</span>
-    </>
+  booked: () => (
+    <span className="art__cal">
+      {Array.from({ length: 12 }).map((_, i) => (
+        <i key={i} className={i === 5 ? 'on' : undefined} />
+      ))}
+    </span>
   ),
-  community: (e) => (
-    <>
-      <div className="art__bubbles">
-        <span />
-        <span />
-        <span />
-      </div>
-      <span className="art__emoji">{e.emoji}</span>
-      <span className="art__slab">{e.name}</span>
-    </>
+  community: () => (
+    <span className="art__nodes">
+      <i />
+      <i />
+      <i />
+      <i />
+    </span>
   ),
-  payday: (e) => (
-    <>
-      <div className="art__stripes" />
-      <div className="art__coin">$</div>
-      <span className="art__slab">{e.name}</span>
-    </>
+  payday: () => (
+    <span className="art__rule">
+      <i />
+      <i />
+      <i />
+    </span>
   ),
-  fans: (e) => (
-    <>
-      <div className="art__chart">
-        {[38, 52, 46, 68, 84, 96].map((h) => (
-          <div key={h} style={{ height: `${h}%` }} />
-        ))}
-      </div>
-      <span className="art__slab">{e.name}</span>
-      <span className="art__emoji art__emoji--corner">{e.emoji}</span>
-    </>
+  fans: () => (
+    <span className="art__chart">
+      {[34, 48, 42, 66, 82, 100].map((h) => (
+        <i key={h} style={{ height: `${h}%` }} />
+      ))}
+    </span>
   ),
-  'hello-stan': (e) => (
-    <>
-      <div className="art__rays" />
-      <span className="art__emoji art__emoji--big">{e.emoji}</span>
-      <span className="art__display">{e.name}</span>
-    </>
-  ),
+  'hello-stan': () => <span className="art__horizon" />,
 };
 
-export default function Cover({ edition }) {
+export default function Cover({ edition, index }) {
+  const tone = toneOf(edition);
   const render = ART[edition.id];
+
   return (
-    <div className={`art art--${edition.id}`}>
-      <span className="art__masthead">The Standard</span>
-      {render ? render(edition) : <span className="art__slab">{edition.name}</span>}
+    <div
+      className={`art art--${edition.id}`}
+      style={{ '--tone': tone.base, '--soft': tone.soft, '--paper': tone.paper }}
+    >
+      <span className="art__top">
+        <span className="art__mast">The Standard</span>
+        <span className="art__idx">{String(index + 1).padStart(2, '0')}</span>
+      </span>
+
+      <span className="art__figure">{render?.()}</span>
+
+      <span className="art__foot">
+        <span className="art__name">{edition.name}</span>
+        <span className="art__q">
+          {edition.quarter} {edition.year}
+        </span>
+      </span>
     </div>
   );
 }

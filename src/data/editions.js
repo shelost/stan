@@ -4,8 +4,7 @@ export const editions = [
     year: '2026',
     quarter: 'Q2',
     name: 'Stanley',
-    emoji: '✦',
-    tone: 'purple',
+    tone: 'graphite',
     blurb: 'Meet Stanley — the AI creator assistant built into every Stan store.',
     highlights: [
       'Stanley drafts your product pages from a single sentence',
@@ -20,8 +19,7 @@ export const editions = [
     year: '2026',
     quarter: 'Q1',
     name: 'Creator OS',
-    emoji: '🧩',
-    tone: 'navy',
+    tone: 'slate',
     blurb: 'One dashboard for everything you make, sell, and schedule.',
     highlights: [
       'Redesigned analytics with revenue at a glance',
@@ -35,8 +33,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q4',
     name: 'Storefront',
-    emoji: '🛍️',
-    tone: 'lilac',
+    tone: 'plum',
     blurb: 'Your link-in-bio, now a full storefront that feels like you.',
     highlights: [
       'New themes with custom fonts and colors',
@@ -50,8 +47,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q3',
     name: 'Classroom',
-    emoji: '📚',
-    tone: 'peach',
+    tone: 'clay',
     blurb: 'Courses that are as easy to build as they are to binge.',
     highlights: [
       'Drip modules that unlock on your schedule',
@@ -65,8 +61,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q2',
     name: 'Booked',
-    emoji: '📅',
-    tone: 'mint',
+    tone: 'sage',
     blurb: 'Coaching and calls without the calendar chaos.',
     highlights: [
       'Two-way calendar sync for 1:1 sessions',
@@ -80,8 +75,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q1',
     name: 'Community',
-    emoji: '💬',
-    tone: 'blue',
+    tone: 'stone',
     blurb: 'Turn followers into members with spaces of their own.',
     highlights: [
       'Paid memberships with monthly perks',
@@ -95,8 +89,7 @@ export const editions = [
     year: '2024',
     quarter: 'Q4',
     name: 'Payday',
-    emoji: '💸',
-    tone: 'green',
+    tone: 'moss',
     blurb: 'Getting paid, minus the paperwork.',
     highlights: [
       'Instant payouts to your bank',
@@ -110,8 +103,7 @@ export const editions = [
     year: '2024',
     quarter: 'Q3',
     name: 'Fans',
-    emoji: '📈',
-    tone: 'pink',
+    tone: 'rust',
     blurb: 'Grow your audience — then keep it.',
     highlights: [
       'Email flows triggered by what fans do',
@@ -125,8 +117,7 @@ export const editions = [
     year: '2024',
     quarter: 'Q2',
     name: 'Hello, Stan',
-    emoji: '🚀',
-    tone: 'sunrise',
+    tone: 'sand',
     blurb: 'The first edition: your creator store, live in minutes.',
     highlights: [
       'Sell digital products from your link-in-bio',

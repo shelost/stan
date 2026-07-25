@@ -1,19 +1,12 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { TONES as PALETTE } from '../../data/tones';
 
-const TONES = {
-  purple: ['#8a7bff', '#6355f1', '#ffffff'],
-  navy: ['#3d4fae', '#131f60', '#ffffff'],
-  lilac: ['#d3b3f6', '#a97ee4', '#ffffff'],
-  peach: ['#ffcb8a', '#ff7e5c', '#ffffff'],
-  mint: ['#7dffd0', '#30dfa0', '#103a2c'],
-  blue: ['#8ab8ff', '#3d6bff', '#ffffff'],
-  green: ['#8ce9ae', '#2fae6b', '#ffffff'],
-  pink: ['#ffb3dc', '#ff5ca8', '#ffffff'],
-  sunrise: ['#ffd28a', '#ff5ca8', '#ffffff'],
-};
+const TONES = Object.fromEntries(
+  Object.entries(PALETTE).map(([k, v]) => [k, [v.soft, v.base, '#f4f2ec']])
+);
 
-const FONT = '"Plus Jakarta Sans", sans-serif';
+const FONT = 'Inter, system-ui, sans-serif';
 const MASTHEAD = 'THE STANDARD';
 
 // ---------- shared fabric / paper helpers (built once) ----------
@@ -186,7 +179,7 @@ function spineTexture(edition) {
 
   // quarter label in a stamped ticket box
   ctx.textAlign = 'left';
-  ctx.font = `600 46px ${FONT}`;
+  ctx.font = `450 44px ${FONT}`;
   const label = `${edition.quarter} ${edition.year}`;
   const lw = ctx.measureText(label).width;
   embossLine(ctx, 96, h / 2 - 44, 96 + lw + 44, h / 2 - 44, 1.5);
@@ -197,7 +190,7 @@ function spineTexture(edition) {
 
   // stamped title
   ctx.textAlign = 'center';
-  ctx.font = `800 78px ${FONT}`;
+  ctx.font = `500 74px ${FONT}`;
   embossText(ctx, edition.name, w / 2, h / 2 + 2, text, 2.5);
 
   // colophon: $ in a double ring
@@ -211,7 +204,7 @@ function spineTexture(edition) {
     ctx.lineWidth = i ? 4 : 5;
     ctx.stroke();
   });
-  ctx.font = `800 52px ${FONT}`;
+  ctx.font = `500 50px ${FONT}`;
   embossText(ctx, '$', cx, cy + 3, text, 1.5);
   ctx.globalAlpha = 1;
 
@@ -267,7 +260,7 @@ function coverTexture(edition) {
   // masthead
   ctx.save();
   ctx.letterSpacing = '10px';
-  ctx.font = `700 34px ${FONT}`;
+  ctx.font = `500 32px ${FONT}`;
   ctx.globalAlpha = 0.85;
   embossText(ctx, MASTHEAD, w / 2, 128, text, 1.5);
   ctx.restore();
@@ -292,17 +285,15 @@ function coverTexture(edition) {
   ctx.strokeStyle = 'rgba(255,255,255,0.3)';
   ctx.stroke();
 
+  // monogram in place of a pictogram — quieter, and it sets in Inter
   ctx.save();
-  ctx.shadowColor = 'rgba(0,0,0,0.35)';
-  ctx.shadowBlur = 18;
-  ctx.shadowOffsetY = 8;
-  ctx.font = `400 150px ${FONT}`;
-  ctx.fillStyle = text;
-  ctx.fillText(edition.emoji, w / 2, my + 8);
+  ctx.font = `300 132px ${FONT}`;
+  ctx.globalAlpha = 0.92;
+  embossText(ctx, edition.name.charAt(0).toUpperCase(), w / 2, my + 10, text, 2);
   ctx.restore();
 
   // stamped title with a rule-and-diamond underline
-  ctx.font = `800 92px ${FONT}`;
+  ctx.font = `500 86px ${FONT}`;
   embossText(ctx, edition.name, w / 2, h / 2 + 168, text, 3);
   const ry = h / 2 + 236;
   embossLine(ctx, w / 2 - 110, ry, w / 2 - 18, ry, 1.5);
@@ -315,7 +306,7 @@ function coverTexture(edition) {
   ctx.fillRect(-6, -6, 12, 12);
   ctx.restore();
 
-  ctx.font = `600 33px ${FONT}`;
+  ctx.font = `450 31px ${FONT}`;
   ctx.globalAlpha = 0.82;
   embossText(ctx, `${edition.quarter} ${edition.year} · Edition`, w / 2, h - 118, text, 1.5);
   ctx.globalAlpha = 1;
@@ -395,8 +386,8 @@ export default function BookStack({ editions, selectedId, onPick, onOverscroll }
     const state = stateRef.current;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#161040');
-    scene.fog = new THREE.Fog('#161040', 26, 44);
+    scene.background = new THREE.Color('#16161a');
+    scene.fog = new THREE.Fog('#16161a', 26, 44);
 
     const camera = new THREE.PerspectiveCamera(34, 16 / 9, 0.1, 100);
 
@@ -405,11 +396,11 @@ export default function BookStack({ editions, selectedId, onPick, onOverscroll }
     renderer.setSize(mount.clientWidth || window.innerWidth, mount.clientHeight || window.innerHeight);
     mount.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight('#b9b3ff', 1.15));
+    scene.add(new THREE.AmbientLight('#ffffff', 1.15));
     const key = new THREE.DirectionalLight('#ffffff', 2.3);
     key.position.set(4, 10, 8);
     scene.add(key);
-    const rim = new THREE.DirectionalLight('#8a7bff', 0.9);
+    const rim = new THREE.DirectionalLight('#9a9a92', 0.85);
     rim.position.set(-6, -4, 6);
     scene.add(rim);
 
@@ -512,7 +503,7 @@ export default function BookStack({ editions, selectedId, onPick, onOverscroll }
 
       const plank = new THREE.Mesh(
         new THREE.BoxGeometry(4.15, 0.14, 1.5),
-        new THREE.MeshStandardMaterial({ color: '#e6e2fb', roughness: 0.55 })
+        new THREE.MeshStandardMaterial({ color: '#d9d8d1', roughness: 0.6 })
       );
       plank.position.set(FEAT_X, FEAT_Y - d / 2 - 0.07, 0);
       scene.add(plank);

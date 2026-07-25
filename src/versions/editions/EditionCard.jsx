@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Cover from './Cover';
 
-export default function EditionCard({ edition, tilt, active }) {
+export default function EditionCard({ edition, index, tilt, active }) {
   const [flipped, setFlipped] = useState(false);
 
   return (
@@ -12,14 +12,10 @@ export default function EditionCard({ edition, tilt, active }) {
     >
       <div className="sleeve__inner">
         <div className="sleeve__face sleeve__face--front">
-          <Cover edition={edition} />
+          <Cover edition={edition} index={index} />
           {edition.isNew && (
             <div className="sleeve__sticker">
-              <span>
-                Just
-                <br />
-                Out
-              </span>
+<span>New</span>
             </div>
           )}
           <div className="sleeve__actions">

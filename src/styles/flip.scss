@@ -1,0 +1,220 @@
+@use 'tokens' as *;
+@use 'switcher';
+
+@include reset;
+
+body {
+  background: $night;
+  color: $chalk;
+}
+
+.board {
+  min-height: 100vh;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 46px clamp(20px, 4vw, 44px) 60px;
+
+  &__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $night-line;
+  }
+
+  &__eyebrow {
+    @include label;
+    color: $chalk-3;
+  }
+
+  &__title {
+    margin-top: 9px;
+    @include title;
+    color: $chalk;
+  }
+
+  &__clock {
+    @include small;
+    color: $chalk-3;
+    white-space: nowrap;
+  }
+
+  &__foot {
+    margin-top: 30px;
+    padding-top: 22px;
+    border-top: 1px solid $night-line;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+
+  &__detail {
+    display: grid;
+    gap: 6px;
+
+    p {
+      @include small;
+      color: $chalk-2;
+      padding-left: 15px;
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 9px;
+        width: 6px;
+        height: 1px;
+        background: $chalk-3;
+      }
+    }
+  }
+
+  &__cta {
+    @include pill-dark;
+    background: $chalk;
+    color: $night;
+  }
+}
+
+// ---- now showing ----
+.marquee {
+  padding: 34px 0 30px;
+  text-align: center;
+
+  &__label {
+    @include label;
+    color: $chalk-3;
+  }
+
+  &__sub {
+    margin: 18px auto 0;
+    @include body;
+    color: $chalk-2;
+    max-width: 60ch;
+  }
+}
+
+// ---- rows ----
+.rows {
+  border: 1px solid $night-line;
+  border-radius: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.015);
+
+  &__head {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr) 120px;
+    gap: 18px;
+    padding: 11px 18px;
+    border-bottom: 1px solid $night-line;
+    @include label;
+    color: $chalk-3;
+  }
+
+  &__status {
+    text-align: right;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr) 120px;
+  gap: 18px;
+  align-items: center;
+  width: 100%;
+  padding: 9px 18px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: none;
+  text-align: left;
+  transition: background 0.16s ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  &--on {
+    background: rgba(255, 255, 255, 0.07);
+  }
+
+  &__status {
+    justify-self: end;
+  }
+}
+
+// ---- flap cells ----
+.flaps {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.flap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: #232327;
+  border-radius: 2px;
+  color: $chalk;
+  font-family: $mono;
+  font-weight: 500;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  &__char {
+    line-height: 1;
+  }
+
+  // the hinge line across the middle of a real flap
+  &__seam {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.55);
+  }
+}
+
+.flaps--sm .flap {
+  width: 13px;
+  height: 20px;
+  font-size: 11px;
+}
+
+.flaps--md .flap {
+  width: 17px;
+  height: 26px;
+  font-size: 14px;
+}
+
+.flaps--lg .flap {
+  width: clamp(26px, 3.4vw, 44px);
+  height: clamp(40px, 5vw, 64px);
+  font-size: clamp(20px, 2.6vw, 34px);
+  border-radius: 3px;
+}
+
+.row--on .flap {
+  background: #2d2d31;
+  color: #fff;
+}
+
+@media (max-width: 720px) {
+  .rows__head,
+  .row {
+    grid-template-columns: 92px minmax(0, 1fr);
+  }
+
+  .rows__status,
+  .row__status {
+    display: none;
+  }
+}

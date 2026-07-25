@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use 'tokens' as *;
 
 $sleeve-size: clamp(150px, 15.5vw, 236px);
 
@@ -25,9 +25,9 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
     transform-style: preserve-3d;
     transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.2, 1);
     box-shadow:
-      0 2px 4px rgba(0, 0, 0, 0.18),
-      0 14px 28px rgba(0, 0, 0, 0.22),
-      0 34px 60px rgba(0, 0, 0, 0.14);
+      0 1px 2px rgba(38, 37, 30, 0.14),
+      0 10px 22px rgba(38, 37, 30, 0.16),
+      0 28px 50px rgba(38, 37, 30, 0.1);
   }
 
   &--flipped &__inner {
@@ -42,7 +42,7 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
 
     &--back {
       transform: rotateY(180deg);
-      background: #fbfbfb;
+      background: $raised;
       display: flex;
       flex-direction: column;
       padding: 9%;
@@ -51,22 +51,25 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
   }
 
   &__meta {
-    font-size: 11px;
-    font-weight: 600;
-    color: #8a8a8a;
+    font-size: 10.5px;
+    font-weight: 450;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: $ink-3;
   }
 
   &__name {
-    font-size: clamp(15px, 1.45vw, 21px);
-    font-weight: 800;
-    letter-spacing: -0.01em;
+    font-size: clamp(15px, 1.45vw, 20px);
+    font-weight: 450;
+    letter-spacing: -0.026em;
   }
 
   &__blurb {
     font-size: clamp(10.5px, 0.95vw, 12.5px);
-    font-weight: 600;
+    font-weight: 400;
+    letter-spacing: -0.004em;
     line-height: 1.45;
-    color: #3a3a3a;
+    color: $ink-2;
   }
 
   &__list {
@@ -82,12 +85,12 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
       font-size: clamp(9px, 0.8vw, 11px);
       font-weight: 500;
       line-height: 1.35;
-      color: #6a6a6a;
+      color: $ink-3;
 
       &::before {
-        content: '✓';
-        font-weight: 800;
-        color: #1fbf87;
+        content: '—';
+        font-weight: 400;
+        color: $ink-4;
       }
     }
   }
@@ -116,9 +119,10 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
     border: none;
     border-radius: 999px;
     padding: 8px 18px;
-    font-family: $font-ui;
-    font-size: 12.5px;
-    font-weight: 700;
+    font-family: $font;
+    font-size: 12px;
+    font-weight: 450;
+    letter-spacing: -0.008em;
     line-height: 1;
     transition: transform 0.15s ease;
 
@@ -127,53 +131,39 @@ $sleeve-size: clamp(150px, 15.5vw, 236px);
     }
 
     &--open {
-      background: #fff;
-      color: #111;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      background: $raised;
+      color: $ink;
+      box-shadow: 0 2px 8px rgba(38, 37, 30, 0.2);
     }
 
     &--details {
-      background: rgba(17, 17, 17, 0.84);
-      color: #fff;
+      background: rgba(38, 37, 30, 0.86);
+      color: $bone;
       backdrop-filter: blur(4px);
       align-self: flex-start;
     }
   }
 
-  // holographic "Just Out" seal on the newest sleeve
+  // quiet marker on the newest sleeve
   &__sticker {
     position: absolute;
-    top: 6%;
-    left: 6%;
-    width: 27%;
-    aspect-ratio: 1;
+    top: 7%;
+    right: 7%;
     z-index: 2;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    transform: rotate(-14deg);
-    background: conic-gradient(
-      from 40deg,
-      #ffd9f2,
-      #d3e6ff,
-      #d9ffe3,
-      #fff3c9,
-      #ffd0d9,
-      #e3d2ff,
-      #ffd9f2
-    );
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.25),
-      inset 0 0 10px rgba(255, 255, 255, 0.8);
+    background: $ink;
+    color: $bone;
+    border-radius: 999px;
+    padding: 3px 8px;
 
     span {
-      font-size: clamp(8px, 0.8vw, 12px);
-      font-weight: 800;
+      font-size: clamp(6.5px, 0.56vw, 9px);
+      font-weight: 500;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
-      text-align: center;
-      line-height: 1.15;
-      color: #3c3644;
+
+      br {
+        display: none;
+      }
     }
   }
 }

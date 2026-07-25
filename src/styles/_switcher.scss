@@ -1,26 +1,28 @@
-@use 'variables' as *;
+@use 'tokens' as *;
 
 .vswitch {
   position: fixed;
-  top: 26px;
-  right: 26px;
-  z-index: 40;
-  font-family: $font-ui;
+  top: 22px;
+  right: 22px;
+  z-index: 60;
+  font-family: $font;
 
   &__button {
     display: flex;
     align-items: center;
-    gap: 9px;
-    border: none;
+    gap: 8px;
+    border: 1px solid transparent;
     border-radius: 999px;
-    padding: 10px 15px;
-    font-size: 13.5px;
-    font-weight: 700;
-    transition: background 0.18s ease;
+    padding: 8px 13px;
+    font-size: 13px;
+    font-weight: 450;
+    letter-spacing: -0.008em;
+    transition: background 0.16s ease, border-color 0.16s ease;
 
     svg {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
+      opacity: 0.5;
       transition: transform 0.2s ease;
     }
   }
@@ -30,113 +32,124 @@
   }
 
   &__dot {
-    width: 9px;
-    height: 9px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     flex-shrink: 0;
   }
 
   &__menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 6px);
     right: 0;
-    width: 262px;
+    width: 250px;
     list-style: none;
-    padding: 7px;
-    border-radius: 16px;
-    animation: vswitch-in 0.18s ease;
-  }
-
-  &__home {
-    display: block;
-    margin-top: 4px;
-    padding: 9px 11px;
-    border-top: 1px solid currentColor;
-    font-size: 11.5px;
-    font-weight: 700;
-    opacity: 0.55;
-
-    &:hover {
-      opacity: 1;
-    }
+    padding: 5px;
+    border-radius: 13px;
+    animation: vswitch-in 0.16s ease;
   }
 
   &__item {
     display: flex;
     align-items: center;
-    gap: 11px;
-    padding: 10px 11px;
-    border-radius: 11px;
-    transition: background 0.15s ease;
+    gap: 10px;
+    padding: 8px 9px;
+    border-radius: 9px;
+    transition: background 0.14s ease;
 
     strong {
       display: block;
-      font-size: 13.5px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.012em;
     }
 
     em {
       display: block;
       font-style: normal;
       font-size: 11.5px;
+      letter-spacing: -0.004em;
       margin-top: 1px;
-      opacity: 0.62;
+      opacity: 0.55;
     }
   }
 
-  // dark chrome for the 3D scenes
+  &__home {
+    display: block;
+    margin: 4px 4px 2px;
+    padding: 8px 5px 3px;
+    font-size: 11.5px;
+    font-weight: 450;
+    letter-spacing: -0.004em;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
   &--dark {
     .vswitch__button {
-      background: rgba(255, 255, 255, 0.13);
-      color: #fff;
-      backdrop-filter: blur(6px);
+      background: rgba(255, 255, 255, 0.07);
+      border-color: $night-line;
+      color: $chalk;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.24);
-      }
-    }
-
-    .vswitch__menu {
-      background: rgba(22, 16, 64, 0.94);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      box-shadow: 0 20px 50px rgba(0, 0, 20, 0.55);
-      backdrop-filter: blur(12px);
-    }
-
-    .vswitch__item {
-      color: #fff;
-
-      &:hover,
-      &--on {
         background: rgba(255, 255, 255, 0.12);
       }
     }
+
+    .vswitch__menu {
+      background: rgba(22, 22, 26, 0.96);
+      border: 1px solid $night-line;
+      box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(14px);
+    }
+
+    .vswitch__item {
+      color: $chalk;
+
+      &:hover,
+      &--on {
+        background: rgba(255, 255, 255, 0.08);
+      }
+    }
+
+    .vswitch__home {
+      color: $chalk;
+      border-top: 1px solid $night-line;
+    }
   }
 
-  // light chrome for the gallery page
   &--light {
     .vswitch__button {
-      background: rgba(17, 17, 17, 0.07);
-      color: #111;
+      background: rgba(38, 37, 30, 0.05);
+      border-color: $line;
+      color: $ink;
 
       &:hover {
-        background: rgba(17, 17, 17, 0.13);
+        background: rgba(38, 37, 30, 0.09);
       }
     }
 
     .vswitch__menu {
-      background: #fff;
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+      background: $raised;
+      border: 1px solid $line;
+      box-shadow: 0 18px 44px rgba(38, 37, 30, 0.12);
     }
 
     .vswitch__item {
-      color: #111;
+      color: $ink;
 
       &:hover,
       &--on {
-        background: rgba(17, 17, 17, 0.06);
+        background: rgba(38, 37, 30, 0.05);
       }
+    }
+
+    .vswitch__home {
+      color: $ink;
+      border-top: 1px solid $line;
     }
   }
 }
@@ -144,7 +157,7 @@
 @keyframes vswitch-in {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateY(-4px);
   }
 
   to {

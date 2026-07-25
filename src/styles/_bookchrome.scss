@@ -1,0 +1,186 @@
+@use 'tokens' as *;
+
+// Page chrome for the Books version.
+.press {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.stack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  canvas {
+    display: block;
+  }
+}
+
+.press__brand {
+  position: fixed;
+  top: 26px;
+  left: 28px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.press__coin {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  background: $chalk;
+  border-radius: 50%;
+  color: $night;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.press__lockup {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+
+  strong {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: $chalk;
+  }
+
+  em {
+    font-style: normal;
+    font-size: 12.5px;
+    font-weight: 400;
+    letter-spacing: -0.004em;
+    color: $chalk-3;
+  }
+}
+
+.press__hint {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.004em;
+  color: $chalk-3;
+  pointer-events: none;
+}
+
+// detail panel for the pulled-out book
+.detail {
+  position: fixed;
+  top: 50%;
+  right: clamp(24px, 5vw, 84px);
+  transform: translateY(-50%);
+  z-index: 6;
+  width: min(340px, calc(100vw - 48px));
+  background: $bone;
+  color: $ink;
+  border: 1px solid $line;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+  animation: detail-in 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &__close {
+    position: absolute;
+    top: 13px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(38, 37, 30, 0.06);
+    color: $ink-2;
+    font-size: 16px;
+    line-height: 1;
+
+    &:hover {
+      background: rgba(38, 37, 30, 0.12);
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    @include label;
+    color: $ink-3;
+  }
+
+  &__new {
+    font-style: normal;
+    @include label;
+    font-size: 10px;
+    background: $ink;
+    color: $bone;
+    border-radius: 999px;
+    padding: 3px 8px;
+  }
+
+  &__name {
+    margin-top: 9px;
+    @include title;
+  }
+
+  &__blurb {
+    margin-top: 8px;
+    @include small;
+    color: $ink-2;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 14px 0 18px;
+    border-top: 1px solid $line;
+
+    li {
+      font-size: 12.5px;
+      letter-spacing: -0.004em;
+      line-height: 1.45;
+      color: $ink-2;
+      padding: 8px 0;
+      border-bottom: 1px solid $line;
+    }
+  }
+
+  &__open {
+    @include pill-dark;
+
+    svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
+}
+
+@keyframes detail-in {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .detail {
+    top: auto;
+    bottom: 18px;
+    right: 18px;
+    left: 18px;
+    width: auto;
+    transform: none;
+    animation: none;
+  }
+}

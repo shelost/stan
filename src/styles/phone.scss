@@ -1,10 +1,11 @@
-@use 'reset';
-@use 'variables' as *;
+@use 'tokens' as *;
 @use 'switcher';
 
+@include reset;
+
 body {
-  background: #0d0a2b;
-  color: #fff;
+  background: $night;
+  color: $chalk;
   overflow: hidden;
 }
 
@@ -39,16 +40,15 @@ body {
   gap: 12px;
 
   &__coin {
-    width: 38px;
-    height: 38px;
+    width: 34px;
+    height: 34px;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: #fff;
-    color: $purple;
-    font-size: 19px;
-    font-weight: 800;
-    box-shadow: 0 2px 8px rgba(0, 0, 20, 0.45);
+    background: $chalk;
+    color: $night;
+    font-size: 15px;
+    font-weight: 500;
   }
 
   &__lockup {
@@ -56,16 +56,17 @@ body {
     flex-direction: column;
 
     strong {
-      font-size: 17px;
-      font-weight: 800;
-      letter-spacing: -0.01em;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
     }
 
     em {
-      font-style: italic;
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.6);
+      font-style: normal;
+      font-size: 12.5px;
+      font-weight: 400;
+      letter-spacing: -0.004em;
+      color: $chalk-3;
     }
   }
 }
@@ -85,37 +86,32 @@ body {
     display: flex;
     align-items: center;
     gap: 9px;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.6);
+    @include label;
+    color: $chalk-3;
   }
 
   &__new {
     font-style: normal;
+    @include label;
     font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    background: $mint;
-    color: $navy;
+    background: $chalk;
+    color: $night;
     border-radius: 999px;
     padding: 3px 8px;
   }
 
   &__name {
     margin-top: 8px;
-    font-size: clamp(34px, 4vw, 58px);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1;
+    font-size: clamp(32px, 3.8vw, 54px);
+    font-weight: 400;
+    letter-spacing: -0.034em;
+    line-height: 1.02;
   }
 
   &__blurb {
     margin-top: 14px;
-    font-size: 15px;
-    font-weight: 500;
-    line-height: 1.55;
-    color: rgba(255, 255, 255, 0.72);
+    @include body;
+    color: $chalk-2;
   }
 
   &__cta {
@@ -124,13 +120,13 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: $mint;
-    color: $navy;
+    background: $chalk;
+    color: $night;
     font-size: 14px;
-    font-weight: 700;
-    padding: 12px 22px;
+    font-weight: 450;
+    letter-spacing: -0.008em;
+    padding: 11px 20px;
     border-radius: 999px;
-    box-shadow: 0 6px 20px rgba(48, 255, 180, 0.28);
     transition: transform 0.15s ease;
 
     svg {
@@ -171,8 +167,8 @@ body {
     height: 40px;
     border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    color: $chalk;
     font-size: 22px;
     line-height: 1;
     backdrop-filter: blur(6px);
@@ -206,8 +202,8 @@ body {
       transform: translateX(-50%);
       white-space: nowrap;
       font-size: 11px;
-      font-weight: 700;
-      color: rgba(255, 255, 255, 0.9);
+      font-weight: 450;
+      color: $chalk-2;
       opacity: 0;
       transition: opacity 0.15s ease;
       pointer-events: none;
@@ -222,7 +218,7 @@ body {
     }
 
     &--on {
-      background: $mint;
+      background: $chalk;
       transform: scale(1.5);
     }
   }
@@ -235,7 +231,7 @@ body {
   z-index: 5;
   font-size: 12px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.4);
+  color: $chalk-3;
   pointer-events: none;
 }
 

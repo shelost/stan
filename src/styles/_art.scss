@@ -1,408 +1,300 @@
-@use 'variables' as *;
+@use 'tokens' as *;
 
-// Nine original sleeve designs, one per edition.
+// Sleeve artwork: a tone field, one geometric figure, and type.
 .art {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  display: block;
+  display: flex;
+  flex-direction: column;
+  padding: 13% 12%;
+  background: var(--paper);
+  color: $ink;
 
-  &__masthead {
-    position: absolute;
-    top: 6.5%;
-    left: 0;
-    right: 0;
-    text-align: center;
-    font-size: clamp(7px, 0.62vw, 9.5px);
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    opacity: 0.72;
-    z-index: 2;
+  &__top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
   }
 
-  &__slab,
-  &__serif,
-  &__mono,
-  &__display,
-  &__script {
-    position: absolute;
-    left: 8%;
-    right: 8%;
-    bottom: 14%;
-    text-align: center;
-    z-index: 2;
+  &__mast {
+    font-size: clamp(6.5px, 0.58vw, 9px);
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $ink-3;
+  }
+
+  &__idx {
+    font-size: clamp(6.5px, 0.58vw, 9px);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--tone);
+  }
+
+  // sized by height so square figures can never outgrow the sleeve
+  &__figure {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    place-items: center;
+    position: relative;
+    margin: 7% 0;
+  }
+
+  // every square figure is constrained by the available height
+  &__rings,
+  &__grid,
+  &__stack,
+  &__cal,
+  &__nodes,
+  &__chart,
+  &__horizon {
+    height: 100%;
+    width: auto;
+    aspect-ratio: 1;
+    max-width: 100%;
+  }
+
+  &__foot {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  &__name {
+    font-size: clamp(13px, 1.35vw, 21px);
+    font-weight: 450;
+    letter-spacing: -0.028em;
     line-height: 1.05;
   }
 
-  &__slab {
-    font-size: clamp(14px, 1.5vw, 24px);
-    font-weight: 800;
-    letter-spacing: -0.015em;
-
-    &--dark {
-      color: #14351f;
-    }
+  &__q {
+    font-size: clamp(7.5px, 0.62vw, 10px);
+    font-weight: 450;
+    letter-spacing: 0.04em;
+    color: $ink-3;
   }
 
-  &__serif {
-    font-size: clamp(14px, 1.5vw, 24px);
-    font-weight: 500;
-    font-style: italic;
-    letter-spacing: 0.01em;
-  }
-
-  &__mono {
-    font-family: $font-ui;
-    font-size: clamp(11px, 1.15vw, 18px);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  &__display {
-    font-size: clamp(17px, 1.85vw, 30px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    text-transform: uppercase;
-  }
-
-  &__script {
-    font-size: clamp(16px, 1.75vw, 28px);
-    font-weight: 500;
-    font-style: italic;
-    letter-spacing: -0.01em;
-  }
-
-  &__emoji {
+  // ---- figures ----
+  &__rings,
+  &__dot {
     position: absolute;
-    top: 42%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(28px, 3.4vw, 54px);
-    z-index: 2;
-    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.25));
+    border-radius: 50%;
+  }
 
-    // tucked under the masthead so it never collides with the title
-    &--corner {
-      top: 15%;
-      left: auto;
-      right: 8%;
-      transform: none;
-      font-size: clamp(15px, 1.5vw, 24px);
-    }
+  &__rings {
+    border: 1px solid var(--tone);
+    opacity: 0.5;
+    box-shadow:
+      inset 0 0 0 1px transparent,
+      0 0 0 0 transparent;
 
-    &--big {
-      font-size: clamp(40px, 4.6vw, 76px);
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 22%;
+      border: 1px solid var(--tone);
+      border-radius: 50%;
+      opacity: 0.7;
     }
   }
 
-  // ---- Stanley: iridescent aurora ----
-  &--stanley {
-    background: linear-gradient(165deg, #6f61f6 0%, #4a3dd4 55%, #2a1f80 100%);
-    color: #fff;
-
-    .art__aurora {
-      position: absolute;
-      inset: -20%;
-      background:
-        radial-gradient(38% 30% at 30% 32%, rgba(150, 255, 220, 0.5), transparent 70%),
-        radial-gradient(40% 34% at 72% 46%, rgba(255, 160, 230, 0.45), transparent 70%),
-        radial-gradient(46% 30% at 50% 78%, rgba(140, 190, 255, 0.4), transparent 72%);
-      filter: blur(6px);
-    }
-
-    .art__spark {
-      position: absolute;
-      top: 40%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: clamp(30px, 3.6vw, 58px);
-      filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.75));
-      z-index: 2;
-    }
+  &__dot {
+    width: 15%;
+    aspect-ratio: 1;
+    background: var(--tone);
   }
 
-  // ---- Creator OS: dark console ----
-  &--creator-os {
-    background: linear-gradient(160deg, #26306e 0%, #131f60 60%, #0b1140 100%);
-    color: #e9ecff;
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 11%;
 
-    .art__grid {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
-      background-size: 11% 11%;
-    }
+    i {
+      aspect-ratio: 1;
+      border-radius: 1px;
+      background: var(--tone);
+      opacity: 0.28;
 
-    .art__window {
-      position: absolute;
-      top: 24%;
-      left: 15%;
-      right: 15%;
-      height: 42%;
-      border-radius: 9px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(2px);
-      display: grid;
-      place-items: center;
-    }
-
-    .art__dots {
-      position: absolute;
-      top: 8px;
-      left: 9px;
-      display: flex;
-      gap: 4px;
-
-      i {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.5);
-      }
-    }
-
-    .art__emoji {
-      position: static;
-      transform: none;
-      font-size: clamp(22px, 2.4vw, 38px);
-    }
-  }
-
-  // ---- Storefront: stacked lilac cards ----
-  &--storefront {
-    background: linear-gradient(165deg, #e2cffb 0%, #c9a8f2 55%, #a97ee4 100%);
-    color: #341a5e;
-
-    .art__layers {
-      position: absolute;
-      inset: 22% 16% 30%;
-
-      div {
-        position: absolute;
-        left: 0;
-        right: 0;
-        height: 34%;
-        border-radius: 10px;
-        background: rgba(255, 255, 255, 0.82);
-        box-shadow: 0 6px 14px rgba(70, 30, 120, 0.22);
-
-        &:nth-child(1) {
-          top: 0;
-          transform: rotate(-3deg);
-        }
-
-        &:nth-child(2) {
-          top: 30%;
-          transform: rotate(1.5deg);
-          background: rgba(255, 255, 255, 0.94);
-        }
-
-        &:nth-child(3) {
-          top: 60%;
-          transform: rotate(-1deg);
-        }
+      &:nth-child(6),
+      &:nth-child(11) {
+        opacity: 1;
       }
     }
   }
 
-  // ---- Classroom: module bars ----
-  &--classroom {
-    background: linear-gradient(165deg, #ffd9a8 0%, #ff9f6b 55%, #ef6f4c 100%);
-    color: #5a2411;
+  &__stack {
+    position: relative;
 
-    .art__bars {
+    i {
       position: absolute;
-      inset: 26% 14% 28%;
-      display: flex;
-      flex-direction: column;
-      gap: 7%;
+      left: 0;
+      right: 0;
+      height: 26%;
+      border: 1px solid var(--tone);
+      background: var(--paper);
 
-      div {
-        height: 14%;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.85);
-
-        &:nth-child(1) {
-          width: 100%;
-        }
-
-        &:nth-child(2) {
-          width: 82%;
-        }
-
-        &:nth-child(3) {
-          width: 90%;
-        }
-
-        &:nth-child(4) {
-          width: 64%;
-          background: rgba(255, 255, 255, 0.5);
-        }
-
-        &:nth-child(5) {
-          width: 44%;
-          background: rgba(255, 255, 255, 0.36);
-        }
+      &:nth-child(1) {
+        top: 6%;
+        opacity: 0.4;
       }
-    }
 
-    .art__emoji {
-      top: 46%;
-      opacity: 0.95;
-    }
-  }
+      &:nth-child(2) {
+        top: 32%;
+        opacity: 0.7;
+      }
 
-  // ---- Booked: calendar grid ----
-  &--booked {
-    background: linear-gradient(165deg, #b6ffe4 0%, #6ef0c0 55%, #2ecf98 100%);
-    color: #0f3a2a;
-
-    .art__cal {
-      position: absolute;
-      inset: 24% 15% 34%;
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8%;
-
-      i {
-        aspect-ratio: 1;
-        border-radius: 3px;
-        background: rgba(255, 255, 255, 0.6);
-
-        &.on {
-          background: #0f3a2a;
-          box-shadow: 0 3px 8px rgba(15, 58, 42, 0.4);
-        }
+      &:nth-child(3) {
+        top: 58%;
+        background: var(--tone);
       }
     }
   }
 
-  // ---- Community: chat bubbles ----
-  &--community {
-    background: linear-gradient(165deg, #a8ccff 0%, #6d9bff 55%, #3d6bff 100%);
-    color: #0d2a75;
+  &__bars {
+    display: flex;
+    flex-direction: column;
+    gap: 13%;
+    width: 78%;
+    flex-shrink: 0;
 
-    .art__bubbles {
-      position: absolute;
-      inset: 20% 12% 30%;
+    i {
+      height: 5px;
+      background: var(--tone);
 
-      span {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 14px 14px 14px 4px;
-        box-shadow: 0 6px 14px rgba(20, 50, 130, 0.22);
-
-        &:nth-child(1) {
-          left: 0;
-          top: 4%;
-          width: 54%;
-          height: 26%;
-        }
-
-        &:nth-child(2) {
-          right: 0;
-          top: 36%;
-          width: 46%;
-          height: 22%;
-          border-radius: 14px 14px 4px 14px;
-          background: rgba(255, 255, 255, 0.72);
-        }
-
-        &:nth-child(3) {
-          left: 8%;
-          bottom: 2%;
-          width: 42%;
-          height: 22%;
-          background: rgba(255, 255, 255, 0.55);
-        }
+      &:nth-child(1) {
+        width: 100%;
       }
-    }
 
-    .art__emoji {
-      top: 44%;
-      font-size: clamp(20px, 2.2vw, 34px);
+      &:nth-child(2) {
+        width: 76%;
+        opacity: 0.6;
+      }
+
+      &:nth-child(3) {
+        width: 88%;
+        opacity: 0.4;
+      }
+
+      &:nth-child(4) {
+        width: 52%;
+        opacity: 0.25;
+      }
     }
   }
 
-  // ---- Payday: banknote stripes + coin ----
-  &--payday {
-    background: linear-gradient(165deg, #b6f3cc 0%, #63cf90 55%, #2c9e63 100%);
-    color: #0d3a22;
+  &__cal {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12%;
 
-    .art__stripes {
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        rgba(255, 255, 255, 0.24) 0 6px,
-        transparent 6px 16px
-      );
+    i {
+      aspect-ratio: 1;
+      border: 1px solid var(--tone);
+      opacity: 0.42;
+
+      &.on {
+        background: var(--tone);
+        opacity: 1;
+      }
     }
+  }
 
-    .art__coin {
+  &__nodes {
+    position: relative;
+
+    i {
       position: absolute;
-      top: 42%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 32%;
+      width: 22%;
       aspect-ratio: 1;
       border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: clamp(20px, 2.1vw, 34px);
-      font-weight: 800;
-      color: #0d3a22;
-      background: radial-gradient(circle at 34% 30%, #ffffff 0%, #ffeaa8 45%, #e6bc55 100%);
-      box-shadow:
-        inset 0 -3px 6px rgba(120, 80, 10, 0.35),
-        0 8px 16px rgba(10, 60, 30, 0.3);
-      z-index: 2;
-    }
-  }
+      border: 1px solid var(--tone);
 
-  // ---- Fans: rising chart ----
-  &--fans {
-    background: linear-gradient(165deg, #ffd0ea 0%, #ff8fc6 55%, #ff5ca8 100%);
-    color: #5c103c;
+      &:nth-child(1) {
+        top: 0;
+        left: 39%;
+        background: var(--tone);
+      }
 
-    .art__chart {
-      position: absolute;
-      inset: 26% 14% 30%;
-      display: flex;
-      align-items: flex-end;
-      gap: 5%;
+      &:nth-child(2) {
+        bottom: 6%;
+        left: 0;
+      }
 
-      div {
-        flex: 1;
-        border-radius: 4px 4px 0 0;
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.55));
+      &:nth-child(3) {
+        bottom: 6%;
+        right: 0;
+      }
+
+      &:nth-child(4) {
+        top: 38%;
+        left: 39%;
+        opacity: 0.45;
       }
     }
   }
 
-  // ---- Hello, Stan: sunrise rays ----
-  &--hello-stan {
-    background: linear-gradient(165deg, #ffd9a0 0%, #ff9ec0 55%, #ff5ca8 100%);
-    color: #5a1f3f;
+  &__rule {
+    display: flex;
+    flex-direction: column;
+    gap: 16%;
+    width: 76%;
+    flex-shrink: 0;
 
-    .art__rays {
-      position: absolute;
-      inset: -25%;
-      background: repeating-conic-gradient(
-        from 0deg at 50% 62%,
-        rgba(255, 255, 255, 0.4) 0deg 7deg,
-        transparent 7deg 18deg
-      );
-      opacity: 0.75;
+    i {
+      height: 1px;
+      background: var(--tone);
+
+      &:nth-child(2) {
+        height: 9px;
+        background: var(--tone);
+        opacity: 0.85;
+      }
+
+      &:nth-child(3) {
+        opacity: 0.45;
+      }
     }
+  }
 
-    .art__emoji--big {
-      top: 41%;
+  &__chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6%;
+
+    i {
+      flex: 1;
+      background: var(--tone);
+      opacity: 0.4;
+
+      &:last-child {
+        opacity: 1;
+      }
+
+      &:nth-child(5) {
+        opacity: 0.7;
+      }
+    }
+  }
+
+  &__horizon {
+    position: relative;
+    border-bottom: 1px solid var(--tone);
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      width: 46%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--tone);
+      opacity: 0.9;
     }
   }
 }

@@ -62,6 +62,7 @@ export default function EditionsApp() {
                 <EditionCard
                   key={e.id}
                   edition={e}
+                  index={i * 4 + j}
                   tilt={TILTS[(i * 4 + j) % TILTS.length]}
                   active={activeId === e.id}
                 />

@@ -1,5 +1,5 @@
-// One page per version; each is served from its own subdomain and
-// from a matching path in the same deployment.
+// One page per version. Each is served from /<id> and, if a domain is
+// ever attached, from <id>.<domain> via the host rewrites in vercel.json.
 export const versions = [
   {
     id: 'books',
@@ -29,8 +29,48 @@ export const versions = [
     id: 'atlas',
     name: 'Atlas',
     tagline: 'Fly the helix of every quarter',
-    note: 'Editor’s pick — a spiral through time',
+    note: 'A spiral through time',
     path: '/atlas',
     accent: '#ff9ad2',
+  },
+  {
+    id: 'press',
+    name: 'Press',
+    tagline: 'The quarter as a broadsheet front page',
+    note: 'Editorial type, columns and rules',
+    path: '/press',
+    accent: '#e8dcc0',
+  },
+  {
+    id: 'terminal',
+    name: 'Terminal',
+    tagline: 'Type your way through the releases',
+    note: 'A CLI you can actually drive',
+    path: '/terminal',
+    accent: '#7dffa8',
+  },
+  {
+    id: 'flip',
+    name: 'Flip',
+    tagline: 'A split-flap board clacking through quarters',
+    note: 'Departure-board kinetic type',
+    path: '/flip',
+    accent: '#ffcb52',
+  },
+  {
+    id: 'desk',
+    name: 'Desk',
+    tagline: 'Nine windows on a tidy desktop',
+    note: 'Draggable, stackable, closeable',
+    path: '/desk',
+    accent: '#9db8ff',
+  },
+  {
+    id: 'orbit',
+    name: 'Orbit',
+    tagline: 'An orrery of everything shipped',
+    note: 'Editor’s pick — quarters as planets',
+    path: '/orbit',
+    accent: '#ffa96b',
   },
 ];

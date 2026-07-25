@@ -1,19 +1,12 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { TONES as PALETTE } from '../../data/tones';
 
-const TONES = {
-  purple: ['#8a7bff', '#6355f1'],
-  navy: ['#5566c8', '#25348a'],
-  lilac: ['#d3b3f6', '#a97ee4'],
-  peach: ['#ffcb8a', '#ff7e5c'],
-  mint: ['#7dffd0', '#30dfa0'],
-  blue: ['#8ab8ff', '#3d6bff'],
-  green: ['#8ce9ae', '#2fae6b'],
-  pink: ['#ffb3dc', '#ff5ca8'],
-  sunrise: ['#ffd28a', '#ff5ca8'],
-};
+const TONES = Object.fromEntries(
+  Object.entries(PALETTE).map(([k, v]) => [k, [v.soft, v.base]])
+);
 
-const FONT = '"Plus Jakarta Sans", sans-serif';
+const FONT = 'Inter, system-ui, sans-serif';
 
 // helix geometry: cards ride a fixed spiral rail and settle at the origin
 const RAD = 5.6;
@@ -71,15 +64,15 @@ function panelTexture(edition, index, total) {
 
   // frosted glass slab
   const g = ctx.createLinearGradient(0, 0, w, h);
-  g.addColorStop(0, 'rgba(28,22,74,0.96)');
-  g.addColorStop(1, 'rgba(14,10,44,0.96)');
+  g.addColorStop(0, 'rgba(34,34,38,0.96)');
+  g.addColorStop(1, 'rgba(21,21,24,0.96)');
   ctx.fillStyle = g;
   roundRect(ctx, 8, 8, w - 16, h - 16, 46);
   ctx.fill();
 
   // accent wash from the edition's tone
   const wash = ctx.createRadialGradient(w * 0.5, 250, 40, w * 0.5, 250, 620);
-  wash.addColorStop(0, `${c1}66`);
+  wash.addColorStop(0, `${c1}55`);
   wash.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = wash;
   ctx.fill();
@@ -94,7 +87,7 @@ function panelTexture(edition, index, total) {
   ctx.textBaseline = 'middle';
 
   // index + quarter row
-  ctx.font = `700 26px ${FONT}`;
+  ctx.font = `450 25px ${FONT}`;
   ctx.fillStyle = 'rgba(255,255,255,0.45)';
   ctx.fillText(String(index + 1).padStart(2, '0'), 66, 92);
   ctx.textAlign = 'right';
@@ -116,30 +109,30 @@ function panelTexture(edition, index, total) {
   ctx.beginPath();
   ctx.arc(w / 2, 310, 96, 0, Math.PI * 2);
   ctx.fill();
-  ctx.font = `400 92px ${FONT}`;
+  ctx.font = `300 84px ${FONT}`;
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#fff';
-  ctx.fillText(edition.emoji, w / 2, 318);
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.fillText(edition.name.charAt(0).toUpperCase(), w / 2, 322);
 
   // name
-  ctx.font = `800 84px ${FONT}`;
+  ctx.font = `450 78px ${FONT}`;
   ctx.fillStyle = '#fff';
   ctx.fillText(edition.name, w / 2, 486);
 
   if (edition.isNew) {
-    ctx.font = `800 24px ${FONT}`;
+    ctx.font = `500 22px ${FONT}`;
     const label = 'NEW THIS QUARTER';
     const tw = ctx.measureText(label).width;
-    ctx.fillStyle = '#30ffb4';
+    ctx.fillStyle = '#e8e6dd';
     roundRect(ctx, w / 2 - tw / 2 - 24, 534, tw + 48, 46, 23);
     ctx.fill();
-    ctx.fillStyle = '#131f60';
+    ctx.fillStyle = '#26251e';
     ctx.fillText(label, w / 2, 558);
   }
 
   // blurb
   ctx.textAlign = 'left';
-  ctx.font = `600 34px ${FONT}`;
+  ctx.font = `400 32px ${FONT}`;
   ctx.fillStyle = 'rgba(255,255,255,0.86)';
   let y = wrap(ctx, edition.blurb, 66, edition.isNew ? 654 : 622, w - 132, 46) + 84;
 
@@ -153,14 +146,14 @@ function panelTexture(edition, index, total) {
     ctx.beginPath();
     ctx.arc(108, y + 8, 15, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = '#12103a';
-    ctx.font = `800 19px ${FONT}`;
+    ctx.fillStyle = '#1a1a1d';
+    ctx.font = `500 18px ${FONT}`;
     ctx.textAlign = 'center';
     ctx.fillText('✓', 108, y + 9);
 
     ctx.textAlign = 'left';
     ctx.fillStyle = 'rgba(255,255,255,0.76)';
-    ctx.font = `500 26px ${FONT}`;
+    ctx.font = `400 25px ${FONT}`;
     wrap(ctx, hl, 146, y - 2, w - 230, 32);
     y += 118;
   });
@@ -172,7 +165,7 @@ function panelTexture(edition, index, total) {
   ctx.moveTo(66, h - 108);
   ctx.lineTo(w - 66, h - 108);
   ctx.stroke();
-  ctx.font = `700 24px ${FONT}`;
+  ctx.font = `450 23px ${FONT}`;
   ctx.fillStyle = 'rgba(255,255,255,0.42)';
   ctx.fillText('THE STANDARD', 66, h - 68);
   ctx.textAlign = 'right';
@@ -197,8 +190,8 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const N = editions.length;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#080619');
-    scene.fog = new THREE.FogExp2('#080619', 0.036);
+    scene.background = new THREE.Color('#131316');
+    scene.fog = new THREE.FogExp2('#131316', 0.034);
 
     const camera = new THREE.PerspectiveCamera(42, 16 / 9, 0.1, 200);
     camera.position.set(0, 0, CAM_Z);
@@ -224,7 +217,7 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const stars = new THREE.Points(
       starGeo,
       new THREE.PointsMaterial({
-        color: '#b9b3ff',
+        color: '#cfcfc7',
         size: 0.09,
         transparent: true,
         opacity: 0.75,
@@ -243,9 +236,9 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const rail = new THREE.Mesh(
       new THREE.TubeGeometry(railCurve, 420, 0.035, 8, false),
       new THREE.MeshBasicMaterial({
-        color: '#8a7bff',
+        color: '#8f8f86',
         transparent: true,
-        opacity: 0.5,
+        opacity: 0.4,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       })
@@ -255,9 +248,9 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const halo = new THREE.Mesh(
       new THREE.TubeGeometry(railCurve, 220, 0.13, 6, false),
       new THREE.MeshBasicMaterial({
-        color: '#6355f1',
+        color: '#6f6f68',
         transparent: true,
-        opacity: 0.14,
+        opacity: 0.12,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       })
@@ -268,9 +261,9 @@ export default function AtlasScene({ editions, wantIndex, onActive, onProgress }
     const ring = new THREE.Mesh(
       new THREE.TorusGeometry(2.45, 0.01, 8, 96),
       new THREE.MeshBasicMaterial({
-        color: '#30ffb4',
+        color: '#c9c7bd',
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.34,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       })
