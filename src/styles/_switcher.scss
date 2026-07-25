@@ -1,0 +1,140 @@
+@use 'variables' as *;
+
+.vswitch {
+  position: fixed;
+  top: 26px;
+  right: 26px;
+  z-index: 40;
+  font-family: $font-ui;
+
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 15px;
+    font-size: 13.5px;
+    font-weight: 700;
+    transition: background 0.18s ease;
+
+    svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &--open &__button svg {
+    transform: rotate(180deg);
+  }
+
+  &__dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  &__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 262px;
+    list-style: none;
+    padding: 7px;
+    border-radius: 16px;
+    animation: vswitch-in 0.18s ease;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 11px;
+    border-radius: 11px;
+    transition: background 0.15s ease;
+
+    strong {
+      display: block;
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+
+    em {
+      display: block;
+      font-style: normal;
+      font-size: 11.5px;
+      margin-top: 1px;
+      opacity: 0.62;
+    }
+  }
+
+  // dark chrome for the 3D scenes
+  &--dark {
+    .vswitch__button {
+      background: rgba(255, 255, 255, 0.13);
+      color: #fff;
+      backdrop-filter: blur(6px);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.24);
+      }
+    }
+
+    .vswitch__menu {
+      background: rgba(22, 16, 64, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 20px 50px rgba(0, 0, 20, 0.55);
+      backdrop-filter: blur(12px);
+    }
+
+    .vswitch__item {
+      color: #fff;
+
+      &:hover,
+      &--on {
+        background: rgba(255, 255, 255, 0.12);
+      }
+    }
+  }
+
+  // light chrome for the gallery page
+  &--light {
+    .vswitch__button {
+      background: rgba(17, 17, 17, 0.07);
+      color: #111;
+
+      &:hover {
+        background: rgba(17, 17, 17, 0.13);
+      }
+    }
+
+    .vswitch__menu {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    }
+
+    .vswitch__item {
+      color: #111;
+
+      &:hover,
+      &--on {
+        background: rgba(17, 17, 17, 0.06);
+      }
+    }
+  }
+}
+
+@keyframes vswitch-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,179 @@
+@use 'variables' as *;
+
+$sleeve-size: clamp(150px, 15.5vw, 236px);
+
+.sleeve {
+  width: $sleeve-size;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  position: relative;
+  perspective: 1200px;
+  transform: rotate(var(--tilt, 0deg));
+  transform-origin: 50% 100%;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
+
+  &:hover,
+  &--active {
+    transform: rotate(0deg) translateY(-10px) scale(1.05);
+    z-index: 4;
+  }
+
+  &__inner {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0.1, 0.2, 1);
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.18),
+      0 14px 28px rgba(0, 0, 0, 0.22),
+      0 34px 60px rgba(0, 0, 0, 0.14);
+  }
+
+  &--flipped &__inner {
+    transform: rotateY(180deg);
+  }
+
+  &__face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    overflow: hidden;
+
+    &--back {
+      transform: rotateY(180deg);
+      background: #fbfbfb;
+      display: flex;
+      flex-direction: column;
+      padding: 9%;
+      gap: 5px;
+    }
+  }
+
+  &__meta {
+    font-size: 11px;
+    font-weight: 600;
+    color: #8a8a8a;
+  }
+
+  &__name {
+    font-size: clamp(15px, 1.45vw, 21px);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+
+  &__blurb {
+    font-size: clamp(10.5px, 0.95vw, 12.5px);
+    font-weight: 600;
+    line-height: 1.45;
+    color: #3a3a3a;
+  }
+
+  &__list {
+    list-style: none;
+    margin: 2px 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+
+    li {
+      display: flex;
+      gap: 6px;
+      font-size: clamp(9px, 0.8vw, 11px);
+      font-weight: 500;
+      line-height: 1.35;
+      color: #6a6a6a;
+
+      &::before {
+        content: '✓';
+        font-weight: 800;
+        color: #1fbf87;
+      }
+    }
+  }
+
+  &__actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8%;
+    z-index: 3;
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  &:hover &__actions,
+  &--active &__actions {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &__btn {
+    border: none;
+    border-radius: 999px;
+    padding: 8px 18px;
+    font-family: $font-ui;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1;
+    transition: transform 0.15s ease;
+
+    &:hover {
+      transform: scale(1.06);
+    }
+
+    &--open {
+      background: #fff;
+      color: #111;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    &--details {
+      background: rgba(17, 17, 17, 0.84);
+      color: #fff;
+      backdrop-filter: blur(4px);
+      align-self: flex-start;
+    }
+  }
+
+  // holographic "Just Out" seal on the newest sleeve
+  &__sticker {
+    position: absolute;
+    top: 6%;
+    left: 6%;
+    width: 27%;
+    aspect-ratio: 1;
+    z-index: 2;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    transform: rotate(-14deg);
+    background: conic-gradient(
+      from 40deg,
+      #ffd9f2,
+      #d3e6ff,
+      #d9ffe3,
+      #fff3c9,
+      #ffd0d9,
+      #e3d2ff,
+      #ffd9f2
+    );
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.25),
+      inset 0 0 10px rgba(255, 255, 255, 0.8);
+
+    span {
+      font-size: clamp(8px, 0.8vw, 12px);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-align: center;
+      line-height: 1.15;
+      color: #3c3644;
+    }
+  }
+}

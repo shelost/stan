@@ -1,0 +1,292 @@
+@use 'reset';
+@use 'variables' as *;
+
+body {
+  background:
+    radial-gradient(90% 60% at 20% 0%, #241b6b 0%, transparent 60%),
+    radial-gradient(80% 60% at 100% 100%, #3b1f6e 0%, transparent 55%),
+    #0b0824;
+  background-attachment: fixed;
+  color: #fff;
+  min-height: 100%;
+}
+
+.hub {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(48px, 8vh, 96px) clamp(20px, 5vw, 44px) 72px;
+
+  &__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: clamp(32px, 6vh, 56px);
+
+    h1 {
+      font-size: clamp(30px, 4.4vw, 50px);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: clamp(14px, 1.4vw, 17px);
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.62);
+      max-width: 46ch;
+    }
+  }
+
+  &__coin {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    color: $purple;
+    font-size: 24px;
+    font-weight: 800;
+    box-shadow: 0 0 30px rgba(138, 123, 255, 0.5);
+  }
+
+  &__grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+    gap: 18px;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    overflow: hidden;
+    transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent);
+      background: rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  &__body {
+    padding: 18px 20px 6px;
+    flex: 1;
+
+    h2 {
+      display: flex;
+      align-items: baseline;
+      gap: 9px;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+  }
+
+  &__sub {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  &__tag {
+    margin-top: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  &__note {
+    margin-top: 5px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  &__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin: 14px 20px 20px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+
+    svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &__card:hover &__go svg {
+    transform: translateX(4px);
+  }
+
+  &__foot {
+    margin-top: 36px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.34);
+  }
+}
+
+// ---- previews ----
+.pv {
+  position: relative;
+  height: 148px;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(0, 0, 0, 0.24));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  span,
+  i {
+    position: absolute;
+    display: block;
+  }
+
+  // stacked slabs
+  &--books span {
+    left: 22%;
+    right: 22%;
+    height: 13px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #8a7bff, #6355f1);
+    bottom: calc(26px + var(--i) * 17px);
+    transform: translateX(calc((var(--i) - 2) * 3px));
+    opacity: calc(1 - var(--i) * 0.12);
+    animation: pv-breathe 3.4s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.4s);
+  }
+
+  // sleeves on a shelf
+  &--editions {
+    .pv__shelf {
+      position: absolute;
+      inset: 30px 16% 44px;
+      display: flex;
+      gap: 7px;
+      align-items: flex-end;
+    }
+
+    span {
+      position: relative;
+      flex: 1;
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(160deg, #d3b3f6, #6355f1);
+      transform: rotate(calc((var(--i) - 1.5) * 2deg));
+
+      &:nth-child(2) {
+        background: linear-gradient(160deg, #7dffd0, #2fae6b);
+      }
+
+      &:nth-child(3) {
+        background: linear-gradient(160deg, #ffcb8a, #ff7e5c);
+      }
+
+      &:nth-child(4) {
+        background: linear-gradient(160deg, #ffb3dc, #ff5ca8);
+      }
+    }
+
+    i {
+      left: 12%;
+      right: 12%;
+      bottom: 38px;
+      height: 5px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  // device with an orbiting ring
+  &--phone {
+    .pv__device {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 40px;
+      height: 76px;
+      margin: -38px 0 0 -20px;
+      border-radius: 9px;
+      background: linear-gradient(160deg, #3a3a48, #16162a);
+      border: 2px solid rgba(255, 255, 255, 0.22);
+      z-index: 2;
+    }
+
+    span {
+      left: 50%;
+      top: 50%;
+      width: 16px;
+      height: 26px;
+      margin: -13px 0 0 -8px;
+      border-radius: 3px;
+      background: linear-gradient(160deg, #8ab8ff, #3d6bff);
+      transform: rotate(calc(var(--i) * 60deg)) translateX(52px)
+        rotate(calc(var(--i) * -60deg));
+      animation: pv-orbit 9s linear infinite;
+      animation-delay: calc(var(--i) * -1.5s);
+    }
+  }
+
+  // helix of panels
+  &--atlas span {
+    left: 50%;
+    top: 50%;
+    width: 34px;
+    height: 46px;
+    margin: -23px 0 0 -17px;
+    border-radius: 5px;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.9), rgba(138, 123, 255, 0.55));
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transform: translate(calc((var(--i) - 3) * 26px), calc((var(--i) - 3) * 9px))
+      scale(calc(1 - var(--i) * 0.09));
+    opacity: calc(1 - var(--i) * 0.13);
+    animation: pv-drift 4.5s ease-in-out infinite;
+    animation-delay: calc(var(--i) * -0.5s);
+  }
+}
+
+@keyframes pv-breathe {
+  0%,
+  100% {
+    transform: translateX(calc((var(--i) - 2) * 3px));
+  }
+
+  50% {
+    transform: translateX(calc((var(--i) - 2) * 9px));
+  }
+}
+
+@keyframes pv-orbit {
+  from {
+    transform: rotate(calc(var(--i) * 60deg)) translateX(52px) rotate(calc(var(--i) * -60deg));
+  }
+
+  to {
+    transform: rotate(calc(var(--i) * 60deg + 360deg)) translateX(52px)
+      rotate(calc(var(--i) * -60deg - 360deg));
+  }
+}
+
+@keyframes pv-drift {
+  0%,
+  100% {
+    opacity: calc(1 - var(--i) * 0.13);
+  }
+
+  50% {
+    opacity: calc(0.55 - var(--i) * 0.05);
+  }
+}

@@ -1,0 +1,270 @@
+@use 'reset';
+@use 'variables' as *;
+@use 'switcher';
+
+body {
+  background: #0d0a2b;
+  color: #fff;
+  overflow: hidden;
+}
+
+.phone-page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.pstage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  canvas {
+    display: block;
+  }
+}
+
+.phead {
+  position: fixed;
+  top: 26px;
+  left: 28px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  &__coin {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #fff;
+    color: $purple;
+    font-size: 19px;
+    font-weight: 800;
+    box-shadow: 0 2px 8px rgba(0, 0, 20, 0.45);
+  }
+
+  &__lockup {
+    display: flex;
+    flex-direction: column;
+
+    strong {
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    em {
+      font-style: italic;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.6);
+    }
+  }
+}
+
+// details panel, left of the device
+.pinfo {
+  position: fixed;
+  left: clamp(28px, 5vw, 76px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: min(310px, 34vw);
+  pointer-events: none;
+  animation: pinfo-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__new {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: $mint;
+    color: $navy;
+    border-radius: 999px;
+    padding: 3px 8px;
+  }
+
+  &__name {
+    margin-top: 8px;
+    font-size: clamp(34px, 4vw, 58px);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+
+  &__blurb {
+    margin-top: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  &__cta {
+    pointer-events: auto;
+    margin-top: 22px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: $mint;
+    color: $navy;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 22px;
+    border-radius: 999px;
+    box-shadow: 0 6px 20px rgba(48, 255, 180, 0.28);
+    transition: transform 0.15s ease;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &:hover {
+      transform: scale(1.04);
+    }
+  }
+}
+
+@keyframes pinfo-in {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-50% + 14px));
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-50%);
+  }
+}
+
+// kept in the left column so the orbiting cards stay unobstructed
+.pnav {
+  position: fixed;
+  bottom: 78px;
+  left: clamp(28px, 5vw, 76px);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  &__arrow {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 22px;
+    line-height: 1;
+    backdrop-filter: blur(6px);
+    transition: background 0.18s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+
+  &__dot {
+    position: relative;
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.28);
+    transition: transform 0.2s ease, background 0.2s ease;
+
+    span {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      white-space: nowrap;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      pointer-events: none;
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.6);
+
+      span {
+        opacity: 1;
+      }
+    }
+
+    &--on {
+      background: $mint;
+      transform: scale(1.5);
+    }
+  }
+}
+
+.phint {
+  position: fixed;
+  bottom: 46px;
+  left: clamp(28px, 5vw, 76px);
+  z-index: 5;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .phint {
+    display: none;
+  }
+
+  .pnav {
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .pinfo {
+    left: 24px;
+    right: 24px;
+    top: auto;
+    bottom: 92px;
+    width: auto;
+    transform: none;
+    animation: none;
+
+    &__name {
+      font-size: 32px;
+    }
+
+    &__blurb {
+      display: none;
+    }
+  }
+}

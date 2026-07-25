@@ -1,0 +1,26 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(books\\..*|the-standard-books\\.vercel\\.app)" }],
+      "destination": "/books.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(editions\\..*|the-standard-editions\\.vercel\\.app)" }],
+      "destination": "/editions.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(phone\\..*|the-standard-phone\\.vercel\\.app)" }],
+      "destination": "/phone.html"
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "(atlas\\..*|the-standard-atlas\\.vercel\\.app)" }],
+      "destination": "/atlas.html"
+    }
+  ]
+}
