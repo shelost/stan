@@ -6,7 +6,7 @@ export default function HubApp() {
     <div className="hub">
       <header className="hub__head">
         <p className="hub__eyebrow">Stan · The Standard</p>
-        <h1 className="hub__title">Everything new, nine ways.</h1>
+        <h1 className="hub__title">Something big is coming</h1>
       </header>
 
       <ol className="hub__list">
