@@ -19,6 +19,7 @@ export default defineConfig({
         home: resolve(__dirname, 'home.html'),
         chat: resolve(__dirname, 'chat.html'),
         grid: resolve(__dirname, 'grid.html'),
+        stan: resolve(__dirname, 'stan.html'),
       },
     },
   },
