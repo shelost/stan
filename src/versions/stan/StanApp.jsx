@@ -53,6 +53,11 @@ const FAMILY = [
 
 const MANIFESTO = 'Nobody hands you an audience. You build one.'.split(' ');
 
+// touch fires mouseenter before click, which would open + instantly
+// re-toggle the panel — only let hover drive it on hover-capable devices
+const canHover = () =>
+  typeof window !== 'undefined' && window.matchMedia('(hover: hover)').matches;
+
 export default function StanApp() {
   const [panel, setPanel] = useState(false);
   const famProgress = useRef(0);
@@ -208,8 +213,7 @@ export default function StanApp() {
               type="button"
               className="isl__trigger"
               aria-expanded={panel}
-              onMouseEnter={() => setPanel(true)}
-              onFocus={() => setPanel(true)}
+              onMouseEnter={() => canHover() && setPanel(true)}
               onClick={() => setPanel((v) => !v)}
             >
               Products

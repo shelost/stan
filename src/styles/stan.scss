@@ -26,9 +26,9 @@ body {
 
 @mixin display($size) {
   font-size: $size;
-  font-weight: 530;
+  font-weight: 640;
   letter-spacing: -0.045em;
-  line-height: 0.98;
+  line-height: 0.88;
 }
 
 // ---- pills ----
@@ -311,8 +311,8 @@ body {
     span {
       display: block;
       overflow: hidden;
-      padding-bottom: 0.06em;
-      margin-bottom: -0.06em;
+      padding-bottom: 0.12em;
+      margin-bottom: -0.12em;
 
       em {
         display: block;
@@ -645,7 +645,9 @@ body {
 
 // ---- responsive ----
 @media (max-width: 940px) {
-  .isl__links {
+  // keep the Products trigger on touch (onClick toggles the panel);
+  // drop only the plain anchor links
+  .isl__links a {
     display: none;
   }
 
@@ -673,6 +675,66 @@ body {
   .wf--right .wf__body {
     left: 18px;
     right: 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .isl {
+    top: 10px;
+    width: calc(100vw - 20px);
+    border-radius: 18px;
+  }
+
+  .isl__bar {
+    height: 50px;
+    padding: 0 6px 0 14px;
+  }
+
+  .isl__logo img {
+    height: 19px;
+  }
+
+  .hero__title {
+    font-size: clamp(44px, 15vw, 60px);
+  }
+
+  .hero__body {
+    bottom: 30px;
+  }
+
+  .fam__act {
+    left: 16px;
+    bottom: 52px;
+
+    .fam__icon {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .fam__hint {
+    display: none;
+  }
+
+  .wf__body {
+    bottom: 44px;
+
+    .wf__badge {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 12px;
+    }
+  }
+
+  .bfoot__grid {
+    gap: 22px;
+  }
+
+  .bfoot__legal {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
   }
 }
 

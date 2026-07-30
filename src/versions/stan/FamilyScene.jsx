@@ -1,16 +1,58 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
-// Five wireframe figures — one per product — living in a single scene.
-// The act progress (0..4) crossfades, scales and spins them so scrolling
-// feels like turning one continuous machine, not swapping slides.
+// Five figures — one per product — living in a single scene. The act
+// progress (0..4) crossfades and spins them so scrolling feels like one
+// continuous machine. Each figure is literal: Store is a link-in-bio,
+// Stories is a wall of real channel thumbnails, Studio is a timeline
+// that edits itself.
+
+// Stan's own channel (@stanforcreators) — thumbnails feature real videos.
+const STORY_VIDEOS = [
+  '-TEgzZ1A_dE',
+  '2_CSXI4Zsts',
+  '58T8V2mleS0',
+  '6euOhcSlRbo',
+  'DyyCXeG4pTk',
+  'FVreqZtcY80',
+];
 
 function wire(color, opacity = 0.9) {
   return new THREE.LineBasicMaterial({ color, transparent: true, opacity });
 }
 
+function roundedShape(w, h, r) {
+  const s = new THREE.Shape();
+  const x = -w / 2;
+  const y = -h / 2;
+  s.moveTo(x + r, y);
+  s.lineTo(x + w - r, y);
+  s.quadraticCurveTo(x + w, y, x + w, y + r);
+  s.lineTo(x + w, y + h - r);
+  s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  s.lineTo(x + r, y + h);
+  s.quadraticCurveTo(x, y + h, x, y + h - r);
+  s.lineTo(x, y + r);
+  s.quadraticCurveTo(x, y, x + r, y);
+  return s;
+}
+
+function roundedOutline(w, h, r, color, opacity = 0.9) {
+  const pts = roundedShape(w, h, r).getPoints(40);
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  return new THREE.LineLoop(geo, wire(color, opacity));
+}
+
+function solidRounded(w, h, r, color, opacity = 1) {
+  const geo = new THREE.ShapeGeometry(roundedShape(w, h, r));
+  return new THREE.Mesh(
+    geo,
+    new THREE.MeshBasicMaterial({ color, transparent: true, opacity })
+  );
+}
+
+// ---- act 1 · Stan: coin heart ----
 function buildStan() {
-  // coin heart: icosahedron shell around a solid core
   const g = new THREE.Group();
   const shell = new THREE.LineSegments(
     new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.7, 1)),
@@ -34,8 +76,8 @@ function buildStan() {
   return g;
 }
 
+// ---- act 2 · Stanley: listening swarm ----
 function buildStanley() {
-  // a listening swarm: particles on a breathing sphere
   const g = new THREE.Group();
   const N = 1400;
   const pos = new Float32Array(N * 3);
@@ -76,81 +118,216 @@ function buildStanley() {
   return g;
 }
 
+// ---- act 3 · Store: link-in-bio phone ----
 function buildStore() {
-  // shelf of cells, one lit
   const g = new THREE.Group();
-  const cells = [];
-  for (let r = 0; r < 3; r += 1) {
-    for (let c = 0; c < 3; c += 1) {
-      const cell = new THREE.LineSegments(
-        new THREE.EdgesGeometry(new THREE.BoxGeometry(0.92, 0.92, 0.92)),
-        wire('#ffffff', 0.8)
-      );
-      cell.position.set((c - 1) * 1.15, (r - 1) * 1.15, 0);
-      g.add(cell);
-      cells.push(cell);
-    }
-  }
-  const lit = new THREE.Mesh(
-    new THREE.BoxGeometry(0.55, 0.55, 0.55),
+
+  const phone = roundedOutline(2.3, 4.1, 0.34, '#ffffff', 0.95);
+  g.add(phone);
+
+  // avatar + handle
+  const avatarPts = new THREE.EllipseCurve(0, 0, 0.34, 0.34).getPoints(48);
+  const avatar = new THREE.LineLoop(
+    new THREE.BufferGeometry().setFromPoints(avatarPts),
+    wire('#ffffff', 0.9)
+  );
+  avatar.position.set(0, 1.42, 0.01);
+  const avatarDot = new THREE.Mesh(
+    new THREE.CircleGeometry(0.13, 24),
     new THREE.MeshBasicMaterial({ color: '#ffffff' })
   );
-  g.add(lit);
-  g.userData.tick = (t) => {
-    const idx = Math.floor(t * 0.7) % 9;
-    const target = cells[idx];
-    lit.position.lerp(target.position, 0.12);
-    lit.rotation.y = t * 0.9;
-    g.rotation.y = Math.sin(t * 0.3) * 0.3;
-  };
-  return g;
-}
+  avatarDot.position.copy(avatar.position);
+  const handle = solidRounded(0.9, 0.12, 0.06, '#d2ceff', 0.75);
+  handle.position.set(0, 0.98, 0.01);
+  g.add(avatar, avatarDot, handle);
 
-function buildStories() {
-  // a waveform you can walk around
-  const g = new THREE.Group();
-  const bars = [];
-  const N = 13;
-  for (let i = 0; i < N; i += 1) {
-    const bar = new THREE.LineSegments(
-      new THREE.EdgesGeometry(new THREE.BoxGeometry(0.34, 1, 0.34)),
-      wire(i % 3 === 1 ? '#d2ceff' : '#ffffff', 0.85)
-    );
-    bar.position.x = (i - (N - 1) / 2) * 0.52;
-    g.add(bar);
-    bars.push(bar);
+  // stacked link buttons
+  const links = [];
+  for (let i = 0; i < 4; i += 1) {
+    const y = 0.52 - i * 0.62;
+    const outline = roundedOutline(1.78, 0.46, 0.23, '#ffffff', 0.8);
+    outline.position.set(0, y, 0.01);
+    const label = solidRounded(0.9, 0.09, 0.045, '#ffffff', 0.5);
+    label.position.set(-0.18, y, 0.02);
+    g.add(outline, label);
+    links.push({ y });
   }
+
+  // the hovering "tap" highlight walking down the links
+  const hover = solidRounded(1.78, 0.46, 0.23, '#d2ceff', 0.32);
+  hover.position.set(0, links[0].y, 0.005);
+  const cursor = new THREE.Mesh(
+    new THREE.CircleGeometry(0.06, 16),
+    new THREE.MeshBasicMaterial({ color: '#ffffff' })
+  );
+  cursor.position.set(0.72, links[0].y - 0.12, 0.03);
+  g.add(hover, cursor);
+
   g.userData.tick = (t) => {
-    bars.forEach((b, i) => {
-      const h = 0.5 + Math.abs(Math.sin(t * 1.5 + i * 0.62)) * 2.1;
-      b.scale.y = h;
-    });
-    g.rotation.y = Math.sin(t * 0.24) * 0.5;
+    const idx = Math.floor(t * 0.8) % 4;
+    const target = links[idx].y;
+    hover.position.y += (target - hover.position.y) * 0.14;
+    cursor.position.y += (target - 0.12 - cursor.position.y) * 0.14;
+    const press = Math.max(0, Math.sin((t * 0.8 % 1) * Math.PI));
+    hover.material.opacity = 0.16 + press * 0.26;
+    g.rotation.y = Math.sin(t * 0.3) * 0.24;
   };
   return g;
 }
 
-function buildStudio() {
-  // the cut: a knotted ribbon
+// ---- act 4 · Stories: wall of real channel thumbnails ----
+function buildStories() {
   const g = new THREE.Group();
-  const knot = new THREE.LineSegments(
-    new THREE.EdgesGeometry(new THREE.TorusKnotGeometry(1.15, 0.34, 96, 12)),
-    wire('#ffffff', 0.7)
-  );
-  const spark = new THREE.Mesh(
-    new THREE.SphereGeometry(0.16, 16, 16),
-    new THREE.MeshBasicMaterial({ color: '#d2ceff' })
-  );
-  g.add(knot, spark);
-  const curve = new THREE.TorusKnotGeometry(1.15, 0.34, 200, 8);
+  const loader = new THREE.TextureLoader();
+  loader.setCrossOrigin('anonymous');
+
+  const W = 1.62;
+  const H = 0.91;
+  const cards = [];
+
+  STORY_VIDEOS.forEach((id, i) => {
+    const col = i % 3;
+    const row = Math.floor(i / 3);
+    const holder = new THREE.Group();
+    holder.position.set((col - 1) * (W + 0.22), (0.5 - row) * (H + 0.26), 0);
+
+    const mat = new THREE.MeshBasicMaterial({ color: '#8b7ef7', transparent: true, opacity: 1 });
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(W, H), mat);
+    loader.load(`https://i.ytimg.com/vi/${id}/hqdefault.jpg`, (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace;
+      mat.color.set('#ffffff');
+      mat.map = tex;
+      mat.needsUpdate = true;
+    });
+    const frame = roundedOutline(W + 0.06, H + 0.06, 0.08, '#ffffff', 0.55);
+
+    // play badge
+    const badge = new THREE.Group();
+    const disc = new THREE.Mesh(
+      new THREE.CircleGeometry(0.16, 28),
+      new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.92 })
+    );
+    const tri = new THREE.Mesh(
+      new THREE.ShapeGeometry(
+        (() => {
+          const s = new THREE.Shape();
+          s.moveTo(-0.045, 0.07);
+          s.lineTo(0.075, 0);
+          s.lineTo(-0.045, -0.07);
+          return s;
+        })()
+      ),
+      new THREE.MeshBasicMaterial({ color: '#6355ff' })
+    );
+    tri.position.z = 0.001;
+    badge.add(disc, tri);
+    badge.position.z = 0.02;
+
+    holder.add(plane, frame, badge);
+    g.add(holder);
+    cards.push({ holder, badge, phase: i * 0.9 });
+  });
+
   g.userData.tick = (t) => {
-    knot.rotation.y = t * 0.3;
-    knot.rotation.x = Math.sin(t * 0.35) * 0.35;
-    const u = (t * 0.12) % 1;
-    const a = u * Math.PI * 2;
-    spark.position.set(Math.cos(a * 2) * 1.5, Math.sin(a * 3) * 0.6, Math.sin(a * 2) * 1.5);
+    const focus = Math.floor(t * 0.55) % cards.length;
+    cards.forEach((c, i) => {
+      const on = i === focus;
+      const s = on ? 1.16 : 1;
+      c.holder.scale.x += (s - c.holder.scale.x) * 0.12;
+      c.holder.scale.y = c.holder.scale.x;
+      c.holder.position.z += ((on ? 0.42 : 0) - c.holder.position.z) * 0.12;
+      c.holder.rotation.x = Math.sin(t * 0.8 + c.phase) * 0.03;
+      c.badge.scale.setScalar(on ? 1 + Math.sin(t * 3) * 0.08 : 0.72);
+      c.badge.children[0].material.opacity = on ? 0.95 : 0.5;
+    });
+    g.rotation.y = Math.sin(t * 0.22) * 0.18;
   };
-  curve.dispose();
+  return g;
+}
+
+// ---- act 5 · Studio: a timeline that edits itself ----
+function buildStudio() {
+  const g = new THREE.Group();
+
+  const panel = roundedOutline(4.3, 2.5, 0.2, '#ffffff', 0.9);
+  g.add(panel);
+
+  // preview strip along the top
+  const preview = solidRounded(3.9, 0.5, 0.08, '#ffffff', 0.14);
+  preview.position.set(0, 0.85, 0.01);
+  const previewBar = solidRounded(1.1, 0.3, 0.06, '#d2ceff', 0.7);
+  previewBar.position.set(-1.3, 0.85, 0.02);
+  g.add(preview, previewBar);
+
+  // three tracks
+  [-0.05, -0.55, -1.0].forEach((y) => {
+    const lane = new THREE.Mesh(
+      new THREE.PlaneGeometry(3.9, 0.012),
+      new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.3 })
+    );
+    lane.position.set(0, y, 0.005);
+    g.add(lane);
+  });
+
+  // clips: [track y, xA, wA, xB, wB, tone] — the timeline tightens itself
+  const defs = [
+    [-0.05, -1.5, 0.9, -1.62, 0.66, '#ffffff'],
+    [-0.05, -0.3, 1.2, -1.05, 0.72, '#d2ceff'],
+    [-0.05, 1.15, 1.0, -0.28, 0.8, '#ffffff'],
+    [-0.55, -1.2, 1.5, -1.32, 1.26, '#d2ceff'],
+    [-0.55, 0.7, 1.4, 0.16, 1.7, '#ffffff'],
+    [-1.0, -0.7, 0.8, -1.44, 1.02, '#ffffff'],
+    [-1.0, 0.9, 1.1, 0.02, 1.86, '#d2ceff'],
+  ];
+  const clips = defs.map(([y, xA, wA, xB, wB, tone]) => {
+    const m = solidRounded(1, 0.34, 0.07, tone, tone === '#ffffff' ? 0.55 : 0.75);
+    m.position.set(xA, y, 0.01);
+    m.scale.x = wA;
+    g.add(m);
+    return { m, y, xA, wA, xB, wB };
+  });
+
+  // playhead
+  const head = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.02, 1.5),
+    new THREE.MeshBasicMaterial({ color: '#ffffff' })
+  );
+  head.position.set(-1.9, -0.5, 0.03);
+  const cap = new THREE.Mesh(
+    new THREE.CircleGeometry(0.06, 4),
+    new THREE.MeshBasicMaterial({ color: '#ffffff' })
+  );
+  cap.rotation.z = Math.PI / 4;
+  cap.position.set(-1.9, 0.32, 0.03);
+  const flash = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.5, 1.5),
+    new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0 })
+  );
+  flash.position.set(0, -0.5, 0.02);
+  g.add(head, cap, flash);
+
+  const smooth = (x) => x * x * (3 - 2 * x);
+
+  g.userData.tick = (t) => {
+    const cycle = (t * 0.22) % 1; // one edit pass
+    const x = -1.9 + cycle * 3.8;
+    head.position.x = x;
+    cap.position.x = x;
+
+    // clips tighten from arrangement A to B as the head sweeps past them
+    clips.forEach((c) => {
+      const local = smooth(Math.max(0, Math.min(1, (x - c.xA) * 2 + 0.5)));
+      const k = cycle > 0.96 ? 0 : local; // reset for the next pass
+      c.m.position.x = c.xA + (c.xB - c.xA) * k;
+      c.m.scale.x = c.wA + (c.wB - c.wA) * k;
+    });
+
+    // cut flash as the head crosses centre
+    flash.position.x = x;
+    flash.material.opacity = Math.max(0, 0.16 - Math.abs(cycle - 0.5) * 1.4);
+    previewBar.position.x = -1.3 + cycle * 2.6;
+    g.rotation.y = Math.sin(t * 0.26) * 0.2;
+  };
   return g;
 }
 
@@ -175,6 +352,10 @@ export default function FamilyScene({ progressRef }) {
       scene.add(f);
     });
 
+    // vertical-FOV camera: on portrait screens the wide figures (studio
+    // timeline, thumbnail wall) would clip, so scale everything to the
+    // visible width instead
+    let aspectScale = 1;
     const fit = () => {
       const w = mount.clientWidth || 1;
       const h = mount.clientHeight || 1;
@@ -183,6 +364,7 @@ export default function FamilyScene({ progressRef }) {
       camera.aspect = a;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
+      aspectScale = Math.min(1, a / 1.15);
     };
     fit();
     const ro = new ResizeObserver(fit);
@@ -198,7 +380,8 @@ export default function FamilyScene({ progressRef }) {
     const setOpacity = (fig, k) => {
       fig.traverse((o) => {
         if (o.material) {
-          o.material.opacity = (o.userData.baseOpacity ?? (o.userData.baseOpacity = o.material.opacity)) * k;
+          o.material.opacity =
+            (o.userData.baseOpacity ?? (o.userData.baseOpacity = o.material.opacity)) * k;
           o.material.transparent = true;
         }
       });
@@ -212,18 +395,16 @@ export default function FamilyScene({ progressRef }) {
       const dt = Math.min(clock.getDelta(), 0.1);
       const f = 1 - Math.exp(-5 * dt);
       const t = clock.elapsedTime;
-      // act progress 0..N-1, continuous
       const p = Math.max(0, Math.min(figures.length - 1, progressRef.current || 0));
 
       figures.forEach((fig, i) => {
         const d = Math.abs(p - i);
-        const k = Math.max(0, 1 - d * 1.6); // fade band around each act
+        const k = Math.max(0, 1 - d * 1.6);
         fig.visible = k > 0.02;
         if (!fig.visible) return;
         setOpacity(fig, k);
-        const s = 0.72 + k * 0.34;
+        const s = (0.72 + k * 0.34) * aspectScale;
         fig.scale.setScalar(s);
-        // figures hand off with a quarter-turn as they trade places
         fig.rotation.y = (p - i) * 0.9;
         fig.userData.tick?.(t);
       });
@@ -242,7 +423,10 @@ export default function FamilyScene({ progressRef }) {
       figures.forEach((fig) =>
         fig.traverse((o) => {
           o.geometry?.dispose();
-          o.material?.dispose();
+          if (o.material) {
+            o.material.map?.dispose();
+            o.material.dispose();
+          }
         })
       );
       renderer.dispose();
