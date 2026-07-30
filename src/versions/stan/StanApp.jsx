@@ -1,140 +1,212 @@
 import { useEffect, useRef, useState } from 'react';
-import CoinScene from './CoinScene';
-import { useScrub, useParallax, phase } from './useScrub';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import FamilyScene from './FamilyScene';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const IMG = (id, w = 1800) =>
   `https://images.unsplash.com/${id}?q=80&w=${w}&auto=format&fit=crop`;
 
 const PHOTOS = {
-  stanley: IMG('photo-1610716632424-4d45990bcd48'),
-  store: IMG('photo-1664277497095-424e085175e8'),
-  stories: IMG('photo-1594751684241-bcef815d5a57', 1200),
-  studio: IMG('photo-1616412875447-096e932d893c', 1200),
+  stanley: IMG('photo-1610716632424-4d45990bcd48', 2200),
+  store: IMG('photo-1664277497095-424e085175e8', 2200),
 };
 
 const FAMILY = [
-  { id: 'stan', icon: '/icon_stan.svg', name: 'Stan', tag: 'Build Your Own.', href: '#top' },
+  {
+    id: 'stan',
+    icon: '/icon_stan.svg',
+    name: 'Stan',
+    tag: 'Build Your Own.',
+    copy: 'One brand on the door — yours. Stan is the home of everything you make, sell and say.',
+  },
   {
     id: 'stanley',
     icon: '/icon_stanley.svg',
     name: 'Stanley',
     tag: 'Your AI Creator Assistant',
-    href: '#stanley',
+    copy: 'Drafts, replies, product pages — written in your voice while you stay in the studio.',
   },
   {
     id: 'store',
     icon: '/icon_store.svg',
     name: 'Store',
     tag: 'Your All-in-One Creator Store',
-    href: '#store',
+    copy: 'Courses, coaching, community. One link in your bio, live in minutes, no code.',
   },
   {
     id: 'stories',
     icon: '/icon_stories.svg',
     name: 'Stories',
     tag: 'Real Creators. Real Stories.',
-    href: '#more',
+    copy: 'The people already building on Stan — how they started and what they wish they knew.',
   },
   {
     id: 'studio',
     icon: '/icon_studio.svg',
     name: 'Studio',
     tag: 'Your AI Video Editor',
-    href: '#more',
+    copy: 'Rough cut to posted clip in minutes. Hook found, dead air gone, captions in your style.',
   },
 ];
-
-const ICONS = FAMILY.map((f) => f.icon);
 
 const MANIFESTO = 'Nobody hands you an audience. You build one.'.split(' ');
 
 export default function StanApp() {
-  useParallax();
-
-  // ---- expanding header ----
   const [panel, setPanel] = useState(false);
-  const [condensed, setCondensed] = useState(false);
+  const famProgress = useRef(0);
+  const root = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setCondensed(window.scrollY > 48);
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
     const onKey = (e) => e.key === 'Escape' && setPanel(false);
     window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('keydown', onKey);
-    };
+    return () => window.removeEventListener('keydown', onKey);
   }, []);
 
-  // ---- hero scrub ----
-  const heroWrap = useRef(null);
-  const heroPhoto = useRef(null);
-  const heroBody = useRef(null);
-  const heroScrim = useRef(null);
+  useEffect(() => {
+    const mm = gsap.matchMedia();
 
-  useScrub(heroWrap, (p) => {
-    const photo = heroPhoto.current;
-    const body = heroBody.current;
-    const scrim = heroScrim.current;
-    if (!photo || !body || !scrim) return;
-    photo.style.transform = `translateY(${(-p * 9).toFixed(2)}%) scale(${(1.02 + p * 0.16).toFixed(3)})`;
-    const out = phase(p, 0.48, 0.92);
-    body.style.opacity = (1 - out).toFixed(3);
-    body.style.transform = `translateY(${(-out * 54).toFixed(1)}px)`;
-    scrim.style.opacity = (0.5 + p * 0.5).toFixed(3);
-  });
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const q = gsap.utils.selector(root);
 
-  // ---- family scrub ----
-  const famWrap = useRef(null);
-  const famList = useRef(null);
-  const famRail = useRef(null);
-  const famProgress = useRef(0);
+      // ---- floating island drops in ----
+      gsap.from('.isl', { y: -70, autoAlpha: 0, duration: 0.9, ease: 'power3.out', delay: 0.2 });
 
-  useScrub(famWrap, (p) => {
-    famProgress.current = p;
-    const list = famList.current;
-    const rail = famRail.current;
-    if (!list || !rail) return;
-    const n = FAMILY.length;
-    const active = Math.max(0, Math.min(n - 1, Math.round(p * (n - 1))));
-    [...list.children].forEach((li, i) => {
-      li.dataset.state = i === active ? 'on' : i < active ? 'done' : 'off';
+      // ---- hero: pinned, photo breathes, then a purple wipe swallows it ----
+      gsap
+        .timeline({
+          scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=170%', scrub: true, pin: true },
+        })
+        .fromTo('.hero__photo', { scale: 1.03, yPercent: 0 }, { scale: 1.2, yPercent: -7, ease: 'none' }, 0)
+        .to('.hero__body', { yPercent: -26, autoAlpha: 0, ease: 'power1.in' }, 0.28)
+        .to('.hero__scrim', { opacity: 0.75, ease: 'none' }, 0)
+        .fromTo(
+          '.hero__wipe',
+          { clipPath: 'inset(100% 0% 0% 0%)' },
+          { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 0.45 },
+          0.55
+        )
+        .fromTo(
+          '.hero__wipemark',
+          { yPercent: 60, autoAlpha: 0 },
+          { yPercent: 0, autoAlpha: 1, ease: 'power2.out', duration: 0.3 },
+          0.72
+        );
+
+      // ---- family: one long pinned act track over the 3D scene ----
+      const acts = q('.fam__act');
+      const N = acts.length;
+      const famTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.fam',
+          start: 'top top',
+          end: `+=${N * 120}%`,
+          scrub: true,
+          pin: true,
+          onUpdate: (st) => {
+            famProgress.current = st.progress * (N - 1);
+          },
+        },
+      });
+
+      acts.forEach((act, i) => {
+        const head = act.querySelector('.fam__head');
+        const tag = act.querySelector('.fam__tag');
+        const copy = act.querySelector('.fam__copy');
+        const icon = act.querySelector('.fam__icon');
+        const at = i * 1; // one unit per act
+        gsap.set(act, { autoAlpha: i === 0 ? 1 : 0 });
+        if (i > 0) {
+          famTl.to(act, { autoAlpha: 1, duration: 0.18 }, at - 0.18);
+          famTl.fromTo(
+            head,
+            { clipPath: 'inset(0% 0% 100% 0%)', yPercent: 30 },
+            { clipPath: 'inset(0% 0% 0% 0%)', yPercent: 0, ease: 'power3.out', duration: 0.3 },
+            at - 0.12
+          );
+          famTl.fromTo(
+            [icon, tag, copy],
+            { y: 26, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, stagger: 0.05, ease: 'power2.out', duration: 0.26 },
+            at - 0.08
+          );
+        }
+        if (i < N - 1) {
+          famTl.to(act, { autoAlpha: 0, yPercent: -8, duration: 0.2 }, at + 0.62);
+          famTl.set(act, { yPercent: 0 }, at + 0.86);
+        }
+        famTl.to(
+          '.fam__count i',
+          { yPercent: -i * 100, ease: 'power2.inOut', duration: 0.3 },
+          Math.max(0, at - 0.12)
+        );
+      });
+      famTl.set({}, {}, N - 1 + 0.4); // tail room on the last act
+
+      // ---- feature panels: card melts to full bleed (wipe), copy rises ----
+      q('.wf').forEach((sec) => {
+        gsap
+          .timeline({
+            scrollTrigger: { trigger: sec, start: 'top top', end: '+=130%', scrub: true, pin: true },
+          })
+          .fromTo(
+            sec.querySelector('.wf__media'),
+            { clipPath: 'inset(14% 10% 14% 10% round 22px)' },
+            { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'power2.inOut', duration: 0.5 },
+            0
+          )
+          .fromTo(
+            sec.querySelector('.wf__photo'),
+            { scale: 1.18 },
+            { scale: 1.02, ease: 'none', duration: 1 },
+            0
+          )
+          .fromTo(
+            sec.querySelector('.wf__body'),
+            { y: 60, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, ease: 'power2.out', duration: 0.32 },
+            0.42
+          )
+          .fromTo(
+            sec.querySelector('.wf__badge'),
+            { scale: 0, rotate: -14 },
+            { scale: 1, rotate: 0, ease: 'back.out(2)', duration: 0.25 },
+            0.55
+          );
+      });
+
+      // ---- manifesto: words light as you scrub ----
+      gsap
+        .timeline({
+          scrollTrigger: { trigger: '.manif', start: 'top top', end: '+=140%', scrub: true, pin: true },
+        })
+        .fromTo(
+          q('.manif__title span'),
+          { autoAlpha: 0.14, y: 14 },
+          { autoAlpha: 1, y: 0, stagger: 0.09, ease: 'power2.out', duration: 0.5 },
+          0
+        )
+        .fromTo('.manif__cta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.62);
+
+      return () => {};
     });
-    rail.style.transform = `scaleY(${(p || 0.001).toFixed(4)})`;
-  });
 
-  // ---- manifesto scrub ----
-  const manWrap = useRef(null);
-  const manWords = useRef(null);
-
-  useScrub(manWrap, (p) => {
-    const holder = manWords.current;
-    if (!holder) return;
-    const words = holder.children;
-    const n = words.length;
-    for (let i = 0; i < n; i += 1) {
-      const a = (i / n) * 0.7;
-      const w = phase(p, a, a + 0.26);
-      words[i].style.opacity = (0.14 + w * 0.86).toFixed(3);
-      words[i].style.transform = `translateY(${((1 - w) * 12).toFixed(1)}px)`;
-    }
-  });
+    return () => mm.revert();
+  }, []);
 
   return (
-    <div className="brand">
-      <header
-        className={`hd${condensed ? ' hd--condensed' : ''}${panel ? ' hd--open' : ''}`}
-        onMouseLeave={() => setPanel(false)}
-      >
-        <div className="hd__bar">
-          <a className="hd__logo" href="#top" aria-label="Stan">
+    <div className="brand" ref={root}>
+      {/* ---- floating header island ---- */}
+      <header className={`isl${panel ? ' isl--open' : ''}`} onMouseLeave={() => setPanel(false)}>
+        <div className="isl__bar">
+          <a className="isl__logo" href="#top" aria-label="Stan">
             <img src="/stan_logo.svg" alt="Stan" />
           </a>
-          <nav className="hd__links">
+          <nav className="isl__links">
             <button
               type="button"
-              className="hd__trigger"
+              className="isl__trigger"
               aria-expanded={panel}
               onMouseEnter={() => setPanel(true)}
               onFocus={() => setPanel(true)}
@@ -162,219 +234,146 @@ export default function StanApp() {
               Editions
             </a>
           </nav>
-          <div className="hd__cta">
-            <a className="hd__ghost" href="https://stan.store" target="_blank" rel="noreferrer">
-              Sign in
-            </a>
-            <a className="pill pill--solid" href="https://stan.store" target="_blank" rel="noreferrer">
-              Get Started
-              <span className="pill__orb">↑</span>
-            </a>
-          </div>
+          <a className="isl__cta" href="https://stan.store" target="_blank" rel="noreferrer">
+            Get Started
+            <span>↑</span>
+          </a>
         </div>
-
-        {/* expanding panel */}
-        <div className="hd__panelwrap" data-open={panel || undefined}>
-          <div className="hd__panel">
-            <div className="hd__grid">
-              {FAMILY.map((f) => (
-                <a className="hd__item" key={f.id} href={f.href} onClick={() => setPanel(false)}>
-                  <img src={f.icon} alt="" />
-                  <span>
-                    <strong>{f.name}</strong>
-                    <em>{f.tag}</em>
-                  </span>
-                </a>
-              ))}
-            </div>
+        <div className="isl__panelwrap" data-open={panel || undefined}>
+          <div className="isl__panel">
+            {FAMILY.map((f) => (
+              <a className="isl__item" key={f.id} href="#family" onClick={() => setPanel(false)}>
+                <img src={f.icon} alt="" />
+                <span>
+                  <strong>{f.name}</strong>
+                  <em>{f.tag}</em>
+                </span>
+              </a>
+            ))}
           </div>
         </div>
       </header>
 
       <main id="top">
         {/* ---- hero ---- */}
-        <section className="hero" ref={heroWrap}>
-          <div className="hero__sticky">
-            <div className="hero__media">
-              <img ref={heroPhoto} src="/computer.jpg" alt="A creator's desk mid-edit" />
-            </div>
-            <div className="hero__scrim" ref={heroScrim} />
-            <div className="hero__body" ref={heroBody}>
-              <p className="hero__eyebrow">
-                <img src="/icon_stan.svg" alt="" />
-                Stan — for the ones who make
-              </p>
-              <h1 className="hero__title">
-                <span>
-                  <em>Build</em>
-                </span>
-                <span>
-                  <em>your own.</em>
-                </span>
-              </h1>
-              <p className="hero__sub">
-                The <b>easiest</b> way to make money online.
-              </p>
-              <div className="hero__actions">
-                <a
-                  className="pill pill--white pill--lg"
-                  href="https://stan.store"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Get Started
-                  <span className="pill__orb">↑</span>
-                </a>
-                <a className="pill pill--line" href="#family">
-                  Meet the family
-                </a>
-              </div>
-            </div>
-            <div className="hero__hint" aria-hidden="true">
-              <span>Scroll</span>
-              <i />
-            </div>
+        <section className="hero">
+          <div className="hero__media">
+            <img className="hero__photo" src="/computer.jpg" alt="A creator's desk mid-edit" />
           </div>
-        </section>
-
-        {/* ---- marquee ---- */}
-        <div className="marq" aria-hidden="true">
-          <div className="marq__track">
-            {[0, 1].map((n) => (
-              <div className="marq__set" key={n}>
-                {['Build your own', 'Own your work', 'Keep the upside', 'Start today'].map((m) => (
-                  <span key={m}>
-                    {m}
-                    <b>✦</b>
-                  </span>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ---- family ---- */}
-        <section className="fam" id="family" ref={famWrap}>
-          <div className="fam__sticky">
-            <p className="fam__kicker">The family</p>
-            <div className="fam__grid">
-              <div className="fam__left">
-                <span className="fam__railtrack">
-                  <span className="fam__rail" ref={famRail} />
-                </span>
-                <ol className="fam__list" ref={famList}>
-                  {FAMILY.map((f) => (
-                    <li key={f.id}>
-                      <img src={f.icon} alt="" />
-                      <span className="fam__name">{f.name}</span>
-                      <span className="fam__tag">{f.tag}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-              <div className="fam__right">
-                <CoinScene icons={ICONS} progressRef={famProgress} />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ---- editorial: stanley ---- */}
-        <section className="feat" id="stanley">
-          <div className="feat__media">
-            <img data-plx="0.07" src={PHOTOS.stanley} alt="A studio microphone in low light" />
-            <img className="feat__badge" src="/icon_stanley.svg" alt="" />
-          </div>
-          <div className="feat__body">
-            <p className="kick">Stanley · Your AI Creator Assistant</p>
-            <h2 className="feat__title">Never run out of things to say.</h2>
-            <p className="feat__copy">
-              Stanley studies what you make and writes like you mean it — product pages, posts,
-              replies — while you stay in the studio. The first hire that costs nothing and never
-              clocks out.
+          <div className="hero__scrim" />
+          <div className="hero__body">
+            <p className="hero__eyebrow">
+              <img src="/icon_stan.svg" alt="" />
+              Stan — for the ones who make
             </p>
-            <a className="pill pill--solid" href="/chat">
+            <h1 className="hero__title">
+              <span>
+                <em>Build</em>
+              </span>
+              <span>
+                <em>your own.</em>
+              </span>
+            </h1>
+            <p className="hero__sub">
+              The <b>easiest</b> way to make money online.
+            </p>
+            <div className="hero__actions">
+              <a className="pill pill--white" href="https://stan.store" target="_blank" rel="noreferrer">
+                Get Started
+                <span className="pill__orb">↑</span>
+              </a>
+              <a className="pill pill--line" href="#family">
+                Meet the family
+              </a>
+            </div>
+          </div>
+          {/* purple wipe that swallows the hero */}
+          <div className="hero__wipe" aria-hidden="true">
+            <p className="hero__wipemark">The family</p>
+          </div>
+        </section>
+
+        {/* ---- family: provenance-style pinned act track ---- */}
+        <section className="fam" id="family">
+          <FamilyScene progressRef={famProgress} />
+          <div className="fam__count" aria-hidden="true">
+            <i>
+              {FAMILY.map((f, n) => (
+                <b key={f.id}>0{n + 1}</b>
+              ))}
+            </i>
+          </div>
+          {FAMILY.map((f) => (
+            <article className="fam__act" key={f.id}>
+              <img className="fam__icon" src={f.icon} alt="" />
+              <h2 className="fam__head">{f.name}</h2>
+              <p className="fam__tag">{f.tag}</p>
+              <p className="fam__copy">{f.copy}</p>
+            </article>
+          ))}
+          <p className="fam__hint" aria-hidden="true">
+            Keep scrolling
+          </p>
+        </section>
+
+        {/* ---- wipe panel: stanley ---- */}
+        <section className="wf" id="stanley">
+          <div className="wf__media">
+            <img className="wf__photo" src={PHOTOS.stanley} alt="A studio microphone in low light" />
+            <div className="wf__tint" />
+          </div>
+          <div className="wf__body">
+            <img className="wf__badge" src="/icon_stanley.svg" alt="" />
+            <p className="wf__kick">Stanley · Your AI Creator Assistant</p>
+            <h2>Never run out of things to say.</h2>
+            <p className="wf__copy">
+              Stanley studies what you make and writes like you mean it — while you stay in the
+              studio. The first hire that costs nothing and never clocks out.
+            </p>
+            <a className="pill pill--white" href="/chat">
               Meet Stanley
               <span className="pill__orb">↑</span>
             </a>
           </div>
         </section>
 
-        {/* ---- editorial: store ---- */}
-        <section className="feat feat--flip" id="store">
-          <div className="feat__media">
-            <img data-plx="0.07" src={PHOTOS.store} alt="A creator filming at a home studio" />
-            <img className="feat__badge" src="/icon_store.svg" alt="" />
+        {/* ---- wipe panel: store ---- */}
+        <section className="wf wf--right" id="store">
+          <div className="wf__media">
+            <img className="wf__photo" src={PHOTOS.store} alt="A creator filming at a home studio" />
+            <div className="wf__tint" />
           </div>
-          <div className="feat__body">
-            <p className="kick">Store · Your All-in-One Creator Store</p>
-            <h2 className="feat__title">One link. Everything you sell.</h2>
-            <p className="feat__copy">
+          <div className="wf__body">
+            <img className="wf__badge" src="/icon_store.svg" alt="" />
+            <p className="wf__kick">Store · Your All-in-One Creator Store</p>
+            <h2>One link. Everything you sell.</h2>
+            <p className="wf__copy">
               Courses, coaching, downloads, community — live in minutes from the link in your bio.
-              No website. No code. No one between you and the people who back you.
+              No one between you and the people who back you.
             </p>
-            <a
-              className="pill pill--solid"
-              href="https://stan.store"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a className="pill pill--white" href="https://stan.store" target="_blank" rel="noreferrer">
               Open your store
               <span className="pill__orb">↑</span>
             </a>
           </div>
         </section>
 
-        {/* ---- stories + studio ---- */}
-        <section className="duo" id="more">
-          {[
-            {
-              id: 'stories',
-              icon: '/icon_stories.svg',
-              kick: 'Stories',
-              head: 'Real Creators. Real Stories.',
-              copy: 'The people already building on Stan — how they started, what they sell, what they wish they knew.',
-              photo: PHOTOS.stories,
-            },
-            {
-              id: 'studio',
-              icon: '/icon_studio.svg',
-              kick: 'Studio',
-              head: 'Your AI Video Editor.',
-              copy: 'Rough cut to posted clip in minutes. Studio finds the hook, trims the dead air, and captions it in your style.',
-              photo: PHOTOS.studio,
-            },
-          ].map((d) => (
-            <article className="duo__card" key={d.id}>
-              <div className="duo__media">
-                <img data-plx="0.05" src={d.photo} alt="" />
-                <img className="duo__badge" src={d.icon} alt="" />
-              </div>
-              <p className="kick">{d.kick}</p>
-              <h3>{d.head}</h3>
-              <p className="duo__copy">{d.copy}</p>
-            </article>
-          ))}
-        </section>
-
         {/* ---- manifesto ---- */}
-        <section className="manif" ref={manWrap}>
-          <div className="manif__sticky">
-            <h2 className="manif__title" ref={manWords}>
-              {MANIFESTO.map((w, i) => (
-                <span key={i}>{w}</span>
-              ))}
-            </h2>
-            <a
-              className="pill pill--white pill--lg"
-              href="https://stan.store"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Start building
-              <span className="pill__orb">↑</span>
-            </a>
-          </div>
+        <section className="manif">
+          <h2 className="manif__title">
+            {MANIFESTO.map((w, i) => (
+              <span key={i}>{w}</span>
+            ))}
+          </h2>
+          <a
+            className="pill pill--white manif__cta"
+            href="https://stan.store"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Start building
+            <span className="pill__orb">↑</span>
+          </a>
         </section>
       </main>
 
@@ -387,8 +386,8 @@ export default function StanApp() {
             <a href="https://stan.store" target="_blank" rel="noreferrer">
               Store
             </a>
-            <a href="#more">Stories</a>
-            <a href="#more">Studio</a>
+            <a href="#family">Stories</a>
+            <a href="#family">Studio</a>
           </div>
           <div>
             <p className="bfoot__label">The Standard</p>
