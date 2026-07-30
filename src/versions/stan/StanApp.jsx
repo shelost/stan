@@ -53,6 +53,20 @@ const FAMILY = [
 
 const MANIFESTO = 'Nobody hands you an audience. You build one.'.split(' ');
 
+const MARQUEE = ['Build Your Own', 'Stan', 'Build Your Own', 'Stanley', 'Build Your Own', 'Store'];
+
+// split a string into animatable letters
+const Chars = ({ text }) =>
+  text.split('').map((c, i) =>
+    c === ' ' ? (
+      ' '
+    ) : (
+      <i className="ch" key={i}>
+        {c}
+      </i>
+    )
+  );
+
 // touch fires mouseenter before click, which would open + instantly
 // re-toggle the panel — only let hover drive it on hover-capable devices
 const canHover = () =>
@@ -78,25 +92,40 @@ export default function StanApp() {
       // ---- floating island drops in ----
       gsap.from('.isl', { y: -70, autoAlpha: 0, duration: 0.9, ease: 'power3.out', delay: 0.2 });
 
-      // ---- hero: pinned, photo breathes, then a purple wipe swallows it ----
+      // ---- hero title arrives letter by letter ----
+      gsap.from('.hero__title .ch', {
+        yPercent: 130,
+        rotate: 4,
+        stagger: 0.045,
+        duration: 1.05,
+        ease: 'power4.out',
+        delay: 0.25,
+      });
+
+      // ---- hero: pinned, photo breathes, letters scatter, blinds swallow it ----
       gsap
         .timeline({
           scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=170%', scrub: true, pin: true },
         })
         .fromTo('.hero__photo', { scale: 1.03, yPercent: 0 }, { scale: 1.2, yPercent: -7, ease: 'none' }, 0)
+        .to(
+          '.hero__title .ch',
+          { yPercent: -46, stagger: { each: 0.014, from: 'end' }, ease: 'power1.in', duration: 0.3 },
+          0.2
+        )
         .to('.hero__body', { yPercent: -26, autoAlpha: 0, ease: 'power1.in' }, 0.28)
         .to('.hero__scrim', { opacity: 0.75, ease: 'none' }, 0)
         .fromTo(
-          '.hero__wipe',
-          { clipPath: 'inset(100% 0% 0% 0%)' },
-          { clipPath: 'inset(0% 0% 0% 0%)', ease: 'power2.inOut', duration: 0.45 },
+          '.hero__wipe i',
+          { yPercent: 101 },
+          { yPercent: 0, stagger: 0.06, ease: 'power2.inOut', duration: 0.4 },
           0.55
         )
         .fromTo(
           '.hero__wipemark',
           { yPercent: 60, autoAlpha: 0 },
           { yPercent: 0, autoAlpha: 1, ease: 'power2.out', duration: 0.3 },
-          0.72
+          0.75
         );
 
       // ---- family: one long pinned act track over the 3D scene ----
@@ -125,9 +154,9 @@ export default function StanApp() {
         if (i > 0) {
           famTl.to(act, { autoAlpha: 1, duration: 0.18 }, at - 0.18);
           famTl.fromTo(
-            head,
-            { clipPath: 'inset(0% 0% 100% 0%)', yPercent: 30 },
-            { clipPath: 'inset(0% 0% 0% 0%)', yPercent: 0, ease: 'power3.out', duration: 0.3 },
+            head.querySelectorAll('.ch'),
+            { yPercent: 115, rotate: 8 },
+            { yPercent: 0, rotate: 0, stagger: 0.035, ease: 'back.out(1.6)', duration: 0.32 },
             at - 0.12
           );
           famTl.fromTo(
@@ -149,7 +178,7 @@ export default function StanApp() {
       });
       famTl.set({}, {}, N - 1 + 0.4); // tail room on the last act
 
-      // ---- feature panels: card melts to full bleed (wipe), copy rises ----
+      // ---- feature panels: card melts to full bleed, ghost name slides behind ----
       q('.wf').forEach((sec) => {
         gsap
           .timeline({
@@ -168,6 +197,12 @@ export default function StanApp() {
             0
           )
           .fromTo(
+            sec.querySelector('.wf__ghost'),
+            { xPercent: 16 },
+            { xPercent: -16, ease: 'none', duration: 1 },
+            0
+          )
+          .fromTo(
             sec.querySelector('.wf__body'),
             { y: 60, autoAlpha: 0 },
             { y: 0, autoAlpha: 1, ease: 'power2.out', duration: 0.32 },
@@ -181,20 +216,84 @@ export default function StanApp() {
           );
       });
 
-      // ---- manifesto: words light as you scrub ----
+      // ---- manifesto: words sharpen out of a blur, halo blooms behind ----
       gsap
         .timeline({
           scrollTrigger: { trigger: '.manif', start: 'top top', end: '+=140%', scrub: true, pin: true },
         })
         .fromTo(
-          q('.manif__title span'),
-          { autoAlpha: 0.14, y: 14 },
-          { autoAlpha: 1, y: 0, stagger: 0.09, ease: 'power2.out', duration: 0.5 },
+          '.manif__halo',
+          { scale: 0.3, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, ease: 'power1.out', duration: 0.7 },
           0
         )
-        .fromTo('.manif__cta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.62);
+        .fromTo(
+          q('.manif__title span'),
+          { autoAlpha: 0.14, y: 14, filter: 'blur(7px)' },
+          { autoAlpha: 1, y: 0, filter: 'blur(0px)', stagger: 0.09, ease: 'power2.out', duration: 0.5 },
+          0
+        )
+        .fromTo('.manif__ctawrap', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.62);
 
-      return () => {};
+      // ---- marquee: drifts on its own, scroll velocity pushes and skews it ----
+      const track = q('.mq__track')[0];
+      let tickFn = null;
+      if (track) {
+        const wrap = gsap.utils.wrap(-50, 0);
+        let x = 0;
+        let vel = 0;
+        ScrollTrigger.create({
+          trigger: '.mq',
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            vel = self.getVelocity();
+          },
+        });
+        const skewTo = gsap.quickTo(track, 'skewX', { duration: 0.35, ease: 'power2.out' });
+        tickFn = (t, dtms) => {
+          const dt = Math.min(dtms, 100) / 1000;
+          const speed = 3 + gsap.utils.clamp(-26, 30, vel / 320);
+          x = wrap(x - speed * dt);
+          gsap.set(track, { xPercent: x });
+          skewTo(gsap.utils.clamp(-9, 9, vel / -520));
+          vel *= 0.92;
+        };
+        gsap.ticker.add(tickFn);
+      }
+
+      // ---- magnetic CTA (hover devices only) ----
+      const cta = q('.manif__cta')[0];
+      let magnet = null;
+      if (cta && window.matchMedia('(hover: hover)').matches) {
+        const xT = gsap.quickTo(cta, 'x', { duration: 0.4, ease: 'power3' });
+        const yT = gsap.quickTo(cta, 'y', { duration: 0.4, ease: 'power3' });
+        magnet = (e) => {
+          const r = cta.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width / 2);
+          const dy = e.clientY - (r.top + r.height / 2);
+          const d = Math.hypot(dx, dy);
+          const pull = d < 200 ? (1 - d / 200) * 0.42 : 0;
+          xT(dx * pull);
+          yT(dy * pull);
+        };
+        window.addEventListener('pointermove', magnet, { passive: true });
+      }
+
+      // ---- footer rises in ----
+      gsap.from('.bfoot__logo, .bfoot__grid > div, .bfoot__legal', {
+        scrollTrigger: { trigger: '.bfoot', start: 'top 85%' },
+        y: 36,
+        autoAlpha: 0,
+        stagger: 0.08,
+        duration: 0.8,
+        ease: 'power3.out',
+      });
+
+      return () => {
+        if (tickFn) gsap.ticker.remove(tickFn);
+        if (magnet) window.removeEventListener('pointermove', magnet);
+      };
     });
 
     return () => mm.revert();
@@ -272,10 +371,14 @@ export default function StanApp() {
             </p>
             <h1 className="hero__title">
               <span>
-                <em>Build</em>
+                <em>
+                  <Chars text="Build" />
+                </em>
               </span>
               <span>
-                <em>your own.</em>
+                <em>
+                  <Chars text="your own." />
+                </em>
               </span>
             </h1>
             <p className="hero__sub">
@@ -291,8 +394,13 @@ export default function StanApp() {
               </a>
             </div>
           </div>
-          {/* purple wipe that swallows the hero */}
+          {/* purple blinds that swallow the hero */}
           <div className="hero__wipe" aria-hidden="true">
+            <i />
+            <i />
+            <i />
+            <i />
+            <i />
             <p className="hero__wipemark">The family</p>
           </div>
         </section>
@@ -310,7 +418,9 @@ export default function StanApp() {
           {FAMILY.map((f) => (
             <article className="fam__act" key={f.id}>
               <img className="fam__icon" src={f.icon} alt="" />
-              <h2 className="fam__head">{f.name}</h2>
+              <h2 className="fam__head">
+                <Chars text={f.name} />
+              </h2>
               <p className="fam__tag">{f.tag}</p>
               <p className="fam__copy">{f.copy}</p>
             </article>
@@ -320,12 +430,26 @@ export default function StanApp() {
           </p>
         </section>
 
+        {/* ---- marquee: velocity-reactive band ---- */}
+        <section className="mq" aria-hidden="true">
+          <div className="mq__track">
+            {[...MARQUEE, ...MARQUEE].map((w, i) => (
+              <span className={`mq__item${i % 2 ? ' mq__item--line' : ''}`} key={i}>
+                {w}
+              </span>
+            ))}
+          </div>
+        </section>
+
         {/* ---- wipe panel: stanley ---- */}
         <section className="wf" id="stanley">
           <div className="wf__media">
             <img className="wf__photo" src={PHOTOS.stanley} alt="A studio microphone in low light" />
             <div className="wf__tint" />
           </div>
+          <span className="wf__ghost" aria-hidden="true">
+            Stanley
+          </span>
           <div className="wf__body">
             <img className="wf__badge" src="/icon_stanley.svg" alt="" />
             <p className="wf__kick">Stanley · Your AI Creator Assistant</p>
@@ -347,6 +471,9 @@ export default function StanApp() {
             <img className="wf__photo" src={PHOTOS.store} alt="A creator filming at a home studio" />
             <div className="wf__tint" />
           </div>
+          <span className="wf__ghost" aria-hidden="true">
+            Store
+          </span>
           <div className="wf__body">
             <img className="wf__badge" src="/icon_store.svg" alt="" />
             <p className="wf__kick">Store · Your All-in-One Creator Store</p>
@@ -364,20 +491,23 @@ export default function StanApp() {
 
         {/* ---- manifesto ---- */}
         <section className="manif">
+          <div className="manif__halo" aria-hidden="true" />
           <h2 className="manif__title">
             {MANIFESTO.map((w, i) => (
               <span key={i}>{w}</span>
             ))}
           </h2>
-          <a
-            className="pill pill--white manif__cta"
-            href="https://stan.store"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Start building
-            <span className="pill__orb">↑</span>
-          </a>
+          <div className="manif__ctawrap">
+            <a
+              className="pill pill--white manif__cta"
+              href="https://stan.store"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Start building
+              <span className="pill__orb">↑</span>
+            </a>
+          </div>
         </section>
       </main>
 

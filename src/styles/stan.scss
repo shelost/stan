@@ -31,6 +31,13 @@ body {
   line-height: 0.88;
 }
 
+// animatable letter (from the Chars splitter)
+.ch {
+  display: inline-block;
+  font-style: normal;
+  will-change: transform;
+}
+
 // ---- pills ----
 .pill {
   display: inline-flex;
@@ -317,11 +324,6 @@ body {
       em {
         display: block;
         font-style: normal;
-        animation: line-up 1s cubic-bezier(0.22, 1, 0.36, 1) both;
-      }
-
-      &:nth-child(2) em {
-        animation-delay: 0.12s;
       }
     }
   }
@@ -349,32 +351,30 @@ body {
     animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.68s both;
   }
 
-  // the purple sheet that swallows the hero on scroll
+  // the purple blinds that swallow the hero on scroll
   &__wipe {
     position: absolute;
     inset: 0;
-    background: $violet;
-    clip-path: inset(100% 0% 0% 0%);
-    display: grid;
-    place-items: center;
-    will-change: clip-path;
+    display: flex;
+    pointer-events: none;
+
+    i {
+      flex: 1;
+      background: $violet;
+      transform: translateY(101%);
+      will-change: transform;
+    }
   }
 
   &__wipemark {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
     @include label;
     font-size: 13px;
     letter-spacing: 0.3em;
     color: $lav;
-  }
-}
-
-@keyframes line-up {
-  from {
-    transform: translateY(110%);
-  }
-
-  to {
-    transform: translateY(0);
   }
 }
 
@@ -452,7 +452,9 @@ body {
   .fam__head {
     @include display(clamp(52px, 7vw, 110px));
     color: #fff;
-    will-change: clip-path, transform;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
   }
 
   .fam__tag {
@@ -481,6 +483,32 @@ body {
   font-size: 10px;
   letter-spacing: 0.3em;
   color: rgba(255, 255, 255, 0.45);
+}
+
+// ---- velocity-reactive marquee ----
+.mq {
+  background: $paper;
+  padding: clamp(44px, 9vh, 92px) 0;
+  overflow: hidden;
+
+  &__track {
+    display: flex;
+    gap: clamp(30px, 4vw, 60px);
+    width: max-content;
+    padding-left: clamp(30px, 4vw, 60px);
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  &__item {
+    @include display(clamp(56px, 9vw, 140px));
+    color: $violet;
+
+    &--line {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(22, 20, 42, 0.35);
+    }
+  }
 }
 
 // ---- full-screen wipe feature panels ----
@@ -515,6 +543,21 @@ body {
     background:
       linear-gradient(270deg, rgba(22, 20, 42, 0.62) 0%, rgba(22, 20, 42, 0.12) 60%),
       linear-gradient(0deg, rgba(22, 20, 42, 0.3), rgba(22, 20, 42, 0) 40%);
+  }
+
+  // giant outlined product name drifting behind the copy
+  &__ghost {
+    position: absolute;
+    top: clamp(24px, 8vh, 80px);
+    left: 0;
+    width: 100%;
+    @include display(clamp(110px, 20vw, 320px));
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    opacity: 0.55;
+    white-space: nowrap;
+    pointer-events: none;
+    will-change: transform;
   }
 
   &__body {
@@ -577,7 +620,20 @@ body {
   padding: 0 clamp(20px, 6vw, 80px);
   text-align: center;
 
+  &__halo {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: min(74vh, 92vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(210, 206, 255, 0.32), rgba(210, 206, 255, 0) 70%);
+    pointer-events: none;
+    will-change: transform, opacity;
+  }
+
   &__title {
+    position: relative;
     @include display(clamp(38px, 6vw, 92px));
     color: #fff;
     max-width: 17ch;
@@ -585,8 +641,13 @@ body {
     span {
       display: inline-block;
       margin: 0 0.18ch;
-      will-change: opacity, transform;
+      will-change: opacity, transform, filter;
     }
+  }
+
+  &__ctawrap {
+    position: relative;
+    will-change: transform, opacity;
   }
 }
 
@@ -744,7 +805,6 @@ body {
     scroll-behavior: auto;
   }
 
-  .hero__title em,
   .hero__eyebrow,
   .hero__sub,
   .hero__actions {
@@ -752,6 +812,14 @@ body {
   }
 
   .hero__wipe {
+    display: none;
+  }
+
+  .mq__track {
+    transform: none !important;
+  }
+
+  .wf__ghost {
     display: none;
   }
 
@@ -789,9 +857,10 @@ body {
   }
 
   .manif__title span,
-  .manif__cta {
+  .manif__ctawrap {
     opacity: 1 !important;
     visibility: visible !important;
     transform: none !important;
+    filter: none !important;
   }
 }
