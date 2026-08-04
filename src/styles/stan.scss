@@ -292,26 +292,20 @@ body {
     will-change: transform, opacity;
   }
 
-  &__eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    @include label;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    color: rgba(255, 255, 255, 0.9);
-    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.35s both;
+  // brand as a hero-level signal — not a tiny eyebrow chip
+  &__brand {
+    animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 
     img {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      box-shadow: 0 4px 16px rgba(22, 20, 42, 0.35);
+      display: block;
+      height: clamp(28px, 3.2vw, 40px);
+      width: auto;
+      opacity: 0.95;
     }
   }
 
   &__title {
-    margin-top: 20px;
+    margin-top: 18px;
     @include display(clamp(58px, min(10.5vw, 17vh), 152px));
     color: #fff;
 
@@ -330,16 +324,13 @@ body {
 
   &__sub {
     margin-top: 20px;
+    max-width: 34ch;
     font-size: clamp(16px, 1.6vw, 20px);
     font-weight: 450;
     letter-spacing: -0.016em;
+    line-height: 1.35;
     color: rgba(255, 255, 255, 0.92);
     animation: rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
-
-    b {
-      font-weight: 650;
-      color: $lav;
-    }
   }
 
   &__actions {
@@ -388,6 +379,122 @@ body {
     opacity: 1;
     transform: none;
   }
+}
+
+// ---- creed: identity beliefs before the product kit ----
+.creed {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: $violet;
+  color: #fff;
+}
+
+.creed__eyebrow {
+  position: absolute;
+  top: clamp(88px, 14vh, 120px);
+  left: clamp(18px, 5vw, 72px);
+  @include label;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: $lav;
+  opacity: 0.85;
+}
+
+.creed__count {
+  position: absolute;
+  top: 50%;
+  right: clamp(16px, 4vw, 60px);
+  transform: translateY(-50%);
+  height: 1em;
+  overflow: hidden;
+  font-size: clamp(80px, 14vw, 200px);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.14);
+  pointer-events: none;
+
+  i {
+    display: block;
+    font-style: normal;
+    will-change: transform;
+  }
+
+  b {
+    display: block;
+    font-weight: 600;
+  }
+}
+
+.creed__act {
+  position: absolute;
+  left: clamp(18px, 5vw, 72px);
+  right: clamp(18px, 12vw, 160px);
+  bottom: clamp(48px, 14vh, 120px);
+  max-width: 720px;
+  will-change: transform, opacity;
+}
+
+.creed__lead {
+  @include display(clamp(48px, 8vw, 120px));
+  color: #fff;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.creed__line {
+  margin-top: 18px;
+  max-width: 36ch;
+  font-size: clamp(16px, 1.7vw, 21px);
+  font-weight: 450;
+  letter-spacing: -0.018em;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.creed__hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  @include label;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+// ---- bridge: short handoff from belief → kit ----
+.bridge {
+  background: $paper;
+  color: $carbon;
+  padding: clamp(72px, 14vh, 140px) clamp(18px, 5vw, 72px);
+  text-align: center;
+}
+
+.bridge__mark {
+  @include label;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  color: $violet;
+  margin-bottom: 18px;
+}
+
+.bridge__title {
+  @include display(clamp(36px, 5.5vw, 72px));
+  max-width: 14ch;
+  margin: 0 auto;
+}
+
+.bridge__sub {
+  margin: 16px auto 0;
+  max-width: 34ch;
+  font-size: clamp(15px, 1.4vw, 18px);
+  font-weight: 450;
+  letter-spacing: -0.014em;
+  line-height: 1.4;
+  color: rgba(22, 20, 42, 0.58);
 }
 
 // ---- family act track ----
@@ -706,7 +813,7 @@ body {
 
 // ---- responsive ----
 @media (max-width: 940px) {
-  // keep the Products trigger on touch (onClick toggles the panel);
+  // keep the Family trigger on touch (onClick toggles the panel);
   // drop only the plain anchor links
   .isl__links a {
     display: none;
@@ -716,12 +823,14 @@ body {
     grid-template-columns: 1fr 1fr;
   }
 
+  .creed__count,
   .fam__count {
     top: 16%;
     right: 18px;
     font-size: 72px;
   }
 
+  .creed__act,
   .fam__act {
     right: 18px;
     max-width: none;
@@ -763,6 +872,21 @@ body {
     bottom: 30px;
   }
 
+  .creed__eyebrow {
+    top: 88px;
+    left: 16px;
+  }
+
+  .creed__act {
+    left: 16px;
+    bottom: 56px;
+  }
+
+  .creed__hint,
+  .fam__hint {
+    display: none;
+  }
+
   .fam__act {
     left: 16px;
     bottom: 52px;
@@ -772,10 +896,6 @@ body {
       height: 42px;
       margin-bottom: 12px;
     }
-  }
-
-  .fam__hint {
-    display: none;
   }
 
   .wf__body {
@@ -805,7 +925,7 @@ body {
     scroll-behavior: auto;
   }
 
-  .hero__eyebrow,
+  .hero__brand,
   .hero__sub,
   .hero__actions {
     animation: none;
@@ -823,26 +943,32 @@ body {
     display: none;
   }
 
+  .creed,
   .fam {
     height: auto;
     min-height: 100svh;
     padding: 120px 0 80px;
   }
 
+  .creed__act,
   .fam__act {
     position: relative;
     left: auto;
+    right: auto;
     bottom: auto;
     margin: 0 clamp(18px, 5vw, 72px) 64px;
     opacity: 1 !important;
     visibility: visible !important;
   }
 
-  .fam3d {
+  .creed__count,
+  .fam__count,
+  .creed__eyebrow,
+  .creed__hint {
     display: none;
   }
 
-  .fam__count {
+  .fam3d {
     display: none;
   }
 

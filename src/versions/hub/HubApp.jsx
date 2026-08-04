@@ -5,8 +5,10 @@ export default function HubApp() {
   return (
     <div className="hub">
       <header className="hub__head">
-        <p className="hub__eyebrow">Stan · The Standard</p>
-        <h1 className="hub__title">Something big is coming…</h1>
+        <p className="hub__eyebrow">
+          <a href="/">Stan · The Standard</a> · Options
+        </p>
+        <h1 className="hub__title">Pick a presentation</h1>
       </header>
 
       <ol className="hub__list">
@@ -38,9 +40,7 @@ export default function HubApp() {
         <span>
           {editions.length} editions · {versions.length} presentations · one data set
         </span>
-        <a href="https://stan.store" target="_blank" rel="noreferrer">
-          stan.store ↗
-        </a>
+        <a href="/">← Back to The Standard</a>
       </footer>
     </div>
   );

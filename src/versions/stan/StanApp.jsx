@@ -9,51 +9,82 @@ const IMG = (id, w = 1800) =>
   `https://images.unsplash.com/${id}?q=80&w=${w}&auto=format&fit=crop`;
 
 const PHOTOS = {
-  stanley: IMG('photo-1610716632424-4d45990bcd48', 2200),
-  store: IMG('photo-1664277497095-424e085175e8', 2200),
+  stanley: IMG('photo-1522202176988-66273c2fd55f', 2200),
+  store: IMG('photo-1556761175-b413da4baf72', 2200),
 };
+
+// Identity first. Products are the kit — not the point.
+const CREED = [
+  {
+    id: 'name',
+    lead: 'Your name.',
+    line: 'On the door. On the work. On the thing you refuse to rent from anyone else.',
+  },
+  {
+    id: 'audience',
+    lead: 'Your audience.',
+    line: 'Not borrowed reach. People who chose you — and stay because the work is real.',
+  },
+  {
+    id: 'terms',
+    lead: 'Your terms.',
+    line: 'What you sell. What you charge. Who you answer to. The relationship stays yours.',
+  },
+  {
+    id: 'craft',
+    lead: 'Your craft.',
+    line: 'The drafts. The late nights. The thing only you can make — shipped on your clock.',
+  },
+];
 
 const FAMILY = [
   {
     id: 'stan',
     icon: '/icon_stan.svg',
     name: 'Stan',
-    tag: 'Build Your Own.',
-    copy: 'One brand on the door — yours. Stan is the home of everything you make, sell and say.',
+    tag: 'The home with your name on it',
+    copy: 'One brand on the door — yours. Everything you make, sell, and say, under one roof.',
   },
   {
     id: 'stanley',
     icon: '/icon_stanley.svg',
     name: 'Stanley',
-    tag: 'Your AI Creator Assistant',
-    copy: 'Drafts, replies, product pages — written in your voice while you stay in the studio.',
+    tag: 'A second brain that sounds like you',
+    copy: 'Drafts, replies, pages — in your voice — so you can stay in the work that matters.',
   },
   {
     id: 'store',
     icon: '/icon_store.svg',
     name: 'Store',
-    tag: 'Your All-in-One Creator Store',
-    copy: 'Courses, coaching, community. One link in your bio, live in minutes, no code.',
+    tag: 'Where your work meets money',
+    copy: 'Courses, coaching, community. One link. Live when you are. No middleman owning the room.',
   },
   {
     id: 'stories',
     icon: '/icon_stories.svg',
     name: 'Stories',
-    tag: 'Real Creators. Real Stories.',
-    copy: 'The people already building on Stan — how they started and what they wish they knew.',
+    tag: 'Proof it is possible',
+    copy: 'Builders already on Stan — how they started, what they own, what they wish they knew.',
   },
   {
     id: 'studio',
     icon: '/icon_studio.svg',
     name: 'Studio',
-    tag: 'Your AI Video Editor',
-    copy: 'Rough cut to posted clip in minutes. Hook found, dead air gone, captions in your style.',
+    tag: 'Ship the cut. Keep going.',
+    copy: 'Rough cut to posted clip without losing the week. The edit that protects the craft.',
   },
 ];
 
-const MANIFESTO = 'Nobody hands you an audience. You build one.'.split(' ');
+const MANIFESTO = 'Nobody hands you a business. You build your own.'.split(' ');
 
-const MARQUEE = ['Build Your Own', 'Stan', 'Build Your Own', 'Stanley', 'Build Your Own', 'Store'];
+const MARQUEE = [
+  'Build Your Own',
+  'Stan',
+  'Your Name',
+  'Your Audience',
+  'Your Terms',
+  'Your Craft',
+];
 
 // split a string into animatable letters
 const Chars = ({ text }) =>
@@ -128,6 +159,49 @@ export default function StanApp() {
           0.75
         );
 
+      // ---- creed: pinned belief track — audience as the hero ----
+      const creedActs = q('.creed__act');
+      const creedN = creedActs.length;
+      const creedTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.creed',
+          start: 'top top',
+          end: `+=${creedN * 110}%`,
+          scrub: true,
+          pin: true,
+        },
+      });
+
+      creedActs.forEach((act, i) => {
+        const at = i * 1;
+        gsap.set(act, { autoAlpha: i === 0 ? 1 : 0 });
+        if (i > 0) {
+          creedTl.to(act, { autoAlpha: 1, duration: 0.16 }, at - 0.16);
+          creedTl.fromTo(
+            act.querySelectorAll('.creed__lead .ch'),
+            { yPercent: 120, rotate: 6 },
+            { yPercent: 0, rotate: 0, stagger: 0.028, ease: 'back.out(1.5)', duration: 0.3 },
+            at - 0.1
+          );
+          creedTl.fromTo(
+            act.querySelector('.creed__line'),
+            { y: 22, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, ease: 'power2.out', duration: 0.24 },
+            at - 0.05
+          );
+        }
+        if (i < creedN - 1) {
+          creedTl.to(act, { autoAlpha: 0, yPercent: -6, duration: 0.18 }, at + 0.65);
+          creedTl.set(act, { yPercent: 0 }, at + 0.86);
+        }
+        creedTl.to(
+          '.creed__count i',
+          { yPercent: -i * 100, ease: 'power2.inOut', duration: 0.28 },
+          Math.max(0, at - 0.1)
+        );
+      });
+      creedTl.set({}, {}, creedN - 1 + 0.35);
+
       // ---- family: one long pinned act track over the 3D scene ----
       const acts = q('.fam__act');
       const N = acts.length;
@@ -149,7 +223,7 @@ export default function StanApp() {
         const tag = act.querySelector('.fam__tag');
         const copy = act.querySelector('.fam__copy');
         const icon = act.querySelector('.fam__icon');
-        const at = i * 1; // one unit per act
+        const at = i * 1;
         gsap.set(act, { autoAlpha: i === 0 ? 1 : 0 });
         if (i > 0) {
           famTl.to(act, { autoAlpha: 1, duration: 0.18 }, at - 0.18);
@@ -176,7 +250,7 @@ export default function StanApp() {
           Math.max(0, at - 0.12)
         );
       });
-      famTl.set({}, {}, N - 1 + 0.4); // tail room on the last act
+      famTl.set({}, {}, N - 1 + 0.4);
 
       // ---- feature panels: card melts to full bleed, ghost name slides behind ----
       q('.wf').forEach((sec) => {
@@ -280,7 +354,16 @@ export default function StanApp() {
         window.addEventListener('pointermove', magnet, { passive: true });
       }
 
-      // ---- footer rises in ----
+      // ---- bridge + footer rise in ----
+      gsap.from('.bridge__mark, .bridge__title, .bridge__sub', {
+        scrollTrigger: { trigger: '.bridge', start: 'top 80%' },
+        y: 28,
+        autoAlpha: 0,
+        stagger: 0.1,
+        duration: 0.75,
+        ease: 'power3.out',
+      });
+
       gsap.from('.bfoot__logo, .bfoot__grid > div, .bfoot__legal', {
         scrollTrigger: { trigger: '.bfoot', start: 'top 85%' },
         y: 36,
@@ -308,6 +391,9 @@ export default function StanApp() {
             <img src="/stan_logo.svg" alt="Stan" />
           </a>
           <nav className="isl__links">
+            <a href="#creed" onMouseEnter={() => setPanel(false)}>
+              The idea
+            </a>
             <button
               type="button"
               className="isl__trigger"
@@ -315,7 +401,7 @@ export default function StanApp() {
               onMouseEnter={() => canHover() && setPanel(true)}
               onClick={() => setPanel((v) => !v)}
             >
-              Products
+              Family
               <svg viewBox="0 0 16 16" aria-hidden="true">
                 <path
                   d="M4 6l4 4 4-4"
@@ -327,18 +413,12 @@ export default function StanApp() {
                 />
               </svg>
             </button>
-            <a href="#stanley" onMouseEnter={() => setPanel(false)}>
-              Stanley
-            </a>
-            <a href="#store" onMouseEnter={() => setPanel(false)}>
-              Store
-            </a>
             <a href="/" onMouseEnter={() => setPanel(false)}>
               Editions
             </a>
           </nav>
           <a className="isl__cta" href="https://stan.store" target="_blank" rel="noreferrer">
-            Get Started
+            Start building
             <span>↑</span>
           </a>
         </div>
@@ -361,13 +441,12 @@ export default function StanApp() {
         {/* ---- hero ---- */}
         <section className="hero">
           <div className="hero__media">
-            <img className="hero__photo" src="/computer.jpg" alt="A creator's desk mid-edit" />
+            <img className="hero__photo" src="/computer.jpg" alt="A builder at work" />
           </div>
           <div className="hero__scrim" />
           <div className="hero__body">
-            <p className="hero__eyebrow">
-              <img src="/icon_stan.svg" alt="" />
-              Stan — for the ones who make
+            <p className="hero__brand">
+              <img src="/stan_logo.svg" alt="Stan" />
             </p>
             <h1 className="hero__title">
               <span>
@@ -382,30 +461,61 @@ export default function StanApp() {
               </span>
             </h1>
             <p className="hero__sub">
-              The <b>easiest</b> way to make money online.
+              For entrepreneurs and creators making something with their name on it.
             </p>
             <div className="hero__actions">
               <a className="pill pill--white" href="https://stan.store" target="_blank" rel="noreferrer">
-                Get Started
+                Start building
                 <span className="pill__orb">↑</span>
               </a>
-              <a className="pill pill--line" href="#family">
-                Meet the family
+              <a className="pill pill--line" href="#creed">
+                The idea
               </a>
             </div>
           </div>
-          {/* purple blinds that swallow the hero */}
           <div className="hero__wipe" aria-hidden="true">
             <i />
             <i />
             <i />
             <i />
             <i />
-            <p className="hero__wipemark">The family</p>
+            <p className="hero__wipemark">Build</p>
           </div>
         </section>
 
-        {/* ---- family: provenance-style pinned act track ---- */}
+        {/* ---- creed: the belief, before the kit ---- */}
+        <section className="creed" id="creed">
+          <p className="creed__eyebrow">What we mean</p>
+          <div className="creed__count" aria-hidden="true">
+            <i>
+              {CREED.map((c, n) => (
+                <b key={c.id}>0{n + 1}</b>
+              ))}
+            </i>
+          </div>
+          {CREED.map((c) => (
+            <article className="creed__act" key={c.id}>
+              <h2 className="creed__lead">
+                <Chars text={c.lead} />
+              </h2>
+              <p className="creed__line">{c.line}</p>
+            </article>
+          ))}
+          <p className="creed__hint" aria-hidden="true">
+            Keep scrolling
+          </p>
+        </section>
+
+        {/* ---- bridge into the kit ---- */}
+        <section className="bridge">
+          <p className="bridge__mark">The kit</p>
+          <h2 className="bridge__title">Tools for the ones who build.</h2>
+          <p className="bridge__sub">
+            Not the point of the story — the gear that gets you there.
+          </p>
+        </section>
+
+        {/* ---- family: products as support, not the headline ---- */}
         <section className="fam" id="family">
           <FamilyScene progressRef={famProgress} />
           <div className="fam__count" aria-hidden="true">
@@ -444,7 +554,7 @@ export default function StanApp() {
         {/* ---- wipe panel: stanley ---- */}
         <section className="wf" id="stanley">
           <div className="wf__media">
-            <img className="wf__photo" src={PHOTOS.stanley} alt="A studio microphone in low light" />
+            <img className="wf__photo" src={PHOTOS.stanley} alt="Builders collaborating on their work" />
             <div className="wf__tint" />
           </div>
           <span className="wf__ghost" aria-hidden="true">
@@ -452,11 +562,11 @@ export default function StanApp() {
           </span>
           <div className="wf__body">
             <img className="wf__badge" src="/icon_stanley.svg" alt="" />
-            <p className="wf__kick">Stanley · Your AI Creator Assistant</p>
-            <h2>Never run out of things to say.</h2>
+            <p className="wf__kick">Stanley · Built for builders</p>
+            <h2>Stay in the work. Let the rest keep moving.</h2>
             <p className="wf__copy">
-              Stanley studies what you make and writes like you mean it — while you stay in the
-              studio. The first hire that costs nothing and never clocks out.
+              An assistant that studies how you sound — so drafts, replies, and pages keep pace
+              while you build the thing only you can.
             </p>
             <a className="pill pill--white" href="/chat">
               Meet Stanley
@@ -468,7 +578,7 @@ export default function StanApp() {
         {/* ---- wipe panel: store ---- */}
         <section className="wf wf--right" id="store">
           <div className="wf__media">
-            <img className="wf__photo" src={PHOTOS.store} alt="A creator filming at a home studio" />
+            <img className="wf__photo" src={PHOTOS.store} alt="An entrepreneur presenting their work" />
             <div className="wf__tint" />
           </div>
           <span className="wf__ghost" aria-hidden="true">
@@ -476,11 +586,11 @@ export default function StanApp() {
           </span>
           <div className="wf__body">
             <img className="wf__badge" src="/icon_store.svg" alt="" />
-            <p className="wf__kick">Store · Your All-in-One Creator Store</p>
-            <h2>One link. Everything you sell.</h2>
+            <p className="wf__kick">Store · Your terms</p>
+            <h2>One link. The business is yours.</h2>
             <p className="wf__copy">
-              Courses, coaching, downloads, community — live in minutes from the link in your bio.
-              No one between you and the people who back you.
+              Put courses, coaching, downloads, community behind a door with your name on it. Live
+              from the link in your bio — no one renting the relationship.
             </p>
             <a className="pill pill--white" href="https://stan.store" target="_blank" rel="noreferrer">
               Open your store
@@ -515,6 +625,13 @@ export default function StanApp() {
         <img className="bfoot__logo" src="/stan_logo.svg" alt="Stan" />
         <div className="bfoot__grid">
           <div>
+            <p className="bfoot__label">The idea</p>
+            <a href="#creed">Build your own</a>
+            <a href="#creed">Your name</a>
+            <a href="#creed">Your audience</a>
+            <a href="#creed">Your terms</a>
+          </div>
+          <div>
             <p className="bfoot__label">Family</p>
             <a href="/chat">Stanley</a>
             <a href="https://stan.store" target="_blank" rel="noreferrer">
@@ -524,13 +641,8 @@ export default function StanApp() {
             <a href="#family">Studio</a>
           </div>
           <div>
-            <p className="bfoot__label">The Standard</p>
-            <a href="/">All nine</a>
-            <a href="/editions">Editions</a>
-            <a href="/books">Books</a>
-          </div>
-          <div>
             <p className="bfoot__label">Company</p>
+            <a href="/">Editions</a>
             <a href="https://stan.store" target="_blank" rel="noreferrer">
               stan.store
             </a>

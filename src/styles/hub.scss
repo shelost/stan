@@ -16,6 +16,10 @@ body {
   &__eyebrow {
     @include label;
     color: $ink-3;
+
+    a:hover {
+      color: $ink;
+    }
   }
 
   &__title {

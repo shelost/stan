@@ -1,0 +1,1195 @@
+@font-face {
+  font-family: 'Futura Condensed ExtraBold';
+  src: url('/fonts/FuturaCondensedExtraBold.woff2') format('woff2');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Futura Medium';
+  src: url('/fonts/FuturaMedium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+// ---------------------------------------------------------------
+// Nike — 2010s aspirational cut of Build Your Own.
+// Futura Condensed ExtraBold, black field, white type, roster cards.
+// ---------------------------------------------------------------
+
+$ink: #0a0a0a;
+$chalk: #f4f4f4;
+$mute: rgba(244, 244, 244, 0.55);
+$line: rgba(244, 244, 244, 0.14);
+$volt: #6355ff;
+$display: 'Futura Condensed ExtraBold', 'Oswald', 'Arial Narrow', Impact, sans-serif;
+$body: 'Futura Medium', 'Futura', Helvetica, Arial, sans-serif;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $body;
+  background: $ink;
+  color: $chalk;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ch {
+  display: inline-block;
+  font-style: normal;
+  will-change: transform;
+}
+
+@mixin futura($size) {
+  font-family: $display;
+  font-size: $size;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+@mixin label {
+  font-family: $body;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+// ---- buttons ----
+.nbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  border: 1.5px solid transparent;
+  font-family: $display;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    background 0.16s ease,
+    color 0.16s ease,
+    border-color 0.16s ease,
+    transform 0.16s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &--light {
+    background: $chalk;
+    color: $ink;
+
+    &:hover {
+      background: $volt;
+      color: #fff;
+    }
+  }
+
+  &--ghost {
+    border-color: rgba(244, 244, 244, 0.45);
+    color: $chalk;
+
+    &:hover {
+      border-color: $chalk;
+      background: rgba(244, 244, 244, 0.06);
+    }
+  }
+}
+
+// ---- top bar ----
+.nbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 58px;
+  padding: 0 clamp(16px, 3vw, 36px);
+  background: rgba(10, 10, 10, 0.78);
+  border-bottom: 1px solid $line;
+  backdrop-filter: blur(16px);
+
+  &__logo img {
+    display: block;
+    height: 22px;
+    width: auto;
+  }
+
+  &__links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    font-family: $body;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: $mute;
+
+    a:hover {
+      color: $chalk;
+    }
+  }
+
+  &__cta {
+    font-family: $display;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 9px 16px;
+    background: $chalk;
+    color: $ink;
+    transition:
+      background 0.16s ease,
+      color 0.16s ease;
+
+    &:hover {
+      background: $volt;
+      color: #fff;
+    }
+  }
+}
+
+// ---- hero (pink panel spotlight) ----
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(88px, 12vh, 120px) clamp(18px, 5vw, 72px) clamp(40px, 8vh, 72px);
+  overflow: hidden;
+  background: #000;
+  color: $chalk;
+}
+
+.hero__left {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.hero__logo {
+  display: block;
+  height: clamp(22px, 2.4vw, 30px);
+  width: auto;
+  margin-bottom: clamp(20px, 3vh, 36px);
+}
+
+.hero__title {
+  @include futura(clamp(72px, 13.5vw, 168px));
+  color: #fff;
+
+  span {
+    display: block;
+    white-space: nowrap;
+  }
+}
+
+.hero__stage {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 520px);
+  aspect-ratio: 4 / 5;
+  justify-self: end;
+  margin-right: clamp(0px, 2vw, 24px);
+  overflow: visible;
+}
+
+.hero__panel {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: 14%;
+  bottom: 8%;
+  border-radius: clamp(20px, 2.6vw, 32px);
+  z-index: 0;
+}
+
+.hero__photo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  height: 96%;
+  object-fit: cover;
+  object-position: center 8%;
+  filter: contrast(1.04);
+  mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+  -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+}
+
+.hero__meta {
+  position: absolute;
+  right: 6%;
+  bottom: 8%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+
+  strong {
+    font-family: $display;
+    font-size: clamp(14px, 1.5vw, 18px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  em {
+    font-style: normal;
+    font-size: clamp(12px, 1.1vw, 14px);
+    color: rgba(255, 255, 255, 0.72);
+  }
+}
+
+.hero__pill {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #000;
+  font-family: $body;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+// ---- products funnel ----
+.funnel {
+  background: #000;
+  color: $chalk;
+  padding: clamp(72px, 14vh, 140px) clamp(18px, 5vw, 72px);
+  border-top: 1px solid $line;
+}
+
+.funnel__head {
+  max-width: 720px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.funnel__eyebrow {
+  @include label;
+  color: $volt;
+  margin-bottom: 16px;
+}
+
+.funnel__title {
+  @include futura(clamp(42px, 8vw, 96px));
+}
+
+.funnel__chart {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding-top: 8px;
+}
+
+.funnel__apex {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(8px, 2vh, 20px);
+
+  img {
+    display: block;
+    height: clamp(36px, 5vw, 52px);
+    width: auto;
+    filter: drop-shadow(0 0 24px rgba(99, 85, 255, 0.45));
+  }
+}
+
+.funnel__edges {
+  display: block;
+  width: min(92%, 880px);
+  height: clamp(72px, 14vh, 140px);
+  margin: 0 auto -4px;
+  overflow: visible;
+
+  .funnel__edge {
+    fill: none;
+    stroke: $volt;
+    stroke-width: 0.55;
+    stroke-linecap: round;
+    opacity: 0.85;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
+  }
+}
+
+.funnel__row {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 28px);
+  position: relative;
+  z-index: 2;
+}
+
+.funnel__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 8px 6px 0;
+
+  strong {
+    font-family: $display;
+    font-size: clamp(18px, 2.4vw, 28px);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  span {
+    max-width: 18ch;
+    font-size: 13px;
+    line-height: 1.4;
+    color: $mute;
+  }
+}
+
+.funnel__icon {
+  display: block;
+  width: clamp(64px, 8vw, 88px);
+  height: clamp(64px, 8vw, 88px);
+  border-radius: 20px;
+  box-shadow: 0 0 0 1px rgba(99, 85, 255, 0.35), 0 12px 40px rgba(99, 85, 255, 0.18);
+}
+
+// ---- wall (five people · Just Do It quiet power) ----
+.wall {
+  background: #000;
+  color: #fff;
+}
+
+.wall__stage {
+  position: relative;
+  overflow: hidden;
+  height: 100svh;
+  min-height: 640px;
+  background: #000;
+}
+
+.wall__cols {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: center;
+  gap: clamp(4px, 1vw, 16px);
+  padding: 0 clamp(4vw, 6vw, 80px);
+  // Dissolve into pure black — faces live in the middle band
+  mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 58%, transparent 88%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 58%, transparent 88%);
+}
+
+.wall__col {
+  position: relative;
+  height: 62%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wall__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  filter: contrast(1.05);
+  pointer-events: none;
+  user-select: none;
+}
+
+.wall__copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px clamp(12%, 14vh, 18%);
+  pointer-events: none;
+}
+
+.wall__title {
+  @include futura(clamp(40px, 8.5vw, 104px));
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.04em;
+}
+
+.wall__mark {
+  display: block;
+  height: 14px;
+  width: auto;
+  margin-top: clamp(14px, 2.4vh, 22px);
+  opacity: 0.75;
+}
+
+// ---- pace strip ----
+.pace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px clamp(18px, 5vw, 72px);
+  border-top: 1px solid $line;
+  border-bottom: 1px solid $line;
+  background: $ink;
+}
+
+.pace__track {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-family: $display;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  color: $mute;
+
+  i {
+    width: 48px;
+    height: 1px;
+    background: $line;
+  }
+}
+
+.pace__note {
+  @include label;
+  color: rgba(244, 244, 244, 0.35);
+}
+
+// ---- creed ----
+.creed {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: $ink;
+  color: $chalk;
+}
+
+.creed__eyebrow {
+  position: absolute;
+  top: 88px;
+  left: clamp(18px, 5vw, 72px);
+  @include label;
+  color: $volt;
+}
+
+.creed__meter {
+  position: absolute;
+  top: 96px;
+  right: clamp(18px, 5vw, 72px);
+  width: min(220px, 30vw);
+  height: 2px;
+  background: $line;
+}
+
+.creed__tick {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: $volt;
+  transform: translateX(-50%);
+}
+
+.creed__act {
+  position: absolute;
+  left: clamp(18px, 5vw, 72px);
+  right: clamp(18px, 10vw, 140px);
+  bottom: clamp(56px, 14vh, 120px);
+  max-width: 860px;
+  will-change: transform, opacity;
+}
+
+.creed__mark {
+  margin-bottom: 14px;
+  font-family: $display;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+  color: $volt;
+}
+
+.creed__lead {
+  @include futura(clamp(52px, 10vw, 128px));
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  white-space: nowrap;
+}
+
+.creed__line {
+  margin-top: 18px;
+  max-width: 34ch;
+  font-size: clamp(16px, 1.7vw, 21px);
+  line-height: 1.4;
+  color: $mute;
+}
+
+.creed__hint {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  @include label;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: rgba(244, 244, 244, 0.35);
+}
+
+// ---- roster / product cards ----
+.roster {
+  background: #e8e8e8;
+  color: $ink;
+  padding: clamp(64px, 12vh, 120px) clamp(16px, 3vw, 40px) clamp(72px, 12vh, 120px);
+}
+
+.roster__head {
+  max-width: 720px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.roster__eyebrow {
+  @include label;
+  color: rgba(10, 10, 10, 0.45);
+  margin-bottom: 16px;
+}
+
+.roster__title {
+  @include futura(clamp(48px, 9vw, 110px));
+  color: $ink;
+}
+
+.roster__sub {
+  margin: 18px auto 0;
+  max-width: 36ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgba(10, 10, 10, 0.55);
+}
+
+.roster__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 3vw, 36px);
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.pcard {
+  &__label {
+    margin-bottom: 8px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: rgba(10, 10, 10, 0.4);
+  }
+
+  &__frame {
+    position: relative;
+    aspect-ratio: 16 / 11;
+    background: #000;
+    overflow: hidden;
+    color: #fff;
+  }
+
+  &__brand {
+    position: absolute;
+    top: 5.5%;
+    left: 4.5%;
+    z-index: 3;
+
+    img {
+      display: block;
+      height: clamp(14px, 1.6vw, 20px);
+      width: auto;
+    }
+  }
+
+  &__num {
+    position: absolute;
+    top: 5.5%;
+    right: 4.5%;
+    z-index: 3;
+    font-family: $display;
+    font-size: clamp(12px, 1.3vw, 16px);
+    letter-spacing: 0.12em;
+    color: rgba(255, 255, 255, 0.45);
+  }
+
+  &__slogan {
+    position: absolute;
+    left: 4%;
+    top: 16%;
+    z-index: 3;
+    max-width: 54%;
+    @include futura(clamp(26px, 4vw, 58px));
+    color: #fff;
+    pointer-events: none;
+
+    span {
+      display: block;
+    }
+
+    &--long {
+      @include futura(clamp(22px, 3.2vw, 44px));
+      line-height: 0.92;
+    }
+  }
+
+  &__panel {
+    position: absolute;
+    right: 6%;
+    top: 14%;
+    bottom: 8%;
+    width: min(46%, 240px);
+    border-radius: clamp(14px, 1.6vw, 22px);
+    z-index: 1;
+  }
+
+  &__photo {
+    position: absolute;
+    right: -2%;
+    bottom: 0;
+    z-index: 2;
+    height: 96%;
+    width: auto;
+    max-width: 62%;
+    object-fit: cover;
+    object-position: center top;
+    filter: contrast(1.05);
+  }
+
+  &__meta {
+    position: absolute;
+    right: 4.5%;
+    bottom: 6%;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    text-align: right;
+
+    strong {
+      font-family: $display;
+      font-size: clamp(13px, 1.35vw, 18px);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    em {
+      font-style: normal;
+      font-size: clamp(11px, 1vw, 13px);
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+
+  &__pill {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #fff;
+    color: #000;
+    font-family: $body;
+    font-size: 11px;
+    letter-spacing: 0.02em;
+  }
+}
+
+// ---- marquee ----
+.mq {
+  background: $ink;
+  padding: clamp(36px, 7vh, 72px) 0;
+  overflow: hidden;
+  border-top: 1px solid $line;
+  border-bottom: 1px solid $line;
+}
+
+.mq__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.mq__item {
+  flex-shrink: 0;
+  padding: 0 0.35em;
+  @include futura(clamp(42px, 8vw, 96px));
+  color: $chalk;
+  white-space: nowrap;
+
+  &--slash {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(244, 244, 244, 0.35);
+  }
+}
+
+// ---- bridge ----
+.bridge {
+  background: $chalk;
+  color: $ink;
+  padding: clamp(72px, 14vh, 140px) clamp(18px, 5vw, 72px);
+  text-align: center;
+}
+
+.bridge__mark {
+  @include label;
+  color: rgba(10, 10, 10, 0.4);
+  margin-bottom: 18px;
+}
+
+.bridge__title {
+  @include futura(clamp(48px, 9vw, 120px));
+}
+
+.bridge__sub {
+  margin: 18px auto 0;
+  max-width: 34ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgba(10, 10, 10, 0.55);
+}
+
+// ---- kit / 3D ----
+.kit {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: $ink;
+  color: $chalk;
+}
+
+.fam3d {
+  position: absolute;
+  inset: 0;
+
+  canvas {
+    display: block;
+  }
+}
+
+.kit__count {
+  position: absolute;
+  top: 50%;
+  right: clamp(16px, 4vw, 60px);
+  transform: translateY(-50%);
+  height: 1em;
+  overflow: hidden;
+  font-family: $display;
+  font-size: clamp(80px, 14vw, 200px);
+  line-height: 1;
+  color: rgba(244, 244, 244, 0.12);
+  pointer-events: none;
+
+  i {
+    display: block;
+    font-style: normal;
+    will-change: transform;
+  }
+
+  b {
+    display: block;
+    font-weight: 800;
+  }
+}
+
+.kit__act {
+  position: absolute;
+  left: clamp(18px, 5vw, 72px);
+  bottom: clamp(40px, 10vh, 96px);
+  max-width: 520px;
+  will-change: transform, opacity;
+}
+
+.kit__lead {
+  @include futura(clamp(48px, 7vw, 104px));
+  overflow: hidden;
+  padding-bottom: 0.1em;
+  white-space: nowrap;
+}
+
+.kit__tag {
+  margin-top: 12px;
+  font-size: clamp(15px, 1.5vw, 19px);
+  color: $volt;
+}
+
+.kit__copy {
+  margin-top: 10px;
+  max-width: 40ch;
+  font-size: 15px;
+  line-height: 1.45;
+  color: $mute;
+}
+
+.kit__hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  @include label;
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: rgba(244, 244, 244, 0.35);
+}
+
+// ---- billboards (Nike ad frames) ----
+.bill {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: #000;
+  color: #fff;
+}
+
+.bill__media {
+  position: absolute;
+  inset: 0;
+}
+
+.bill__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 16%;
+  filter: grayscale(1) contrast(1.08);
+}
+
+.bill--flip .bill__photo {
+  object-position: center 20%;
+  transform: scaleX(-1);
+}
+
+.bill__tint {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.35) 0%, transparent 28%, rgba(0, 0, 0, 0.55) 62%, rgba(0, 0, 0, 0.88) 100%),
+    radial-gradient(ellipse at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+.bill__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(72px, 12vh, 120px) clamp(18px, 5vw, 64px) clamp(36px, 8vh, 72px);
+  text-align: center;
+}
+
+.bill__title {
+  @include futura(clamp(48px, 9vw, 120px));
+  max-width: 14ch;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.45);
+
+  span {
+    display: block;
+  }
+}
+
+.bill__title--quote {
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  font-weight: 600;
+  font-size: clamp(28px, 4.6vw, 52px);
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  text-transform: none;
+  max-width: 22ch;
+}
+
+.bill__context {
+  margin-top: clamp(16px, 3vh, 28px);
+  max-width: 36ch;
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.bill__foot {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(28px, 6vh, 48px);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  img {
+    display: block;
+    height: 18px;
+    width: auto;
+    opacity: 0.9;
+  }
+
+  span {
+    @include label;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+// ---- manifesto ----
+.manif {
+  position: relative;
+  height: 100svh;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  overflow: hidden;
+  background: $ink;
+  padding: 80px 24px;
+}
+
+.manif__halo {
+  position: absolute;
+  width: min(70vw, 640px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(99, 85, 255, 0.22) 0%, transparent 68%);
+  pointer-events: none;
+}
+
+.manif__title {
+  position: relative;
+  z-index: 1;
+  max-width: 14ch;
+  @include futura(clamp(42px, 8vw, 96px));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.18em 0.28em;
+
+  span {
+    display: inline-block;
+  }
+}
+
+.manif__cta {
+  position: relative;
+  z-index: 1;
+  margin-top: 36px;
+}
+
+// ---- footer ----
+.nfoot {
+  background: $ink;
+  color: $chalk;
+  padding: clamp(56px, 10vh, 100px) clamp(18px, 5vw, 72px) 40px;
+  border-top: 1px solid $line;
+}
+
+.nfoot__mark {
+  @include futura(clamp(42px, 8vw, 96px));
+  margin-bottom: 48px;
+}
+
+.nfoot__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin-bottom: 48px;
+
+  a {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: $mute;
+
+    &:hover {
+      color: $chalk;
+    }
+  }
+}
+
+.nfoot__label {
+  @include label;
+  color: $volt;
+  margin-bottom: 4px;
+}
+
+.nfoot__legal {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  @include label;
+  font-size: 10px;
+  color: rgba(244, 244, 244, 0.35);
+  border-top: 1px solid $line;
+  padding-top: 18px;
+}
+
+@media (max-width: 900px) {
+  .nbar__links {
+    display: none;
+  }
+
+  .funnel__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 16px;
+  }
+
+  .funnel__edges {
+    height: 64px;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    padding-top: 96px;
+    gap: 28px;
+  }
+
+  .hero__stage {
+    width: min(100%, 420px);
+    justify-self: center;
+    margin-right: 0;
+  }
+
+  .hero__title {
+    font-size: clamp(64px, 18vw, 110px);
+  }
+
+  .wall__stage {
+    min-height: 560px;
+  }
+
+  .wall__cols {
+    padding: 0 12px;
+  }
+
+  .wall__col {
+    height: 72%;
+  }
+
+  .wall__title {
+    font-size: clamp(36px, 10vw, 72px);
+  }
+
+  .roster__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pcard__frame {
+    aspect-ratio: 5 / 4;
+  }
+
+  .pcard__slogan {
+    font-size: clamp(28px, 8vw, 48px);
+    max-width: 58%;
+  }
+
+  .pcard__slogan--long {
+    font-size: clamp(22px, 6.5vw, 36px);
+  }
+
+  .bill--flip .bill__photo {
+    transform: none;
+  }
+
+  .nfoot__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kit__count {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .pace {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .funnel__row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .funnel__edges {
+    display: none;
+  }
+
+  .wall__cols {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .wall__col {
+    height: 58%;
+  }
+
+  .wall__title {
+    font-size: clamp(28px, 9vw, 48px);
+  }
+
+  .bill__title {
+    font-size: clamp(40px, 12vw, 72px);
+  }
+
+  .bill__title--quote {
+    font-size: clamp(24px, 7vw, 36px);
+  }
+}

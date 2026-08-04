@@ -50,8 +50,8 @@ export default function VersionSwitcher({ current, tone = 'dark' }) {
             </li>
           ))}
           <li>
-            <a className="vswitch__home" href="/">
-              See all four side by side ↗
+            <a className="vswitch__home" href="/options">
+              See all presentations ↗
             </a>
           </li>
         </ul>

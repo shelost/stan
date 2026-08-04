@@ -10,6 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         index: resolve(__dirname, 'index.html'),
+        options: resolve(__dirname, 'options.html'),
         books: resolve(__dirname, 'books.html'),
         editions: resolve(__dirname, 'editions.html'),
         phone: resolve(__dirname, 'phone.html'),
@@ -20,6 +21,7 @@ export default defineConfig({
         chat: resolve(__dirname, 'chat.html'),
         grid: resolve(__dirname, 'grid.html'),
         stan: resolve(__dirname, 'stan.html'),
+        nike: resolve(__dirname, 'nike.html'),
       },
     },
   },
