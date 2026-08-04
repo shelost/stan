@@ -1,13 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import EditionCard from '../editions/EditionCard';
+import LearnModal from './LearnModal';
 import { editions } from '../../data/editions';
 import { toneOf } from '../../data/tones';
 
-const TILTS = [-3, 2, -1.5, 2.5, -2, 1.5, -2.5, 2, -1.5];
+const TILTS = [-2.5, 1.8, -1.2, 2.2, -1.8, 1.4, -2, 1.6, -1.4];
 const num = (i) => String(i + 1).padStart(2, '0');
 
 export default function StandardApp() {
   const [active, setActive] = useState(0);
+  const [open, setOpen] = useState(false);
+  const fillRef = useRef(null);
   const edition = editions[active];
   const tone = toneOf(edition);
   const shelves = useMemo(() => [editions.slice(0, 4), editions.slice(4)], []);
@@ -20,7 +23,15 @@ export default function StandardApp() {
   };
 
   useEffect(() => {
+    if (fillRef.current) {
+      const pct = (active / (editions.length - 1)) * 100;
+      fillRef.current.style.height = `${pct}%`;
+    }
+  }, [active]);
+
+  useEffect(() => {
     const onKey = (e) => {
+      if (open) return;
       if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'j') {
         e.preventDefault();
         setActive((i) => Math.min(i + 1, editions.length - 1));
@@ -29,10 +40,14 @@ export default function StandardApp() {
         e.preventDefault();
         setActive((i) => Math.max(i - 1, 0));
       }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        setOpen(true);
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [open]);
 
   useEffect(() => {
     const hash = window.location.hash.replace('#', '');
@@ -58,31 +73,22 @@ export default function StandardApp() {
         <span className="shead__coin">$</span>
         <div className="shead__lockup">
           <strong>The Standard</strong>
-          <em>Every quarter</em>
+          <em>An atlas of every quarter</em>
         </div>
       </header>
 
       <aside className="scard" key={edition.id} style={{ '--tone': tone.base }}>
-        <p className="scard__meta">
-          <span className="scard__idx">{num(active)}</span>
-          {edition.quarter} {edition.year}
-          {edition.isNew && <em>New</em>}
-        </p>
-        <h1 className="scard__name">{edition.name}</h1>
-        <p className="scard__blurb">{edition.blurb}</p>
-        <a className="scard__cta" href={edition.url} target="_blank" rel="noreferrer">
-          Open in Stan
-          <svg viewBox="0 0 16 16" aria-hidden="true">
-            <path
-              d="M3 8h9m-3.5-3.5L12 8l-3.5 3.5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </a>
+        <span className="scard__idx">{num(active)}</span>
+        <div className="scard__copy">
+          <p className="scard__meta">
+            {edition.quarter} {edition.year}
+            {edition.isNew && <em>New</em>}
+          </p>
+          <h1 className="scard__name">{edition.name}</h1>
+        </div>
+        <button className="scard__cta" type="button" onClick={() => setOpen(true)}>
+          Learn more
+        </button>
       </aside>
 
       <main className="sstage">
@@ -110,6 +116,28 @@ export default function StandardApp() {
           </section>
         ))}
       </main>
+
+      <nav className="srail" aria-label="Editions">
+        <span className="srail__line">
+          <span className="srail__fill" ref={fillRef} />
+        </span>
+        {editions.map((e, i) => (
+          <button
+            key={e.id}
+            type="button"
+            className={`srail__tick${i === active ? ' srail__tick--on' : ''}`}
+            onClick={() => select(i)}
+            aria-label={e.name}
+          >
+            <span className="srail__label">
+              {e.quarter} {e.year} · {e.name}
+            </span>
+            <span className="srail__dot" />
+          </button>
+        ))}
+      </nav>
+
+      {open && <LearnModal edition={edition} index={active} onClose={() => setOpen(false)} />}
     </div>
   );
 }
