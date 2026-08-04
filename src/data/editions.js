@@ -4,6 +4,7 @@ export const editions = [
     year: '2026',
     quarter: 'Q2',
     name: 'Stanley',
+    icon: 'auto_awesome',
     tone: 'graphite',
     blurb: 'Meet Stanley — the AI creator assistant built into every Stan store.',
     story:
@@ -21,32 +22,38 @@ export const editions = [
         {
           id: 'themes',
           name: 'Themes + Customization',
-          blurb: 'Shape every storefront with themes, type, color, and layout controls that feel like yours.',
+          icon: 'palette',
+          blurb: 'Themes, type, color, and layout that feel like yours.',
         },
         {
           id: 'bridge',
-          name: 'Stanley × Stan Store bridge',
-          blurb: 'Stanley works natively inside the store — draft, price, and reply without leaving the flow.',
+          name: 'Stanley × Store bridge',
+          icon: 'hub',
+          blurb: 'Draft, price, and reply without leaving the store.',
         },
         {
           id: 'i18n',
           name: 'Internationalization',
-          blurb: 'Reach creators and buyers worldwide with localized store experiences.',
+          icon: 'public',
+          blurb: 'Localized store experiences for creators worldwide.',
         },
         {
           id: 'ai-builder',
           name: 'AI Store Builder',
-          blurb: 'Go from a single prompt to a working store — products, layout, and copy included.',
+          icon: 'auto_awesome',
+          blurb: 'From a prompt to a working store.',
         },
         {
           id: 'domains',
           name: 'Custom Domains',
-          blurb: 'Put your Stan store on a domain that is actually yours.',
+          icon: 'language',
+          blurb: 'Your Stan store on a domain that is yours.',
         },
         {
           id: 'starter',
           name: 'Starter plan',
-          blurb: 'A simpler way in for creators just getting started.',
+          icon: 'rocket_launch',
+          blurb: 'A simpler way in for new creators.',
           status: 'Coming soon',
         },
       ],
@@ -54,27 +61,32 @@ export const editions = [
         {
           id: 'affiliate',
           name: 'Affiliate Share',
-          blurb: 'Share and track affiliate links with a cleaner, more reliable flow.',
+          icon: 'share',
+          blurb: 'Cleaner affiliate tracking.',
         },
         {
           id: 'community',
           name: 'Community',
-          blurb: 'Badges and a refreshed members page for spaces that feel finished.',
+          icon: 'groups',
+          blurb: 'Badges and a refreshed members page.',
         },
         {
           id: 'autodm',
           name: 'AutoDM',
-          blurb: 'Stronger delivery when engagement spikes — replies that keep up with your audience.',
+          icon: 'chat',
+          blurb: 'Replies that keep up when you spike.',
         },
         {
           id: 'email',
           name: 'Email Marketing',
-          blurb: 'Better deliverability, clearer analytics, and smarter customer segmentation.',
+          icon: 'mail',
+          blurb: 'Deliverability, analytics, segments.',
         },
         {
           id: 'courses',
           name: 'Courses',
-          blurb: 'Polish across the course experience — building, teaching, and learning.',
+          icon: 'menu_book',
+          blurb: 'Polish across build, teach, learn.',
         },
       ],
     },
@@ -86,6 +98,7 @@ export const editions = [
     year: '2026',
     quarter: 'Q1',
     name: 'Creator OS',
+    icon: 'dashboard',
     tone: 'slate',
     blurb: 'One dashboard for everything you make, sell, and schedule.',
     story:
@@ -102,6 +115,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q4',
     name: 'Storefront',
+    icon: 'storefront',
     tone: 'plum',
     blurb: 'Your link-in-bio, now a full storefront that feels like you.',
     story:
@@ -118,6 +132,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q3',
     name: 'Classroom',
+    icon: 'school',
     tone: 'clay',
     blurb: 'Courses that are as easy to build as they are to binge.',
     story:
@@ -134,6 +149,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q2',
     name: 'Booked',
+    icon: 'calendar_month',
     tone: 'sage',
     blurb: 'Coaching and calls without the calendar chaos.',
     story:
@@ -150,6 +166,7 @@ export const editions = [
     year: '2025',
     quarter: 'Q1',
     name: 'Community',
+    icon: 'groups',
     tone: 'stone',
     blurb: 'Turn followers into members with spaces of their own.',
     story:
@@ -166,6 +183,7 @@ export const editions = [
     year: '2024',
     quarter: 'Q4',
     name: 'Payday',
+    icon: 'payments',
     tone: 'moss',
     blurb: 'Getting paid, minus the paperwork.',
     story:
@@ -182,6 +200,7 @@ export const editions = [
     year: '2024',
     quarter: 'Q3',
     name: 'Fans',
+    icon: 'favorite',
     tone: 'rust',
     blurb: 'Grow your audience — then keep it.',
     story:
@@ -198,6 +217,7 @@ export const editions = [
     year: '2024',
     quarter: 'Q2',
     name: 'Hello, Stan',
+    icon: 'waving_hand',
     tone: 'sand',
     blurb: 'The first edition: your creator store, live in minutes.',
     story:

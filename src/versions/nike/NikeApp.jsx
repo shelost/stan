@@ -57,13 +57,13 @@ const BUILDERS = [
   },
 ];
 
-// Five-person wall — studio cutouts on black (ch_1…ch_5).
+// Five-person wall — Nike campaign stripes (coral · blue · black · green · tan).
 const WALL = [
-  { id: 'ch1', img: '/ch_1.png', color: '#2f6fdb', href: '#steven', name: 'Steven Bartlett' },
-  { id: 'ch2', img: '/ch_2.png', color: '#c45a3e', href: '#jt', name: 'JT Barnett' },
-  { id: 'ch3', img: '/ch_3.png', color: '#7c6ae8', href: '#roster', name: 'Builder' },
-  { id: 'ch4', img: '/ch_4.png', color: '#1a9d4b', href: '#roy', name: 'Roy Lee' },
-  { id: 'ch5', img: '/ch_5.png', color: '#d478a8', href: '#sarah', name: 'Sarah Perl' },
+  { id: 'ch3', img: '/ch_3.png', color: '#e86a54', href: '#roster', name: 'Builder' },
+  { id: 'ch2', img: '/ch_2.png', color: '#2e88d6', href: '#jt', name: 'JT Barnett' },
+  { id: 'ch1', img: '/ch_1.png', color: '#000000', href: '#steven', name: 'Steven Bartlett', focal: true },
+  { id: 'ch4', img: '/ch_4.png', color: '#2da566', href: '#roy', name: 'Roy Lee' },
+  { id: 'ch5', img: '/ch_5.png', color: '#d1a56c', href: '#sarah', name: 'Sarah Perl' },
 ];
 
 const PRODUCTS = [
@@ -222,19 +222,35 @@ export default function NikeApp() {
         });
 
         gsap.from('.wall__col', {
-          scrollTrigger: { trigger: '.wall', start: 'top 70%' },
-          y: 24,
-          duration: 1,
-          stagger: 0.05,
+          scrollTrigger: { trigger: '.wall', start: 'top 72%' },
+          yPercent: 12,
+          duration: 1.05,
+          stagger: 0.06,
           ease: 'power3.out',
         });
-        gsap.from('.wall__title, .wall__sub, .wall__mark', {
-          scrollTrigger: { trigger: '.wall', start: 'top 70%' },
-          y: 16,
-          duration: 0.9,
-          stagger: 0.08,
+        gsap.from('.wall__photo', {
+          scrollTrigger: { trigger: '.wall', start: 'top 72%' },
+          y: 36,
+          duration: 1.1,
+          stagger: 0.07,
           ease: 'power3.out',
-          delay: 0.2,
+          delay: 0.08,
+        });
+        gsap.from('.wall__title', {
+          scrollTrigger: { trigger: '.wall', start: 'top 72%' },
+          y: 28,
+          autoAlpha: 0,
+          duration: 0.95,
+          ease: 'power4.out',
+          delay: 0.28,
+        });
+        gsap.from('.wall__bar', {
+          scrollTrigger: { trigger: '.wall', start: 'top 72%' },
+          scaleY: 0,
+          transformOrigin: 'bottom',
+          duration: 0.7,
+          ease: 'power2.out',
+          delay: 0.18,
         });
 
         const acts = q('.kit__act');
@@ -461,21 +477,19 @@ export default function NikeApp() {
             <div className="wall__cols">
               {WALL.map((b) => (
                 <a
-                  className="wall__col"
+                  className={`wall__col${b.focal ? ' wall__col--focal' : ''}`}
                   key={b.id}
                   href={b.href}
                   style={{ '--tone': b.color }}
                   aria-label={b.name}
                 >
-                  <span className="wall__glow" aria-hidden="true" />
                   <img className="wall__photo" src={b.img} alt="" />
                 </a>
               ))}
             </div>
+            <div className="wall__bar" aria-hidden="true" />
             <div className="wall__copy">
-              <h2 className="wall__title">Build Your Own.</h2>
-              <p className="wall__sub">Five builders. One mark. Tap a face to read their story.</p>
-              <img className="wall__mark" src="/stan_logo.svg" alt="Stan" />
+              <h2 className="wall__title">Build Your Own</h2>
             </div>
           </div>
         </section>

@@ -525,7 +525,7 @@ a {
   will-change: transform, opacity;
 }
 
-// ---- wall (five people · Just Do It quiet power) ----
+// ---- wall (five people · Just Do It campaign stripes) ----
 .wall {
   background: #000;
   color: #fff;
@@ -545,92 +545,91 @@ a {
   z-index: 1;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  align-items: center;
-  gap: clamp(4px, 1vw, 16px);
-  padding: 0 clamp(4vw, 6vw, 80px);
-  mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 62%, transparent 90%);
-  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 18%, #000 62%, transparent 90%);
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
 }
 
 .wall__col {
   position: relative;
-  height: 62%;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
-  transition: transform 0.25s ease;
+  background: var(--tone);
+  overflow: hidden;
+  transition: filter 0.28s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+  }
 
   &:hover {
-    transform: translateY(-6px);
+    filter: brightness(1.06);
   }
 
-  &:hover .wall__glow {
-    opacity: 0.85;
+  &:hover .wall__photo {
+    transform: translateY(-4px) scale(1.03);
   }
-}
 
-.wall__glow {
-  position: absolute;
-  left: 12%;
-  right: 12%;
-  top: 18%;
-  bottom: 10%;
-  border-radius: 28px;
-  background: var(--tone);
-  opacity: 0.55;
-  z-index: 0;
-  transition: opacity 0.25s ease;
+  &--focal .wall__photo {
+    width: 118%;
+    height: 92%;
+  }
 }
 
 .wall__photo {
   position: relative;
   z-index: 1;
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 108%;
+  height: 86%;
   object-fit: contain;
   object-position: center bottom;
-  filter: contrast(1.05);
+  filter: grayscale(1) contrast(1.08);
   pointer-events: none;
   user-select: none;
-  transform: none;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.wall__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  height: clamp(88px, 16vh, 148px);
+  background: #000;
+  pointer-events: none;
 }
 
 .wall__copy {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  z-index: 2;
+  bottom: clamp(28px, 5.5vh, 56px);
+  z-index: 3;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 24px clamp(10%, 12vh, 16%);
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 12px;
   pointer-events: none;
   text-align: center;
 }
 
 .wall__title {
-  @include futura(clamp(40px, 8.5vw, 104px));
+  @include futura(clamp(52px, 12vw, 152px));
   color: #fff;
   text-align: center;
-  letter-spacing: -0.04em;
-}
-
-.wall__sub {
-  margin-top: 12px;
-  max-width: 34ch;
-  font-size: 14px;
-  line-height: 1.45;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-.wall__mark {
-  display: block;
-  height: 14px;
-  width: auto;
-  margin-top: clamp(14px, 2.4vh, 22px);
-  opacity: 0.75;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  white-space: nowrap;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.4);
 }
 
 // ---- pace strip ----
@@ -1275,16 +1274,18 @@ a {
     min-height: 560px;
   }
 
-  .wall__cols {
-    padding: 0 12px;
+  .wall__photo {
+    width: 120%;
+    height: 80%;
   }
 
-  .wall__col {
-    height: 72%;
+  .wall__col--focal .wall__photo {
+    width: 132%;
+    height: 88%;
   }
 
   .wall__title {
-    font-size: clamp(36px, 10vw, 72px);
+    font-size: clamp(40px, 12vw, 88px);
   }
 
   .roster__grid {
@@ -1318,16 +1319,22 @@ a {
     display: none;
   }
 
-  .wall__cols {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+  .wall__bar {
+    height: clamp(56px, 12vh, 88px);
   }
 
-  .wall__col {
-    height: 58%;
+  .wall__photo {
+    width: 140%;
+    height: 74%;
+  }
+
+  .wall__col--focal .wall__photo {
+    width: 150%;
+    height: 80%;
   }
 
   .wall__title {
-    font-size: clamp(28px, 9vw, 48px);
+    font-size: clamp(32px, 11vw, 56px);
   }
 
   .bill__title {
