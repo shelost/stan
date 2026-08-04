@@ -66,8 +66,6 @@ const WALL = [
   { id: 'ch5', img: '/ch_5.png', color: '#d478a8', href: '#sarah', name: 'Sarah Perl' },
 ];
 
-const FEATURED = BUILDERS[3];
-
 const PRODUCTS = [
   {
     id: 'stanley',
@@ -181,73 +179,28 @@ function BuilderCard({ builder }) {
 
 function PhoneStage({ builder }) {
   return (
-    <article className="phones__slide" data-id={builder.id}>
-      <div className="phones__stack">
-        <div className="phones__glow" style={{ background: builder.color }} aria-hidden="true" />
-        <div className="phones__device" aria-hidden="true">
-          <div className="phones__bezel">
-            <div className="phones__notch" />
-            <div className="phones__screen">
-              <div className="phones__avatar" />
-              <div className="phones__bars">
-                {LINK_SLOTS.map((w, i) => (
-                  <span key={i} className="phones__bar" style={{ width: `${w}%` }} />
-                ))}
-              </div>
-            </div>
+    <div className="phone" style={{ '--tone': builder.color }}>
+      <div className="phone__shell" aria-hidden="true">
+        <div className="phone__notch" />
+        <div className="phone__screen">
+          <div className="phone__avatar" />
+          <div className="phone__bars">
+            {LINK_SLOTS.map((w, i) => (
+              <span key={i} className="phone__bar" style={{ width: `${w}%` }} />
+            ))}
           </div>
         </div>
-        <img className="phones__cutout" src={builder.img} alt="" />
       </div>
-      <div className="phones__meta">
-        <strong>{builder.name}</strong>
-        <em>{builder.handle}</em>
-        <span className="phones__pill" style={{ background: builder.color }}>
-          {builder.tag}
-        </span>
-      </div>
-    </article>
+      <img className="phone__cutout" key={builder.id} src={builder.img} alt={builder.name} />
+    </div>
   );
 }
 
 export default function NikeApp() {
   const kitProgress = useRef(0);
   const root = useRef(null);
-  const trackRef = useRef(null);
   const [phoneIndex, setPhoneIndex] = useState(0);
-
-  const selectPhone = (index) => {
-    const next = Math.max(0, Math.min(index, BUILDERS.length - 1));
-    setPhoneIndex(next);
-    const track = trackRef.current;
-    const slide = track?.children[next];
-    if (track && slide) {
-      track.scrollTo({ left: slide.offsetLeft - (track.clientWidth - slide.clientWidth) / 2, behavior: 'smooth' });
-    }
-  };
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return undefined;
-
-    const onScroll = () => {
-      const mid = track.scrollLeft + track.clientWidth / 2;
-      let best = 0;
-      let bestDist = Infinity;
-      Array.from(track.children).forEach((slide, i) => {
-        const center = slide.offsetLeft + slide.clientWidth / 2;
-        const dist = Math.abs(center - mid);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = i;
-        }
-      });
-      setPhoneIndex(best);
-    };
-
-    track.addEventListener('scroll', onScroll, { passive: true });
-    return () => track.removeEventListener('scroll', onScroll);
-  }, []);
+  const activeBuilder = BUILDERS[phoneIndex];
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -260,20 +213,12 @@ export default function NikeApp() {
         const q = gsap.utils.selector(root);
 
         gsap.from('.nbar', { y: -28, duration: 0.7, ease: 'power3.out', delay: 0.05 });
-        gsap.from('.hero__logo, .hero__title span, .hero__sub, .hero__stage', {
+        gsap.from('.hero__logo, .hero__title span, .hero__sub, .hero__right', {
           y: 28,
           duration: 0.85,
           stagger: 0.06,
           ease: 'power4.out',
           delay: 0.1,
-        });
-
-        gsap.from('.phones__head, .phones__seg, .phones__slide', {
-          scrollTrigger: { trigger: '.phones', start: 'top 78%' },
-          y: 28,
-          duration: 0.8,
-          stagger: 0.06,
-          ease: 'power3.out',
         });
 
         gsap.from('.wall__col', {
@@ -480,7 +425,7 @@ export default function NikeApp() {
       </header>
 
       <main id="top">
-        <section className="hero">
+        <section className="hero" id="phones">
           <div className="hero__left">
             <img className="hero__logo" src="/stan_logo.svg" alt="Stan" />
             <h1 className="hero__title">
@@ -490,13 +435,23 @@ export default function NikeApp() {
             </h1>
             <p className="hero__sub">The platform for creators who put their name on the work.</p>
           </div>
-          <div className="hero__stage">
-            <div className="hero__panel" style={{ background: FEATURED.color }} aria-hidden="true" />
-            <img className="hero__photo" src={FEATURED.img} alt={FEATURED.name} />
-            <div className="hero__meta">
-              <strong>{FEATURED.name}</strong>
-              <em>{FEATURED.handle}</em>
-              <span className="hero__pill">{FEATURED.tag}</span>
+
+          <div className="hero__right">
+            <PhoneStage builder={activeBuilder} />
+
+            <div className="phone__seg" role="tablist" aria-label="Creators">
+              {BUILDERS.map((b, i) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  role="tab"
+                  aria-label={b.name}
+                  aria-selected={i === phoneIndex}
+                  className={`phone__dot${i === phoneIndex ? ' phone__dot--on' : ''}`}
+                  style={{ '--tone': b.color }}
+                  onClick={() => setPhoneIndex(i)}
+                />
+              ))}
             </div>
           </div>
         </section>
@@ -546,38 +501,6 @@ export default function NikeApp() {
           <p className="kit__hint" aria-hidden="true">
             Keep scrolling
           </p>
-        </section>
-
-        <section className="phones" id="phones">
-          <header className="phones__head">
-            <img className="phones__logo" src="/stan_logo.svg" alt="Stan" />
-            <h2 className="phones__title">Your link. Their world.</h2>
-            <p className="phones__sub">
-              One storefront that looks like you — scroll the builders already live on Stan.
-            </p>
-          </header>
-
-          <div className="phones__seg" role="tablist" aria-label="Creators">
-            {BUILDERS.map((b, i) => (
-              <button
-                key={b.id}
-                type="button"
-                role="tab"
-                aria-selected={i === phoneIndex}
-                className={`phones__tab${i === phoneIndex ? ' phones__tab--on' : ''}`}
-                style={{ '--tone': b.color }}
-                onClick={() => selectPhone(i)}
-              >
-                {b.name.split(' ')[0]}
-              </button>
-            ))}
-          </div>
-
-          <div className="phones__track" ref={trackRef}>
-            {BUILDERS.map((b) => (
-              <PhoneStage key={b.id} builder={b} />
-            ))}
-          </div>
         </section>
 
         <section className="funnel" id="products">
