@@ -290,6 +290,12 @@ export default function StandardApp() {
           </span>
         </button>
         <div className="scard__info">
+          {/* The tagline is the headline and the edition name is the label above
+              it — the release is what you are looking at, so the line that says
+              what it does for you is what gets the serif. */}
+          {/* The tagline is the kicker and the edition name is the headline:
+              these are numbered editions, so the release has to be the thing
+              you read first, with its benefit line sitting above it. */}
           {edition.tagline && <p className="scard__kicker">{edition.tagline}</p>}
           <p className="scard__meta">
             <span className="scard__idx">{num(active)}</span>

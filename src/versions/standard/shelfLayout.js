@@ -83,10 +83,12 @@ export const COMPACT_SHELVES = [
     id: 'crown',
     shift: 0,
     gap: 0.42,
+    // Lamp between the two, as on the roomy crown: standing it at the end of
+    // the board would throw its light off the shelf instead of onto a card.
     items: [
-      { kind: 'prop', variant: 'lamp', depth: 'mid' },
       { kind: 'edition', id: 'stanley', depth: 'front', lean: -1.4 },
-      { kind: 'edition', id: 'creator-os', depth: 'mid', lean: 1.2, nudge: 0.12 },
+      { kind: 'prop', variant: 'lamp', depth: 'mid', nudge: 0.1 },
+      { kind: 'edition', id: 'creator-os', depth: 'mid', lean: 1.2, nudge: 0.1 },
     ],
   },
   {

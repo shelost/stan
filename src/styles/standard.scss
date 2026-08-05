@@ -277,7 +277,7 @@ body {
   }
 }
 
-// the episode-title beat, set like the reference's kicker line
+// the edition's own name, set as the label above the headline
 .scard__kicker {
   margin-top: 0;
   font-size: 12.5px;
@@ -289,13 +289,17 @@ body {
   text-shadow: 0 0 22px color-mix(in srgb, var(--tone) 45%, transparent);
 }
 
+// The headline is the tagline, so it has to hold two or three words on more
+// than one line — smaller than a one-word edition name would need, and
+// balanced so it never breaks to a lonely last word.
 .scard__name {
   margin-top: 10px;
   font-family: $serif;
-  font-size: clamp(40px, 4.4vw, 62px);
+  font-size: clamp(30px, 3.3vw, 46px);
   font-weight: 400;
-  letter-spacing: -0.03em;
-  line-height: 0.94;
+  letter-spacing: -0.028em;
+  line-height: 1.02;
+  text-wrap: balance;
   color: $chalk;
 }
 
@@ -907,11 +911,11 @@ body {
 // above the width queries so the phone layout below can override them.
 @media (max-height: 820px) {
   .scard__device {
-    width: min(215px, 19vw, 24vh);
+    width: min(215px, 19vw, 22vh);
   }
 
   .scard__name {
-    font-size: clamp(32px, 3.4vw, 44px);
+    font-size: clamp(30px, 3.1vw, 40px);
   }
 
   .scard__points {
