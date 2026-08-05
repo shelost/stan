@@ -291,18 +291,15 @@ export default function StandardApp() {
         </button>
         <div className="scard__info">
           {/* The tagline is the headline and the edition name is the label above
-              it — the release is what you are looking at, so the line that says
-              what it does for you is what gets the serif. */}
-          {/* The tagline is the kicker and the edition name is the headline:
-              these are numbered editions, so the release has to be the thing
-              you read first, with its benefit line sitting above it. */}
-          {edition.tagline && <p className="scard__kicker">{edition.tagline}</p>}
+              it — the release is already on screen as artwork, so the line worth
+              setting in serif is the one that says what it does for you. */}
+          <p className="scard__kicker">{edition.name}</p>
           <p className="scard__meta">
             <span className="scard__idx">{num(active)}</span>
             {edition.quarter} {edition.year}
             {edition.isNew && <em>New</em>}
           </p>
-          <h1 className="scard__name">{edition.name}</h1>
+          <h1 className="scard__name">{edition.tagline ?? edition.name}</h1>
           {edition.creator && (
             <p className="scard__creator">
               <span>{edition.creator.name}</span>

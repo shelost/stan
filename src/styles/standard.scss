@@ -1023,10 +1023,11 @@ body {
     display: none;
   }
 
+  // enough clearance that the CTA's glow never touches the top shelf
   .sstage {
     position: relative;
     inset: auto;
-    padding: 12px 14px 64px;
+    padding: 34px 14px 64px;
     overflow: visible;
   }
 }
