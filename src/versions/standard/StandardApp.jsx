@@ -46,16 +46,19 @@ export default function StandardApp() {
       const boards = root.querySelectorAll('.sshelf__board');
       const props = root.querySelectorAll('.sprop');
       const head = root.querySelector('.shead');
+      const newBtn = root.querySelector('.snew');
       const rail = root.querySelector('.srail');
 
       gsap.set(sleeves, { y: 72, rotate: 8, scale: 0.78, autoAlpha: 0, transformOrigin: '50% 100%' });
       gsap.set(boards, { scaleX: 0.4, autoAlpha: 0, transformOrigin: '50% 50%' });
       gsap.set(props, { y: 26, scale: 0.9, autoAlpha: 0, transformOrigin: '50% 100%' });
       gsap.set(head, { y: -18, autoAlpha: 0 });
+      gsap.set(newBtn, { y: -18, autoAlpha: 0 });
       gsap.set(rail, { x: 16, autoAlpha: 0 });
 
       const tl = gsap.timeline({ defaults: { ease: 'back.out(1.6)' } });
       tl.to(head, { y: 0, autoAlpha: 1, duration: 0.55, ease: 'power3.out' }, 0)
+        .to(newBtn, { y: 0, autoAlpha: 1, duration: 0.55, ease: 'power3.out' }, 0)
         .to(boards, { scaleX: 1, autoAlpha: 1, duration: 0.55, stagger: 0.1, ease: 'power3.out' }, 0.08)
         .to(
           sleeves,
@@ -110,7 +113,12 @@ export default function StandardApp() {
     return () => pop.kill();
   }, [edition.id]);
 
-  // Side-card entrance + selection transitions
+  // Hero panel entrance, replayed on every selection because the aside is
+  // keyed by edition id and therefore remounts. The copy arrives as a stagger
+  // — kicker, meta, name, blurb, then the highlights one at a time — while the
+  // device swings in underneath it and its artwork settles out of a slight
+  // over-scale, so the cover reads as a physical object being set down rather
+  // than a picture being swapped.
   useEffect(() => {
     const card = scardRef.current;
     if (!card) return;
@@ -119,31 +127,71 @@ export default function StandardApp() {
     const q = gsap.utils.selector(card);
     const glow = q('.scard__glow');
     const device = q('.scard__device');
+    const art = q('.scard__screen .art');
+    const figure = q('.scard__screen .art__figure');
+    const kicker = q('.scard__kicker');
     const meta = q('.scard__meta');
     const name = q('.scard__name');
     const creator = q('.scard__creator');
     const blurb = q('.scard__blurb');
+    const points = q('.scard__points li');
     const cta = q('.scard__cta');
 
-    gsap.killTweensOf([card, ...glow, ...device, ...meta, ...name, ...creator, ...blurb, ...cta]);
+    const targets = [
+      card,
+      ...glow,
+      ...device,
+      ...art,
+      ...figure,
+      ...kicker,
+      ...meta,
+      ...name,
+      ...creator,
+      ...blurb,
+      ...points,
+      ...cta,
+    ];
+    gsap.killTweensOf(targets);
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.fromTo(card, { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 })
-      .fromTo(glow, { scale: 0.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.5 }, 0.05)
+      .fromTo(glow, { scale: 0.55, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6 }, 0.04)
       .fromTo(
         device,
-        { y: 26, rotate: -3, scale: 0.92, autoAlpha: 0 },
-        { y: 0, rotate: 0, scale: 1, autoAlpha: 1, duration: 0.6, ease: 'back.out(1.6)' },
-        0.06,
+        { y: 34, rotate: -3.5, scale: 0.9, autoAlpha: 0 },
+        { y: 0, rotate: 0, scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(1.7)' },
+        0.05,
       )
-      .fromTo(meta, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.2)
-      .fromTo(name, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42 }, 0.24)
-      .fromTo(creator, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.28)
-      .fromTo(blurb, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38 }, 0.3)
-      .fromTo(cta, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.34);
+      .fromTo(art, { scale: 1.16, y: 8 }, { scale: 1, y: 0, duration: 0.85 }, 0.08)
+      .fromTo(figure, { scale: 0.84, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.8, ease: 'back.out(2.2)' }, 0.16)
+      .fromTo(kicker, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.18)
+      .fromTo(meta, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38 }, 0.22)
+      .fromTo(name, { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, 0.25)
+      .fromTo(creator, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.3)
+      .fromTo(blurb, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42 }, 0.33)
+      .fromTo(
+        points,
+        { x: -10, autoAlpha: 0 },
+        { x: 0, autoAlpha: 1, duration: 0.36, stagger: 0.075 },
+        0.38,
+      )
+      .fromTo(cta, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.5);
+
+    // Idle float, so the hero never sits completely dead between selections.
+    // Held as its own tween rather than started from a timeline callback, so
+    // the cleanup below can reliably kill it.
+    const float = gsap.to(device, {
+      y: -7,
+      duration: 3.4,
+      ease: 'sine.inOut',
+      yoyo: true,
+      repeat: -1,
+      delay: 1.1,
+    });
 
     return () => {
       tl.kill();
+      float.kill();
     };
   }, [edition.id]);
 
@@ -201,11 +249,21 @@ export default function StandardApp() {
         </div>
       </header>
 
+      <button className="snew" type="button" onClick={() => select(0)} aria-label="Jump to newest edition">
+        See what's new
+        <span aria-hidden="true">→</span>
+      </button>
+
       <aside
         className="scard"
         ref={scardRef}
         key={edition.id}
-        style={{ '--tone': tone.base, '--paper': tone.paper, '--soft': tone.soft }}
+        style={{
+          '--tone': tone.base,
+          '--soft': tone.soft,
+          '--deep': tone.deep,
+          '--paper': tone.paper,
+        }}
       >
         <span className="scard__glow" aria-hidden="true" />
         <button
@@ -222,6 +280,7 @@ export default function StandardApp() {
           </span>
         </button>
         <div className="scard__info">
+          {edition.tagline && <p className="scard__kicker">{edition.tagline}</p>}
           <p className="scard__meta">
             <span className="scard__idx">{num(active)}</span>
             {edition.quarter} {edition.year}
@@ -235,8 +294,15 @@ export default function StandardApp() {
             </p>
           )}
           <p className="scard__blurb">{edition.blurb}</p>
+          {edition.highlights && (
+            <ul className="scard__points">
+              {edition.highlights.slice(0, 3).map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+          )}
           <button className="scard__cta" type="button" onClick={() => setOpen(true)}>
-            Learn more
+            Explore the edition
             <span aria-hidden="true">→</span>
           </button>
         </div>

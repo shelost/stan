@@ -16,6 +16,14 @@ body {
 }
 
 .standard {
+  // One source of truth for the hero panel's footprint. `.scard` is fixed and
+  // `.sstage` is a full-bleed absolute layer, so the only thing keeping the
+  // shelves clear of the panel is the stage's left inset — deriving it from
+  // these two values means the two can never collide at any width.
+  --hero-x: clamp(20px, 3.4vw, 52px);
+  --hero-w: min(430px, 31vw);
+  --hero-gutter: clamp(24px, 2.6vw, 56px);
+
   position: relative;
   height: 100vh;
   overflow: hidden;
@@ -74,6 +82,50 @@ body {
   }
 }
 
+// Jumps straight to the newest edition. Lives outside `.shead` because GSAP
+// transforms the header on entrance, and a transformed ancestor would hijack
+// this element's fixed positioning. Its entrance is GSAP's too, so there is no
+// CSS animation here to fight it.
+.snew {
+  position: fixed;
+  top: 24px;
+  right: 30px;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 999px;
+  background: $accent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  box-shadow: 0 6px 22px rgba(99, 85, 255, 0.35);
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  span {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: #7266ff;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 28px rgba(99, 85, 255, 0.45);
+
+    span {
+      transform: translateX(2px);
+    }
+  }
+}
+
 // —— Floating hero: a real phone over bare copy ———————————————
 // No panel behind any of this: the phone and the type sit straight on the
 // night background so the hero reads as one piece, not a card with a tray.
@@ -84,17 +136,17 @@ body {
 // without a transform, which GSAP owns for the selection animation.
 .scard {
   position: fixed;
-  left: clamp(22px, 3.4vw, 52px);
+  left: var(--hero-x);
   top: 0;
   bottom: 0;
   z-index: 8;
-  width: min(268px, 27vw);
+  width: var(--hero-w);
   height: max-content;
   margin-block: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 22px;
+  gap: clamp(14px, 2.4vh, 26px);
   pointer-events: none;
 }
 
@@ -115,7 +167,10 @@ body {
 .scard__device {
   position: relative;
   z-index: 1;
-  width: min(198px, 20vw);
+  // The 9/19 device is 2.11× as tall as it is wide, so the viewport-height
+  // term is what actually sizes it — the px and vw terms only stop it running
+  // away on a short-and-wide or very large window.
+  width: min(272px, 21vw, 25.5vh);
   aspect-ratio: 9 / 19;
   padding: 0;
   border: none;
@@ -219,25 +274,69 @@ body {
   }
 }
 
+// the episode-title beat, set like the reference's kicker line
+.scard__kicker {
+  margin-top: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--soft);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--tone) 45%, transparent);
+}
+
 .scard__name {
-  margin-top: 8px;
+  margin-top: 10px;
   font-family: $serif;
-  font-size: clamp(30px, 3.4vw, 46px);
+  font-size: clamp(40px, 4.4vw, 62px);
   font-weight: 400;
   letter-spacing: -0.03em;
-  line-height: 0.98;
+  line-height: 0.94;
   color: $chalk;
 }
 
 // the release in one breath — the hero's job is to inform, not tease
 .scard__blurb {
-  margin-top: 10px;
-  max-width: 30ch;
-  font-size: 13px;
+  margin-top: 12px;
+  max-width: 34ch;
+  font-size: 14.5px;
   font-weight: 420;
-  letter-spacing: -0.014em;
-  line-height: 1.5;
+  letter-spacing: -0.016em;
+  line-height: 1.45;
   color: $chalk-2;
+}
+
+// the three quick hits, each anchored by a dot in the edition's own hue
+.scard__points {
+  list-style: none;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  li {
+    position: relative;
+    padding-left: 17px;
+    max-width: 34ch;
+    font-size: 13px;
+    font-weight: 450;
+    letter-spacing: -0.016em;
+    line-height: 1.3;
+    color: $chalk-2;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--tone);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--tone) 75%, transparent);
+    }
+  }
 }
 
 // Partnerships hook: only rendered when an edition carries `creator`.
@@ -259,40 +358,42 @@ body {
   }
 }
 
+// Filled in the edition's own hue, like the reference's primary buttons. The
+// pastel is light enough that the label has to be ink rather than white.
 .scard__cta {
   pointer-events: auto;
-  margin-top: 16px;
+  margin-top: 20px;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 14px;
-  border: 1px solid rgba(243, 242, 251, 0.16);
+  gap: 9px;
+  padding: 13px 21px;
+  border: none;
   border-radius: 999px;
-  background: rgba(243, 242, 251, 0.06);
-  color: $chalk;
+  background: var(--tone);
+  color: #17151f;
   font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 450;
+  font-size: 13.5px;
+  font-weight: 540;
   letter-spacing: -0.02em;
   line-height: 1;
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--tone) 34%, transparent);
   transition:
-    color 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease,
-    transform 0.2s ease;
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
   span {
-    color: var(--tone);
+    color: rgba(23, 21, 31, 0.6);
     transition: transform 0.2s ease;
   }
 
   &:hover {
-    background: rgba(243, 242, 251, 0.12);
-    border-color: rgba(243, 242, 251, 0.32);
+    background: color-mix(in srgb, var(--tone) 82%, #fff);
     transform: translateY(-1px);
+    box-shadow: 0 14px 36px color-mix(in srgb, var(--tone) 44%, transparent);
 
     span {
-      transform: translateX(2px);
+      transform: translateX(3px);
     }
   }
 }
@@ -394,16 +495,15 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  // The left inset only has to clear the fixed detail card (which tops out at
-  // 52px + 248px). Anything beyond that opens a void between the card and the
-  // shelving, so the two stop reading as one composition.
-  padding: 64px clamp(56px, 6vw, 120px) 32px clamp(292px, 22vw, 340px);
-  overflow: auto;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  // The left inset is exactly the hero panel's footprint plus a gutter, so it
+  // tracks the panel at every width — wide enough to clear it, never wider,
+  // which would open a void between the panel and the shelving.
+  padding: 60px clamp(48px, 4.4vw, 120px) 32px
+    calc(var(--hero-x) + var(--hero-w) + var(--hero-gutter));
+  // The scene sizes itself off this box (see `--span` in _shelfscene.scss), so
+  // there is nothing to scroll — `hidden` is a backstop, not a scroller.
+  overflow: hidden;
+  container-type: inline-size;
 }
 
 // Phone-aspect sleeves — deep bezel, shelf contact shadow, tone halo.
@@ -683,6 +783,17 @@ body {
   }
 }
 
+// The edition's hue on a white page has to come from the `deep` stop — the
+// pastel `base` that works on the dark shelf would vanish here.
+.nmodal__kicker {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--deep, #{$accent});
+}
+
 .nmodal__title {
   font-size: clamp(32px, 4vw, 42px);
   font-weight: 600;
@@ -788,26 +899,56 @@ body {
   }
 }
 
-// Short windows: shrink the device before the copy has to give way
+// Short windows: shrink the device before the copy has to give way. These are
+// height-only, so they also catch a laptop at 1440×720 — and they are declared
+// above the width queries so the phone layout below can override them.
 @media (max-height: 820px) {
   .scard__device {
-    width: min(162px, 17vw);
+    width: min(215px, 19vw, 24vh);
   }
 
   .scard__name {
-    font-size: clamp(26px, 3vw, 36px);
+    font-size: clamp(32px, 3.4vw, 44px);
+  }
+
+  .scard__points {
+    margin-top: 12px;
+    gap: 7px;
   }
 }
 
 @media (max-height: 700px) {
   .scard__device {
-    width: 134px;
+    width: min(178px, 23vh);
   }
 
+  .scard__name {
+    font-size: clamp(27px, 3vw, 36px);
+  }
+
+  .scard__blurb {
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  .scard__cta {
+    margin-top: 14px;
+    padding: 10px 17px;
+  }
+}
+
+@media (max-height: 600px) {
   .scard__blurb {
     display: none;
   }
 }
+
+// —— Stacked layout ————————————————————————————————————————————
+// Below 960px the hero stops floating beside the room and sits above it,
+// poster-style. The scene keeps its full three-shelf composition here — it is
+// only on a phone (below 720px) that ShelfScene reflows onto four shorter
+// boards. Neither ever scrolls: `--span` in _shelfscene.scss divides the
+// stage's own measured width, so the longest board always fits.
 
 @media (max-width: 960px) {
   body {
@@ -817,7 +958,11 @@ body {
   .standard {
     height: auto;
     min-height: 100vh;
+    // vertical scroll belongs to the body; clipping x stops decorative bleed
+    // (the hero glow) from widening the layout viewport and pushing the fixed
+    // header chrome off-screen
     overflow: visible;
+    overflow-x: clip;
   }
 
   .scard {
@@ -825,10 +970,31 @@ body {
     left: auto;
     top: auto;
     bottom: auto;
-    width: min(280px, calc(100% - 48px));
+    width: min(560px, calc(100% - 40px));
     height: auto;
-    margin: 88px 24px 8px;
+    margin: 96px auto 4px;
+    align-items: center;
+    text-align: center;
     pointer-events: auto;
+  }
+
+  .scard__info {
+    align-items: center;
+  }
+
+  .scard__device {
+    width: min(240px, 46vw);
+  }
+
+  .scard__blurb {
+    max-width: 44ch;
+  }
+
+  // the bullets stay left-aligned inside a centred column, so their dots line
+  // up instead of ragging down the middle
+  .scard__points {
+    align-items: flex-start;
+    text-align: left;
   }
 
   .srail {
@@ -838,7 +1004,64 @@ body {
   .sstage {
     position: relative;
     inset: auto;
-    padding: 24px 16px 56px;
+    padding: 12px 14px 64px;
     overflow: visible;
+  }
+}
+
+@media (max-width: 720px) {
+  .shead {
+    top: 18px;
+    left: 18px;
+
+    &__coin {
+      width: 30px;
+      height: 30px;
+      font-size: 14px;
+    }
+
+    &__lockup strong {
+      font-size: 20px;
+    }
+  }
+
+  .snew {
+    top: 16px;
+    right: 14px;
+    padding: 9px 14px;
+    font-size: 12px;
+  }
+
+  .scard {
+    width: calc(100% - 32px);
+    margin-top: 80px;
+    gap: 18px;
+  }
+
+  .scard__device {
+    width: min(208px, 53vw);
+  }
+
+  .scard__name {
+    font-size: clamp(36px, 12vw, 52px);
+  }
+
+  .scard__blurb {
+    margin-top: 10px;
+    font-size: 14px;
+    max-width: 32ch;
+  }
+
+  .scard__points {
+    margin-top: 14px;
+    gap: 8px;
+
+    li {
+      font-size: 12.5px;
+    }
+  }
+
+  .scard__cta {
+    margin-top: 18px;
   }
 }

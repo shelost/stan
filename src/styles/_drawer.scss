@@ -1,15 +1,18 @@
 @use 'tokens' as *;
 
+// Thumb swatches, keyed by the same hue names as src/data/tones.js. These are
+// the `deep` stop of each hue rather than the pastel `base`, because the
+// thumb's label is set in $bone and needs the contrast.
 $tones: (
-  'graphite': #3f3f39,
-  'clay': #a06249,
-  'sage': #6b7d64,
-  'slate': #57687a,
-  'sand': #a98d64,
-  'plum': #6a5364,
-  'moss': #55624b,
-  'rust': #94583d,
-  'stone': #77776f,
+  'violet': #432687,
+  'sky': #2a6084,
+  'blush': #86284a,
+  'apricot': #82572b,
+  'mint': #2b825f,
+  'lilac': #732886,
+  'teal': #2b7c82,
+  'coral': #863428,
+  'periwinkle': #283786,
 );
 
 .drawer-backdrop {

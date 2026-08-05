@@ -28,6 +28,14 @@ export default function LearnModal({ edition, index, onClose }) {
         aria-modal="true"
         aria-label={edition.name}
         onClick={(e) => e.stopPropagation()}
+        // all four stops, so the cover's artwork renders its full mesh here
+        // rather than falling back to a flat wash
+        style={{
+          '--tone': tone.base,
+          '--soft': tone.soft,
+          '--deep': tone.deep,
+          '--paper': tone.paper,
+        }}
       >
         <header className="nmodal__bar">
           <div className="nmodal__crumbs">
@@ -46,7 +54,7 @@ export default function LearnModal({ edition, index, onClose }) {
 
         <div className="nmodal__page">
           <div className="nmodal__hero">
-            <div className="nmodal__cover" style={{ '--paper': tone.paper }}>
+            <div className="nmodal__cover">
               <Cover edition={edition} index={index} />
             </div>
             <div className="nmodal__props">
@@ -74,6 +82,7 @@ export default function LearnModal({ edition, index, onClose }) {
             </div>
           </div>
 
+          {edition.tagline && <p className="nmodal__kicker">{edition.tagline}</p>}
           <h1 className="nmodal__title">{edition.name}</h1>
           <p className="nmodal__lede">{edition.blurb}</p>
           <p className="nmodal__story">{edition.story}</p>

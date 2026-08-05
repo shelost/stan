@@ -1,13 +1,28 @@
-// Every edition carries three scene fields on top of its content:
+// Copy voice: benefit-led, title-cased, short. An edition is named by what it
+// does for you ("Know Your Revenue"), never by the feature that does it
+// ("Revenue analytics"). Supporting lines run two or three clipped sentences
+// at most — the artwork and the shelf carry the page, not the prose.
 //
+// Fields:
+//   tagline    the episode-title beat, shown as the kicker above the name
+//   blurb      one breath of supporting copy — the reference's "Reach more
+//              inboxes. Build a stronger audience."
+//   highlights three quick hits. Plain strings, because eight other version
+//              pages render them as text (atlas and phone draw them onto a
+//              canvas); anything richer belongs in `shipped`.
+//   story      the modal's paragraph. Still short.
+//   shipped    OPTIONAL richer modal content: headline + supporting items,
+//              each { id, name, icon, blurb, status? }. When absent the modal
+//              falls back to `highlights`.
+//   tone       key into src/data/tones.js — one pastel hue per release.
 //   prop       key into the shelf prop vocabulary (src/versions/standard/ShelfProp.jsx).
-//              The piece of creator gear that sits beside this edition on the shelf.
-//   spotlight  opt-in to the lamp's light pool. `isNew` is lit implicitly, so this
-//              flag is for the one or two older editions partnerships wants surfaced.
-//   creator    OPTIONAL and currently unset — the forward-looking partnerships hook.
-//              Shape: { name: 'Full Name', handle: '@handle' }. When present it
-//              renders in the side card and the Learn-more modal; when absent
-//              nothing is rendered and no placeholder is substituted.
+//              The piece of creator gear that sits beside this edition.
+//   spotlight  opt-in to the lamp's light pool. `isNew` is lit implicitly, so
+//              this flag is for older editions partnerships wants surfaced.
+//   creator    OPTIONAL and currently unset — the forward-looking partnerships
+//              hook. Shape: { name: 'Full Name', handle: '@handle' }. When
+//              present it renders in the side card and the Learn-more modal;
+//              when absent nothing renders and no placeholder is substituted.
 
 export const editions = [
   {
@@ -16,88 +31,82 @@ export const editions = [
     quarter: 'Q2',
     name: 'Stanley',
     icon: 'auto_awesome',
-    tone: 'graphite',
-    blurb: 'Meet Stanley — the AI creator assistant built into every Stan store.',
+    tone: 'violet',
+    tagline: 'Build faster with AI',
+    blurb: 'Work less. Create more. Meet your new co-founder.',
     story:
-      'Stanley is the first edition that lives inside the store rather than beside it. Ask it to draft a product page, tighten a price, or answer a DM — and it answers in your voice, with your links already attached.',
-    highlights: [
-      'Themes + Customization',
-      'Stanley × Stan Store bridge',
-      'Internationalization',
-      'AI Store Builder',
-      'Custom Domains',
-      'Starter plan',
-    ],
+      'Stanley is the first edition that lives inside the store instead of beside it. Ask for a product page, a sharper price, a reply to a DM — it answers in your voice, with your links already attached.',
+    highlights: ['One Prompt, One Store', 'Themes That Feel Like Yours', 'No Borders'],
     shipped: {
       headline: [
         {
-          id: 'themes',
-          name: 'Themes + Customization',
-          icon: 'palette',
-          blurb: 'Themes, type, color, and layout that feel like yours.',
+          id: 'ai-builder',
+          name: 'One Prompt, One Store',
+          icon: 'auto_awesome',
+          blurb: 'Describe it. Stanley builds it.',
         },
         {
-          id: 'bridge',
-          name: 'Stanley × Store bridge',
-          icon: 'hub',
-          blurb: 'Draft, price, and reply without leaving the store.',
+          id: 'themes',
+          name: 'Make It Yours',
+          icon: 'palette',
+          blurb: 'Themes, type, and color that look like you.',
         },
         {
           id: 'i18n',
-          name: 'Internationalization',
+          name: 'No Borders',
           icon: 'public',
-          blurb: 'Localized store experiences for creators worldwide.',
-        },
-        {
-          id: 'ai-builder',
-          name: 'AI Store Builder',
-          icon: 'auto_awesome',
-          blurb: 'From a prompt to a working store.',
+          blurb: 'Sell anywhere. Grow everywhere.',
         },
         {
           id: 'domains',
-          name: 'Custom Domains',
+          name: 'Your Name, Your Domain',
           icon: 'language',
-          blurb: 'Your Stan store on a domain that is yours.',
+          blurb: 'Point a real domain at your store.',
+        },
+        {
+          id: 'bridge',
+          name: 'Stanley Lives Here Now',
+          icon: 'hub',
+          blurb: 'Draft, price, and reply without leaving.',
         },
         {
           id: 'starter',
-          name: 'Starter plan',
+          name: 'An Easier Way In',
           icon: 'rocket_launch',
-          blurb: 'A simpler way in for new creators.',
+          blurb: 'A starter plan for brand-new creators.',
           status: 'Coming soon',
         },
       ],
       supporting: [
         {
           id: 'affiliate',
-          name: 'Affiliate Share',
+          name: 'Share the Upside',
           icon: 'share',
           blurb: 'Cleaner affiliate tracking.',
         },
         {
           id: 'community',
-          name: 'Community',
+          name: 'Somewhere to Belong',
           icon: 'groups',
           blurb: 'Badges and a refreshed members page.',
         },
         {
           id: 'autodm',
-          name: 'AutoDM',
+          name: 'Replies That Keep Up',
           icon: 'chat',
-          blurb: 'Replies that keep up when you spike.',
+          blurb: 'AutoDM holds the line when you spike.',
         },
         {
           id: 'email',
-          name: 'Email Marketing',
+          name: 'Every Email Counts',
           icon: 'mail',
-          blurb: 'Deliverability, analytics, segments.',
+          blurb: 'Reach more inboxes.',
         },
         {
           id: 'courses',
-          name: 'Courses',
+          name: 'Courses, Polished',
           icon: 'menu_book',
-          blurb: 'Polish across build, teach, learn.',
+          blurb: 'Better to build. Better to finish.',
         },
       ],
     },
@@ -111,15 +120,12 @@ export const editions = [
     quarter: 'Q1',
     name: 'Creator OS',
     icon: 'dashboard',
-    tone: 'slate',
-    blurb: 'One dashboard for everything you make, sell, and schedule.',
+    tone: 'sky',
+    tagline: 'Run the whole show',
+    blurb: 'One dashboard. Everything you make, sell, and schedule.',
     story:
-      'Creator OS pulls analytics, the mobile app, and every connected social into a single place you can run from. Revenue sits at the top. Everything else is one tap away.',
-    highlights: [
-      'Redesigned analytics with revenue at a glance',
-      'A faster mobile app for managing your store anywhere',
-      'Connect every social platform in one tap',
-    ],
+      'Creator OS pulls analytics, the mobile app, and every connected social into one place you can actually run from. Revenue sits at the top. The rest is one tap away.',
+    highlights: ['Revenue at a Glance', 'Your Store, In Your Pocket', 'Every Platform, One Tap'],
     url: 'https://stan.store',
     prop: 'tablet',
     spotlight: true,
@@ -130,15 +136,12 @@ export const editions = [
     quarter: 'Q4',
     name: 'Storefront',
     icon: 'storefront',
-    tone: 'plum',
-    blurb: 'Your link-in-bio, now a full storefront that feels like you.',
+    tone: 'blush',
+    tagline: 'The brand upgrade',
+    blurb: 'Make your storefront unmistakably you.',
     story:
-      'Storefront turns the link in your bio into a real shop — themes, fonts, and drag-and-drop blocks for products, media, and links. Preview before you publish. Ship when it feels right.',
-    highlights: [
-      'New themes with custom fonts and colors',
-      'Drag-and-drop blocks for links, products, and media',
-      'Instant previews before you publish',
-    ],
+      'Storefront turns a link in your bio into a real shop. Themes, fonts, and drag-and-drop blocks for products, media, and links. Preview it. Then ship it.',
+    highlights: ['Themes With Real Type', 'Drag, Drop, Done', 'Preview Before You Publish'],
     url: 'https://stan.store',
     prop: 'dock',
   },
@@ -148,15 +151,12 @@ export const editions = [
     quarter: 'Q3',
     name: 'Classroom',
     icon: 'school',
-    tone: 'clay',
-    blurb: 'Courses that are as easy to build as they are to binge.',
+    tone: 'apricot',
+    tagline: 'Made to binge',
+    blurb: 'Courses as easy to build as they are to finish.',
     story:
-      'Classroom is for courses that feel finished the day you ship them. Drip modules on your schedule, certificates when students finish, and every file type in one upload.',
-    highlights: [
-      'Drip modules that unlock on your schedule',
-      'Completion certificates for your students',
-      'Upload once — video, audio, and downloads together',
-    ],
+      'Classroom is for courses that feel finished the day you ship them. Drip modules on your schedule, certificates at the finish line, and every file type in one upload.',
+    highlights: ['Drip on Your Schedule', 'Certificates at the Finish', 'One Upload, Every Format'],
     url: 'https://stan.store',
     prop: 'ringlight',
   },
@@ -166,14 +166,15 @@ export const editions = [
     quarter: 'Q2',
     name: 'Booked',
     icon: 'calendar_month',
-    tone: 'sage',
+    tone: 'mint',
+    tagline: 'Never double-booked',
     blurb: 'Coaching and calls without the calendar chaos.',
     story:
-      'Booked keeps coaching sessions and workshops off the spreadsheet. Calendars sync both ways, reminders cut no-shows, and waitlists fill the seats you leave open.',
+      'Booked keeps sessions and workshops off the spreadsheet. Calendars sync both ways, reminders cut no-shows, and waitlists fill the seats you leave open.',
     highlights: [
-      'Two-way calendar sync for 1:1 sessions',
-      'Automatic reminders that cut no-shows',
-      'Group workshops with built-in waitlists',
+      'Calendars That Sync Both Ways',
+      'Reminders That Cut No-Shows',
+      'Waitlists That Fill Seats',
     ],
     url: 'https://stan.store',
     prop: 'headphones',
@@ -184,14 +185,15 @@ export const editions = [
     quarter: 'Q1',
     name: 'Community',
     icon: 'groups',
-    tone: 'stone',
-    blurb: 'Turn followers into members with spaces of their own.',
+    tone: 'lilac',
+    tagline: 'Members only',
+    blurb: 'Turn followers into members with a place of their own.',
     story:
-      'Community gives your audience a place to stay. Paid memberships, member-only chat, exclusive drops, and welcome flows that run without you babysitting the inbox.',
+      'Community gives your audience somewhere to stay. Paid memberships, member-only chat, exclusive drops, and welcome flows that run without you.',
     highlights: [
-      'Paid memberships with monthly perks',
-      'Member-only chat and exclusive drops',
-      'Welcome flows that run themselves',
+      'Memberships Worth Paying For',
+      'Chat and Drops for Members',
+      'Welcome Flows That Run Themselves',
     ],
     url: 'https://stan.store',
     prop: 'mic',
@@ -203,15 +205,12 @@ export const editions = [
     quarter: 'Q4',
     name: 'Payday',
     icon: 'payments',
-    tone: 'moss',
-    blurb: 'Getting paid, minus the paperwork.',
+    tone: 'teal',
+    tagline: 'Know your revenue',
+    blurb: 'See exactly where your money is coming from.',
     story:
-      'Payday is the money layer: instant bank payouts, invoices in one click, and tax exports that arrive when the year ends — not after a weekend of sorting.',
-    highlights: [
-      'Instant payouts to your bank',
-      'One-click invoices and receipts',
-      'Year-end tax exports that just work',
-    ],
+      'Payday is the money layer. Instant payouts to your bank, invoices in one click, and tax exports that land when the year ends — not after a weekend of sorting.',
+    highlights: ['Payouts Straight to Your Bank', 'Invoices in One Click', 'Tax, Simplified'],
     url: 'https://stan.store',
     prop: 'notepad',
   },
@@ -221,15 +220,12 @@ export const editions = [
     quarter: 'Q3',
     name: 'Fans',
     icon: 'favorite',
-    tone: 'rust',
-    blurb: 'Grow your audience — then keep it.',
+    tone: 'coral',
+    tagline: 'Every email counts',
+    blurb: 'Reach more inboxes. Build a stronger audience.',
     story:
-      'Fans is the growth edition: email that reacts to what people do, offers with a clock on them, and funnels that carry a first click all the way to checkout.',
-    highlights: [
-      'Email flows triggered by what fans do',
-      'Discount codes and limited-time offers',
-      'Funnels from first click to checkout',
-    ],
+      'Fans is the growth edition. Email that reacts to what people do, offers with a clock on them, and funnels that carry a first click all the way to checkout.',
+    highlights: ['Email That Reacts to Fans', 'Offers With a Clock On Them', 'A Better Funnel'],
     url: 'https://stan.store',
     prop: 'camera',
   },
@@ -239,15 +235,12 @@ export const editions = [
     quarter: 'Q2',
     name: 'Hello, Stan',
     icon: 'waving_hand',
-    tone: 'sand',
-    blurb: 'The first edition: your creator store, live in minutes.',
+    tone: 'periwinkle',
+    tagline: 'Where it all began',
+    blurb: 'The first edition. Your store, live in minutes.',
     story:
-      'Hello, Stan was the beginning — digital products from a link-in-bio, no website to maintain, no monthly headache. Built for creators from day one, and still the foundation under every edition since.',
-    highlights: [
-      'Sell digital products from your link-in-bio',
-      'No website, no code, no monthly headache',
-      'Built for creators from day one',
-    ],
+      'Hello, Stan was the beginning. Digital products from a link in bio, no website to maintain, no monthly headache — and still the foundation under every edition since.',
+    highlights: ['A Link in Bio That Sells', 'No Website to Maintain', 'Built for Creators, Day One'],
     url: 'https://stan.store',
     prop: 'tripod',
   },

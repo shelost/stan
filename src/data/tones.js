@@ -1,19 +1,19 @@
-// One hue per edition, all drawn from a cool violet family so the nine
-// sit together. Muted on purpose — the bright purple is reserved for
-// the interface highlight.
+// One hue per edition, all drawn from pastel space at matched saturation
+// and lightness so the nine sit together as a family. Muted on purpose —
+// the bright purple is reserved for the interface highlight.
 //
 // `deep` is the shadow end of each hue. The sleeve field mixes paper →
 // soft → base → deep to get depth out of a two-colour palette.
 export const TONES = {
-  graphite: { base: '#6355ff', soft: '#8a80ff', deep: '#2a1f7a', paper: '#eceaff' },
-  slate: { base: '#5a6480', soft: '#8f9ab8', deep: '#242c44', paper: '#e9edf6' },
-  plum: { base: '#7d5a88', soft: '#a888b2', deep: '#3a2246', paper: '#f2e9f6' },
-  clay: { base: '#96718d', soft: '#c197b8', deep: '#4a2b45', paper: '#f7ecf3' },
-  sage: { base: '#5f7f8a', soft: '#8fadb8', deep: '#223a44', paper: '#e8f0f3' },
-  stone: { base: '#6e6b86', soft: '#9b98b4', deep: '#2e2b44', paper: '#eeecfa' },
-  moss: { base: '#547073', soft: '#87a3a5', deep: '#1f3437', paper: '#e7f0f0' },
-  rust: { base: '#8a5f72', soft: '#b78e9d', deep: '#432434', paper: '#f6eaef' },
-  sand: { base: '#7c7398', soft: '#a79fc3', deep: '#332c4e', paper: '#f0edfa' },
+  graphite: { base: '#5c4c9f', soft: '#8a80c8', deep: '#2a1f5a', paper: '#ece9f6' },
+  slate: { base: '#4f7ec2', soft: '#7da3d8', deep: '#1e3a5f', paper: '#e8eff8' },
+  plum: { base: '#c05d90', soft: '#d989b0', deep: '#5a1f45', paper: '#f5e9f0' },
+  clay: { base: '#cf7154', soft: '#e39b80', deep: '#71301f', paper: '#fcece5' },
+  sage: { base: '#4e9c77', soft: '#83c0a2', deep: '#1e4d38', paper: '#e6f3ed' },
+  stone: { base: '#5a7a8f', soft: '#8fa5bf', deep: '#1f3447', paper: '#e9f1f6' },
+  moss: { base: '#6b8b6e', soft: '#9db8a0', deep: '#273b2c', paper: '#eef3f0' },
+  rust: { base: '#c65868', soft: '#de8b96', deep: '#6e2430', paper: '#fbe8ea' },
+  sand: { base: '#d4a558', soft: '#e5c791', deep: '#6b4f1f', paper: '#faf5eb' },
 };
 
-export const toneOf = (edition) => TONES[edition.tone] ?? TONES.stone;
+export const toneOf = (edition) => TONES[edition.tone] ?? TONES.graphite;

@@ -3,16 +3,22 @@ import gsap from 'gsap';
 import EditionCard from '../editions/EditionCard';
 import ShelfProp from './ShelfProp';
 import { editions, isSpotlit } from '../../data/editions';
+import { toneOf } from '../../data/tones';
 import { resolveShelves } from './shelfLayout';
-import { prefersReducedMotion } from './helpers';
+import { prefersReducedMotion, useMediaQuery } from './helpers';
 
 // The lamp's resting throw: down and a little to the left, across the
 // shelves that hang below it. The beam hangs from its top edge, so a
 // positive rotation swings the pool of light leftward.
 const BASE_AIM = 10;
 
+// Below this the room reflows onto four shorter shelves. Matches the
+// `--unit` divisor in _shelfscene.scss, which assumes the compact spans.
+const COMPACT_AT = '(max-width: 720px)';
+
 export default function ShelfScene({ active, onSelect }) {
-  const shelves = useMemo(() => resolveShelves(editions), []);
+  const compact = useMediaQuery(COMPACT_AT);
+  const shelves = useMemo(() => resolveShelves(editions, compact), [compact]);
   const sceneRef = useRef(null);
   const beamRef = useRef(null);
 
@@ -44,7 +50,7 @@ export default function ShelfScene({ active, onSelect }) {
     observer.observe(scene);
 
     return () => observer.disconnect();
-  }, []);
+  }, [compact]);
 
   // Selecting an edition re-aims the lamp at it. The swing is clamped so the
   // light always still reads as falling from the fixture.
@@ -80,10 +86,10 @@ export default function ShelfScene({ active, onSelect }) {
 
     const tween = gsap.to(beam, { rotation: aim, duration: 1, ease: 'power3.out' });
     return () => tween.kill();
-  }, [active]);
+  }, [active, compact]);
 
   return (
-    <div className="sscene" ref={sceneRef}>
+    <div className={`sscene${compact ? ' sscene--compact' : ''}`} ref={sceneRef}>
       <span className="sscene__beam" ref={beamRef} aria-hidden="true" />
 
       {shelves.map((shelf) => (
@@ -115,6 +121,15 @@ export default function ShelfScene({ active, onSelect }) {
               const lit = isSpotlit(item.edition);
               const selected = active === item.index;
               const gear = item.edition.prop ? <ShelfProp variant={item.edition.prop} /> : null;
+              const tone = toneOf(item.edition);
+
+              // The hue rides on the item, not just the card, so the pool of
+              // lamplight underneath can warm towards the edition's own colour.
+              const seatStyle = {
+                ...style,
+                '--tone': tone.base,
+                '--soft': tone.soft,
+              };
 
               return (
                 <div
@@ -122,7 +137,7 @@ export default function ShelfScene({ active, onSelect }) {
                     hero ? ' sitem--hero' : ''
                   }${selected ? ' sitem--active' : ''}`}
                   key={item.edition.id}
-                  style={style}
+                  style={seatStyle}
                 >
                   {item.prop === 'left' && gear}
 
