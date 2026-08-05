@@ -32,7 +32,7 @@ export const editions = [
     name: 'Stanley',
     icon: 'auto_awesome',
     tone: 'violet',
-    tagline: 'Build faster with AI',
+    tagline: 'Build Faster with AI',
     blurb: 'Work less. Create more. Meet your new co-founder.',
     story:
       'Stanley is the first edition that lives inside the store instead of beside it. Ask for a product page, a sharper price, a reply to a DM — it answers in your voice, with your links already attached.',
@@ -121,7 +121,7 @@ export const editions = [
     name: 'Creator OS',
     icon: 'dashboard',
     tone: 'sky',
-    tagline: 'Run the whole show',
+    tagline: 'Run the Whole Show',
     blurb: 'One dashboard. Everything you make, sell, and schedule.',
     story:
       'Creator OS pulls analytics, the mobile app, and every connected social into one place you can actually run from. Revenue sits at the top. The rest is one tap away.',
@@ -137,7 +137,7 @@ export const editions = [
     name: 'Storefront',
     icon: 'storefront',
     tone: 'blush',
-    tagline: 'The brand upgrade',
+    tagline: 'The Brand Upgrade',
     blurb: 'Make your storefront unmistakably you.',
     story:
       'Storefront turns a link in your bio into a real shop. Themes, fonts, and drag-and-drop blocks for products, media, and links. Preview it. Then ship it.',
@@ -152,7 +152,7 @@ export const editions = [
     name: 'Classroom',
     icon: 'school',
     tone: 'apricot',
-    tagline: 'Made to binge',
+    tagline: 'Made to Binge',
     blurb: 'Courses as easy to build as they are to finish.',
     story:
       'Classroom is for courses that feel finished the day you ship them. Drip modules on your schedule, certificates at the finish line, and every file type in one upload.',
@@ -167,7 +167,7 @@ export const editions = [
     name: 'Booked',
     icon: 'calendar_month',
     tone: 'mint',
-    tagline: 'Never double-booked',
+    tagline: 'Never Double-Booked',
     blurb: 'Coaching and calls without the calendar chaos.',
     story:
       'Booked keeps sessions and workshops off the spreadsheet. Calendars sync both ways, reminders cut no-shows, and waitlists fill the seats you leave open.',
@@ -186,7 +186,7 @@ export const editions = [
     name: 'Community',
     icon: 'groups',
     tone: 'lilac',
-    tagline: 'Members only',
+    tagline: 'Members Only',
     blurb: 'Turn followers into members with a place of their own.',
     story:
       'Community gives your audience somewhere to stay. Paid memberships, member-only chat, exclusive drops, and welcome flows that run without you.',
@@ -206,7 +206,7 @@ export const editions = [
     name: 'Payday',
     icon: 'payments',
     tone: 'teal',
-    tagline: 'Know your revenue',
+    tagline: 'Know Your Revenue',
     blurb: 'See exactly where your money is coming from.',
     story:
       'Payday is the money layer. Instant payouts to your bank, invoices in one click, and tax exports that land when the year ends — not after a weekend of sorting.',
@@ -221,7 +221,7 @@ export const editions = [
     name: 'Fans',
     icon: 'favorite',
     tone: 'coral',
-    tagline: 'Every email counts',
+    tagline: 'Every Email Counts',
     blurb: 'Reach more inboxes. Build a stronger audience.',
     story:
       'Fans is the growth edition. Email that reacts to what people do, offers with a clock on them, and funnels that carry a first click all the way to checkout.',
@@ -236,7 +236,7 @@ export const editions = [
     name: 'Hello, Stan',
     icon: 'waving_hand',
     tone: 'periwinkle',
-    tagline: 'Where it all began',
+    tagline: 'Where It All Began',
     blurb: 'The first edition. Your store, live in minutes.',
     story:
       'Hello, Stan was the beginning. Digital products from a link in bio, no website to maintain, no monthly headache — and still the foundation under every edition since.',
