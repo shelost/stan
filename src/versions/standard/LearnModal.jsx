@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
 import Cover from '../editions/Cover';
 import { toneOf } from '../../data/tones';
-
-const num = (i) => String(i + 1).padStart(2, '0');
+import { num } from './helpers';
 
 export default function LearnModal({ edition, index, onClose }) {
   const tone = toneOf(edition);
@@ -65,6 +64,13 @@ export default function LearnModal({ edition, index, onClose }) {
                 <span>Status</span>
                 <strong>{edition.isNew ? 'New release' : 'Shipped'}</strong>
               </div>
+              {edition.creator && (
+                <div>
+                  <span>Creator</span>
+                  <strong>{edition.creator.name}</strong>
+                  {edition.creator.handle && <i>{edition.creator.handle}</i>}
+                </div>
+              )}
             </div>
           </div>
 

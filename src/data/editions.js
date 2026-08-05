@@ -1,3 +1,14 @@
+// Every edition carries three scene fields on top of its content:
+//
+//   prop       key into the shelf prop vocabulary (src/versions/standard/ShelfProp.jsx).
+//              The piece of creator gear that sits beside this edition on the shelf.
+//   spotlight  opt-in to the lamp's light pool. `isNew` is lit implicitly, so this
+//              flag is for the one or two older editions partnerships wants surfaced.
+//   creator    OPTIONAL and currently unset — the forward-looking partnerships hook.
+//              Shape: { name: 'Full Name', handle: '@handle' }. When present it
+//              renders in the side card and the Learn-more modal; when absent
+//              nothing is rendered and no placeholder is substituted.
+
 export const editions = [
   {
     id: 'stanley',
@@ -92,6 +103,7 @@ export const editions = [
     },
     url: 'https://stan.store',
     isNew: true,
+    prop: 'speaker',
   },
   {
     id: 'creator-os',
@@ -109,6 +121,8 @@ export const editions = [
       'Connect every social platform in one tap',
     ],
     url: 'https://stan.store',
+    prop: 'tablet',
+    spotlight: true,
   },
   {
     id: 'storefront',
@@ -126,6 +140,7 @@ export const editions = [
       'Instant previews before you publish',
     ],
     url: 'https://stan.store',
+    prop: 'dock',
   },
   {
     id: 'classroom',
@@ -143,6 +158,7 @@ export const editions = [
       'Upload once — video, audio, and downloads together',
     ],
     url: 'https://stan.store',
+    prop: 'ringlight',
   },
   {
     id: 'booked',
@@ -160,6 +176,7 @@ export const editions = [
       'Group workshops with built-in waitlists',
     ],
     url: 'https://stan.store',
+    prop: 'headphones',
   },
   {
     id: 'community',
@@ -177,6 +194,8 @@ export const editions = [
       'Welcome flows that run themselves',
     ],
     url: 'https://stan.store',
+    prop: 'mic',
+    spotlight: true,
   },
   {
     id: 'payday',
@@ -194,6 +213,7 @@ export const editions = [
       'Year-end tax exports that just work',
     ],
     url: 'https://stan.store',
+    prop: 'notepad',
   },
   {
     id: 'fans',
@@ -211,6 +231,7 @@ export const editions = [
       'Funnels from first click to checkout',
     ],
     url: 'https://stan.store',
+    prop: 'camera',
   },
   {
     id: 'hello-stan',
@@ -228,5 +249,10 @@ export const editions = [
       'Built for creators from day one',
     ],
     url: 'https://stan.store',
+    prop: 'tripod',
   },
 ];
+
+// The lamp on the shelf lights the newest edition plus anything flagged
+// `spotlight`. Everything else sits in the cool ambient of the room.
+export const isSpotlit = (edition) => Boolean(edition.isNew || edition.spotlight);

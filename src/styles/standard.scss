@@ -1,6 +1,7 @@
 @use 'tokens' as *;
 @use 'art';
 @use 'sleeve';
+@use 'shelfscene';
 
 @include reset;
 
@@ -19,6 +20,20 @@ body {
   height: 100vh;
   overflow: hidden;
   background: $night;
+
+  // Ambient room light: a warm pocket up where the lamp hangs, a cool one in
+  // the far corner. Kept at page level rather than inside the scene so it can
+  // never show its own box edge against the night background.
+  &::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(38% 34% at 82% 4%, rgba(255, 206, 150, 0.1) 0%, transparent 72%),
+      radial-gradient(48% 46% at 12% 88%, rgba(112, 124, 198, 0.07) 0%, transparent 76%);
+  }
 }
 
 // —— Header ———————————————————————————————————————————————————
@@ -47,57 +62,149 @@ body {
 
   &__lockup {
     display: flex;
-    flex-direction: column;
+    align-items: center;
 
     strong {
-      font-size: 15px;
-      font-weight: 500;
-      letter-spacing: -0.025em;
-      line-height: 1.1;
-    }
-
-    em {
-      font-style: normal;
-      font-size: 12px;
+      font-family: $serif;
+      font-size: 22px;
       font-weight: 400;
       letter-spacing: -0.02em;
-      line-height: 1.2;
-      color: $chalk-3;
+      line-height: 1;
     }
   }
 }
 
-// —— Atlas-like side card —————————————————————————————————————
+// —— Floating hero: a real phone over bare copy ———————————————
+// No panel behind any of this: the phone and the type sit straight on the
+// night background so the hero reads as one piece, not a card with a tray.
 
+// Centred against the shelving rather than dropped into the bottom corner, so
+// the left column and the scene read as one band instead of a card floating
+// beside it. `margin-block: auto` between a top and bottom of 0 centres it
+// without a transform, which GSAP owns for the selection animation.
 .scard {
   position: fixed;
-  left: clamp(28px, 4vw, 64px);
-  bottom: clamp(56px, 10vh, 108px);
+  left: clamp(22px, 3.4vw, 52px);
+  top: 0;
+  bottom: 0;
   z-index: 8;
+  width: min(268px, 27vw);
+  height: max-content;
+  margin-block: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0;
-  width: min(300px, 32vw);
+  gap: 22px;
   pointer-events: none;
-  animation: scard-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scard__glow {
+  position: absolute;
+  inset: -14% -24%;
+  background: radial-gradient(
+    50% 42% at 38% 30%,
+    color-mix(in srgb, var(--tone) 38%, transparent) 0%,
+    transparent 72%
+  );
+  filter: blur(4px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+// the device itself: bezel, punch-hole camera, glass edge, cursor tilt
+.scard__device {
+  position: relative;
+  z-index: 1;
+  width: min(198px, 20vw);
+  aspect-ratio: 9 / 19;
+  padding: 0;
+  border: none;
+  background: none;
+  perspective: 950px;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.scard__screen {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 30px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #17161e 0%, #0d0c12 100%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 22px 48px rgba(0, 0, 0, 0.5),
+    0 48px 90px rgba(0, 0, 0, 0.34),
+    0 0 52px color-mix(in srgb, var(--tone) 24%, transparent);
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+
+  @include art.art-phone(24px);
+
+  // the artwork is inset so the dark body shows as a slim bezel
+  .art {
+    inset: 6px;
+  }
+}
+
+.scard__device:hover .scard__screen {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.5),
+    0 26px 54px rgba(0, 0, 0, 0.54),
+    0 54px 98px rgba(0, 0, 0, 0.38),
+    0 0 64px color-mix(in srgb, var(--tone) 38%, transparent);
+}
+
+.scard__edge {
+  position: absolute;
+  inset: 6px;
+  border-radius: 24px;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.13),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1.5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.scard__cam {
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #0d0c12;
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.09),
+    0 0 0 2px rgba(13, 12, 18, 0.65);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.scard__info {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .scard__idx {
-  @include label;
   color: $chalk-3;
-  margin-bottom: 10px;
-}
-
-.scard__copy {
-  display: flex;
-  flex-direction: column;
+  padding-right: 9px;
+  border-right: 1px solid rgba(243, 242, 251, 0.18);
 }
 
 .scard__meta {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 9px;
   @include label;
   color: $chalk-2;
 
@@ -113,48 +220,80 @@ body {
 }
 
 .scard__name {
-  margin-top: 6px;
-  font-size: clamp(34px, 4.4vw, 66px);
+  margin-top: 8px;
+  font-family: $serif;
+  font-size: clamp(30px, 3.4vw, 46px);
   font-weight: 400;
-  letter-spacing: -0.045em;
-  line-height: 0.96;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: $chalk;
+}
+
+// the release in one breath — the hero's job is to inform, not tease
+.scard__blurb {
+  margin-top: 10px;
+  max-width: 30ch;
+  font-size: 13px;
+  font-weight: 420;
+  letter-spacing: -0.014em;
+  line-height: 1.5;
+  color: $chalk-2;
+}
+
+// Partnerships hook: only rendered when an edition carries `creator`.
+.scard__creator {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-top: 9px;
+  font-size: 12.5px;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: $chalk-2;
+
+  em {
+    font-style: normal;
+    font-size: 11.5px;
+    color: var(--tone);
+  }
 }
 
 .scard__cta {
   pointer-events: auto;
-  margin-top: 22px;
+  margin-top: 16px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 0 0 3px;
-  border: none;
-  border-bottom: 1px solid rgba(243, 242, 251, 0.28);
-  background: none;
-  color: $chalk-2;
+  padding: 9px 14px;
+  border: 1px solid rgba(243, 242, 251, 0.16);
+  border-radius: 999px;
+  background: rgba(243, 242, 251, 0.06);
+  color: $chalk;
   font-family: inherit;
-  font-size: 13.5px;
+  font-size: 12.5px;
   font-weight: 450;
   letter-spacing: -0.02em;
   line-height: 1;
   transition:
     color 0.15s ease,
-    border-color 0.15s ease;
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.2s ease;
+
+  span {
+    color: var(--tone);
+    transition: transform 0.2s ease;
+  }
 
   &:hover {
-    color: $chalk;
-    border-color: $chalk;
-  }
-}
+    background: rgba(243, 242, 251, 0.12);
+    border-color: rgba(243, 242, 251, 0.32);
+    transform: translateY(-1px);
 
-@keyframes scard-in {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    span {
+      transform: translateX(2px);
+    }
   }
 }
 
@@ -244,7 +383,10 @@ body {
   }
 }
 
-// —— Shelves ——————————————————————————————————————————————————
+// —— Stage ————————————————————————————————————————————————————
+// The scene centres itself with `margin: auto` rather than
+// `justify-content`, so a tall room scrolls from its true top instead of
+// having the first shelf clipped away.
 
 .sstage {
   position: absolute;
@@ -252,89 +394,158 @@ body {
   z-index: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 32px;
-  padding: 96px 80px 48px clamp(320px, 34vw, 400px);
+  // The left inset only has to clear the fixed detail card (which tops out at
+  // 52px + 248px). Anything beyond that opens a void between the card and the
+  // shelving, so the two stop reading as one composition.
+  padding: 64px clamp(56px, 6vw, 120px) 32px clamp(292px, 22vw, 340px);
   overflow: auto;
-}
+  scrollbar-width: none;
 
-.sshelf {
-  position: relative;
-  width: 100%;
-  max-width: 860px;
-  margin: 0 auto;
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: -18% -4% -10%;
-    background: radial-gradient(
-      55% 70% at 50% 58%,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0) 70%
-    );
-    pointer-events: none;
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
 
-.sshelf__row {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  gap: clamp(12px, 2vw, 32px);
-  padding-bottom: 2px;
-}
-
-.sshelf__board {
-  position: relative;
-  margin-top: -2px;
-}
-
-.sshelf__top {
-  height: 7px;
-  background: linear-gradient(180deg, #3a3844 0%, #2a2834 100%);
-  border-radius: 1px 1px 0 0;
-}
-
-.sshelf__front {
-  height: 12px;
-  background: linear-gradient(180deg, #2a2834 0%, #1d1c26 70%, #16151d 100%);
-  border-radius: 0 0 2px 2px;
-  box-shadow:
-    0 10px 22px rgba(0, 0, 0, 0.45),
-    0 28px 50px rgba(0, 0, 0, 0.35);
-}
-
-// Phone-aspect sleeves (standard only)
+// Phone-aspect sleeves — deep bezel, shelf contact shadow, tone halo.
+// Nothing here animates `transform` on `.sleeve__inner`: GSAP owns that
+// element for the pointer tilt, and a CSS animation would outrank it.
 .standard {
+  @include art.art-phone(18px);
+
   .sleeve {
-    width: clamp(78px, 8.2vw, 118px);
+    width: clamp(80px, 8.4vw, 122px);
     aspect-ratio: 9 / 19;
+    perspective: 780px;
+    transition: transform 0.5s cubic-bezier(0.34, 1.4, 0.64, 1);
+
+    // tone bloom washing the shelf behind the selected phone
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -12% -32% -8%;
+      z-index: -2;
+      border-radius: 50%;
+      background: radial-gradient(
+        50% 50% at 50% 56%,
+        color-mix(in srgb, var(--tone) 46%, transparent) 0%,
+        transparent 72%
+      );
+      filter: blur(10px);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+    }
+
+    // contact shadow so the phone reads as standing on the board
+    &::after {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      left: 3%;
+      right: 3%;
+      bottom: -5px;
+      height: 15px;
+      border-radius: 50%;
+      background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0) 72%);
+      filter: blur(3px);
+      pointer-events: none;
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease;
+    }
+
+    &:hover {
+      transform: rotate(0deg) translateY(-18px) scale(1.08);
+      z-index: 5;
+    }
+
+    &--active {
+      transform: rotate(0deg) translateY(-22px) scale(1.11);
+      z-index: 6;
+    }
+
+    &--active:hover {
+      transform: rotate(0deg) translateY(-24px) scale(1.13);
+    }
+
+    &:hover::before {
+      opacity: 0.5;
+    }
+
+    &--active::before {
+      opacity: 0.85;
+      animation: sleeve-bloom 4.2s ease-in-out infinite;
+    }
+
+    // shadow spreads and softens as the card lifts off the shelf
+    &:hover::after,
+    &--active::after {
+      opacity: 0.5;
+      transform: translateY(13px) scale(1.14, 0.66);
+    }
   }
 
   .sleeve__inner {
-    border-radius: 16px;
+    border-radius: 18px;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0f0e14;
     box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.4),
-      0 12px 28px rgba(0, 0, 0, 0.45),
-      0 28px 56px rgba(0, 0, 0, 0.3);
+      0 1px 2px rgba(0, 0, 0, 0.45),
+      0 14px 30px rgba(0, 0, 0, 0.48),
+      0 32px 60px rgba(0, 0, 0, 0.32);
+    transition:
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
   }
 
-  .sleeve--active,
-  .sleeve:hover {
-    z-index: 4;
+  .sleeve:hover .sleeve__inner {
+    border-color: rgba(255, 255, 255, 0.26);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.45),
+      0 20px 44px rgba(0, 0, 0, 0.52),
+      0 42px 76px rgba(0, 0, 0, 0.36),
+      0 0 34px color-mix(in srgb, var(--tone) 24%, transparent);
   }
 
   .sleeve--active .sleeve__inner {
-    outline: 1.5px solid rgba(243, 242, 251, 0.35);
-    outline-offset: 3px;
+    border-color: rgba(243, 242, 251, 0.46);
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.45),
+      0 22px 48px rgba(0, 0, 0, 0.55),
+      0 46px 82px rgba(0, 0, 0, 0.38),
+      0 0 46px color-mix(in srgb, var(--tone) 40%, transparent);
   }
 
-  .art {
-    border-radius: 16px;
+  // brighter lip on the dark page than the light /editions shelves want
+  .sleeve__edge {
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.44),
+      inset 0 -1.5px 0 rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes sleeve-bloom {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .standard .sleeve,
+  .standard .sleeve::before,
+  .standard .sleeve::after,
+  .standard .sleeve__inner {
+    animation: none !important;
+    transition: none !important;
   }
 }
 
@@ -433,10 +644,9 @@ body {
   overflow: hidden;
   flex-shrink: 0;
   box-shadow: 0 8px 20px rgba(29, 27, 46, 0.12);
+  background: var(--paper, #f0ece4);
 
-  .art {
-    border-radius: 12px;
-  }
+  @include art.art-phone(12px);
 }
 
 .nmodal__props {
@@ -463,6 +673,13 @@ body {
     font-weight: 500;
     letter-spacing: -0.02em;
     color: $ink;
+  }
+
+  i {
+    font-style: normal;
+    font-size: 12px;
+    letter-spacing: -0.018em;
+    color: rgba(29, 27, 46, 0.45);
   }
 }
 
@@ -571,6 +788,27 @@ body {
   }
 }
 
+// Short windows: shrink the device before the copy has to give way
+@media (max-height: 820px) {
+  .scard__device {
+    width: min(162px, 17vw);
+  }
+
+  .scard__name {
+    font-size: clamp(26px, 3vw, 36px);
+  }
+}
+
+@media (max-height: 700px) {
+  .scard__device {
+    width: 134px;
+  }
+
+  .scard__blurb {
+    display: none;
+  }
+}
+
 @media (max-width: 960px) {
   body {
     overflow: auto;
@@ -585,11 +823,12 @@ body {
   .scard {
     position: relative;
     left: auto;
+    top: auto;
     bottom: auto;
-    width: auto;
-    padding: 96px 24px 8px;
+    width: min(280px, calc(100% - 48px));
+    height: auto;
+    margin: 88px 24px 8px;
     pointer-events: auto;
-    animation: none;
   }
 
   .srail {
@@ -599,17 +838,7 @@ body {
   .sstage {
     position: relative;
     inset: auto;
-    padding: 24px 16px 48px;
+    padding: 24px 16px 56px;
     overflow: visible;
-  }
-
-  .sshelf__row {
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 8px;
-  }
-
-  .standard .sleeve {
-    width: 88px;
   }
 }

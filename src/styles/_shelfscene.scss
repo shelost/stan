@@ -1,0 +1,545 @@
+@use 'tokens' as *;
+
+// The domestic shelf scene for The Standard.
+//
+// Everything here is scoped to the scene's own classes (`.sscene`, `.sshelf`,
+// `.sitem`, `.sprop`) so the shared `.sleeve` / `.art` layers that /editions,
+// /phone and the rest depend on keep their original behaviour. The only
+// crossover is `.standard .sitem …`, which resizes and grades a card that is
+// standing inside this scene.
+//
+// One length drives the whole room: `--unit` is the width of a full-size
+// edition card, and every shelf gap, prop height and nudge is expressed as a
+// multiple of it. Change it and the scene rescales as a piece.
+//
+// Hierarchy runs on four steps, loudest to quietest:
+//   hero    the newest edition — biggest, warmest, deepest pool of light
+//   lit     the other spotlit editions
+//   front   / mid / back — unlit editions, dimmer and cooler as they recede
+//   props   quietest of all, so nothing competes with a card
+
+.sscene {
+  --unit: clamp(60px, 6.2vw, 92px);
+
+  position: relative;
+  width: min(940px, 100%);
+  margin-block: auto;
+  margin-inline: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+// The lamp's throw. Anchored in JS to the fixture's measured position and
+// rotated by GSAP toward the selected edition, so the transform belongs to
+// GSAP and only the shape lives here.
+//
+// The cone is a conic gradient rather than a clip-path: `clip-path` is
+// applied after `filter`, so a clipped cone keeps a razor edge no matter how
+// hard it is blurred, and reads as a flat wedge instead of light.
+.sscene__beam {
+  --cone: 255, 218, 174;
+
+  position: absolute;
+  left: 60%;
+  top: 4%;
+  z-index: 0;
+  width: calc(var(--unit) * 8);
+  height: calc(var(--unit) * 7); // replaced in JS with the drop to the last shelf
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
+  background: conic-gradient(
+    from 152deg at 50% 0%,
+    transparent 0deg,
+    rgba(var(--cone), 0.06) 9deg,
+    rgba(var(--cone), 0.38) 28deg,
+    rgba(var(--cone), 0.06) 47deg,
+    transparent 56deg
+  );
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.98) 0%,
+    rgba(0, 0, 0, 0.66) 42%,
+    rgba(0, 0, 0, 0.22) 74%,
+    transparent 96%
+  );
+  filter: blur(12px);
+  animation: beam-in 1.8s ease 0.4s both;
+}
+
+// —— shelving ——————————————————————————————————————————————————
+// Boards are sized by what stands on them plus a fixed overhang, so an
+// uneven set of groupings produces an uneven — but never arbitrary — set of
+// shelf lengths, with no dead board hanging off either end.
+
+.sshelf {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  margin-left: calc(var(--shift) * 100%);
+  margin-bottom: calc(var(--unit) * var(--gap));
+}
+
+.sshelf__items {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(var(--unit) * 0.26);
+  padding: 0 calc(var(--unit) * 0.32);
+  min-height: calc(var(--unit) * 0.4);
+}
+
+// A thin plank with a lit front lip: it should frame the objects, not
+// compete with them.
+.sshelf__board {
+  position: relative;
+  z-index: 1;
+  margin-top: -1px;
+}
+
+.sshelf__top {
+  height: 4px;
+  background: linear-gradient(180deg, #4a4757 0%, #322f3e 100%);
+  border-radius: 1px 1px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 226, 190, 0.14);
+}
+
+.sshelf__front {
+  height: 8px;
+  background: linear-gradient(180deg, #2b2937 0%, #1c1b25 100%);
+  border-radius: 0 0 2px 2px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+// short stubs of upright under each board, so the shelves read as one
+// piece of furniture rather than three floating planks
+.sshelf__bracket {
+  position: absolute;
+  top: 12px;
+  width: calc(var(--unit) * 0.1);
+  height: calc(var(--unit) * 0.4);
+  border-radius: 0 0 2px 2px;
+  background: linear-gradient(180deg, #232230 0%, rgba(22, 21, 29, 0) 100%);
+  pointer-events: none;
+
+  &--l {
+    left: 8%;
+  }
+
+  &--r {
+    right: 8%;
+  }
+}
+
+// —— items ——————————————————————————————————————————————————————
+// Depth is the atmosphere control: how big a thing is, how far it lifts up
+// the board, how bright it renders and what it stacks over.
+
+.sitem {
+  --scale: var(--depth-scale, 1);
+  --boost: 1;
+
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: calc(var(--unit) * 0.08);
+  margin-bottom: var(--lift, 0px);
+  margin-left: calc(var(--unit) * var(--nudge, 0));
+}
+
+.sitem--back {
+  --depth-scale: 0.86;
+  --lift: 6px;
+  --bright: 0.62;
+  --sat: 0.7;
+  --dim: 0.44;
+
+  z-index: 1;
+}
+
+.sitem--mid {
+  --depth-scale: 0.96;
+  --lift: 3px;
+  --bright: 0.7;
+  --sat: 0.78;
+  --dim: 0.56;
+
+  z-index: 2;
+}
+
+.sitem--front {
+  --depth-scale: 1.18;
+  --lift: 0px;
+  --bright: 0.84;
+  --sat: 0.88;
+  --dim: 0.7;
+
+  z-index: 3;
+}
+
+// Lit by the lamp — driven by `isNew` / `spotlight` in src/data/editions.js.
+.sitem--lit {
+  --bright: 1.18;
+  --sat: 1.14;
+  --dim: 0.82;
+
+  z-index: 4;
+}
+
+// The newest edition outranks the rest of the spotlit set.
+.sitem--hero {
+  --boost: 1.1;
+  --bright: 1.28;
+  --sat: 1.2;
+  --dim: 0.88;
+
+  z-index: 5;
+}
+
+.sitem--active {
+  --bright: 1.32;
+  --sat: 1.22;
+  --dim: 0.9;
+
+  z-index: 6;
+}
+
+.sitem__seat {
+  position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+}
+
+// the pool of lamplight the card is standing in
+.sitem__pool {
+  position: absolute;
+  z-index: 0;
+  left: -72%;
+  right: -72%;
+  bottom: -7%;
+  height: 34%;
+  border-radius: 50%;
+  background: radial-gradient(
+    50% 50% at 50% 60%,
+    rgba(255, 214, 162, 0.46) 0%,
+    rgba(255, 198, 144, 0.16) 42%,
+    transparent 74%
+  );
+  filter: blur(12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+// and the shadow it throws away from the lamp, down and to the left
+.sitem__cast {
+  position: absolute;
+  z-index: 0;
+  left: -66%;
+  width: 132%;
+  bottom: -4px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0.7) 0%, transparent 72%);
+  filter: blur(5px);
+  transform: skewX(-24deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.sitem:hover .sitem__pool {
+  opacity: 0.5;
+}
+
+.sitem--lit .sitem__pool {
+  opacity: 0.85;
+}
+
+.sitem--hero .sitem__pool,
+.sitem--lit:hover .sitem__pool,
+.sitem--active .sitem__pool {
+  opacity: 1;
+}
+
+.sitem--lit .sitem__cast,
+.sitem--active .sitem__cast {
+  opacity: 0.9;
+}
+
+// —— the cards, standing in the room ————————————————————————————
+
+.standard .sitem .sleeve {
+  width: calc(var(--unit) * var(--scale) * var(--boost));
+}
+
+.standard .sitem .art {
+  filter: brightness(var(--bright, 0.8)) saturate(var(--sat, 0.86));
+  transition: filter 0.5s ease;
+}
+
+// The edition name is the one thing that has to survive at this scale, so it
+// takes a larger share of the card here than it does in the side panel.
+.standard .sitem .art__name {
+  font-size: 16cqw;
+  letter-spacing: -0.035em;
+}
+
+.standard .sitem .art__q {
+  font-size: 8cqw;
+}
+
+.standard .sitem--lit .sleeve__inner {
+  border-color: rgba(255, 228, 194, 0.38);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 18px 40px rgba(0, 0, 0, 0.5),
+    0 40px 74px rgba(0, 0, 0, 0.34),
+    0 0 48px rgba(255, 206, 152, 0.26);
+}
+
+.standard .sitem--hero .sleeve__inner {
+  border-color: rgba(255, 232, 204, 0.5);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.45),
+    0 22px 48px rgba(0, 0, 0, 0.55),
+    0 48px 88px rgba(0, 0, 0, 0.38),
+    0 0 64px rgba(255, 206, 152, 0.36);
+}
+
+// —— props ——————————————————————————————————————————————————————
+// Decorative only: no pointer events, no tab stop, nothing to click. The
+// host takes the viewBox's aspect ratio exactly, so nothing distorts.
+
+.sprop {
+  position: relative;
+  flex: 0 0 auto;
+  display: block;
+  height: calc(var(--unit) * var(--ph) * var(--pscale, 1) * var(--scale, 1));
+  aspect-ratio: var(--ar);
+  margin-bottom: calc(var(--unit) * var(--drop, 0) * var(--pscale, 1) * var(--scale, 1) * -1);
+  opacity: var(--dim, 0.6);
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+
+  svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+}
+
+// the fixture is the light source, so it never recedes with its shelf
+.sprop--lamp {
+  opacity: 1;
+
+  .pr__glow {
+    filter:
+      drop-shadow(0 0 12px rgba(255, 206, 150, 0.95))
+      drop-shadow(0 10px 36px rgba(255, 196, 132, 0.6));
+  }
+}
+
+.pr__shell {
+  fill: #292833;
+  stroke: rgba(255, 255, 255, 0.18);
+  stroke-width: 1;
+}
+
+.pr__deep {
+  fill: #191821;
+}
+
+.pr__screen {
+  fill: #1e1d2b;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 0.8;
+}
+
+.pr__paper {
+  fill: #35343f;
+}
+
+.pr__lens {
+  fill: #2a2939;
+  stroke: rgba(255, 255, 255, 0.16);
+  stroke-width: 1;
+}
+
+.pr__cast {
+  fill: rgba(0, 0, 0, 0.5);
+}
+
+.pr__stem,
+.pr__handle,
+.pr__band {
+  fill: none;
+  stroke: #3e3c4c;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pr__vine {
+  fill: none;
+  stroke: #3a5147;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+}
+
+.pr__leaf {
+  fill: #33473b;
+  stroke: rgba(190, 226, 202, 0.2);
+  stroke-width: 0.8;
+}
+
+.pr__lite {
+  fill: none;
+  stroke: rgba(255, 228, 194, 0.38);
+  stroke-width: 1.1;
+  stroke-linecap: round;
+}
+
+.pr__rule {
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+}
+
+.pr__accent {
+  fill: $accent;
+  opacity: 0.5;
+}
+
+.pr__glow {
+  fill: rgba(255, 224, 182, 0.88);
+}
+
+.pr__ringlight {
+  fill: none;
+  stroke: rgba(255, 228, 194, 0.5);
+  stroke-width: 6;
+  filter: drop-shadow(0 0 8px rgba(255, 206, 152, 0.5));
+}
+
+// declared last so it dims whatever it is paired with
+.pr__soft {
+  opacity: 0.5;
+}
+
+.pr__sway {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: prop-sway 9s ease-in-out infinite;
+}
+
+.pr__hang {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: prop-sway 11s ease-in-out infinite;
+}
+
+@keyframes prop-sway {
+  0%,
+  100% {
+    transform: rotate(-0.9deg);
+  }
+
+  50% {
+    transform: rotate(0.9deg);
+  }
+}
+
+@keyframes beam-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+// —— responsive ————————————————————————————————————————————————
+
+// On a very wide desktop the scene grows with the room rather than sitting
+// as a small island with dead space either side of it.
+@media (min-width: 1600px) {
+  .sscene {
+    --unit: clamp(92px, 5.7vw, 112px);
+
+    width: min(1140px, 100%);
+  }
+}
+
+// The irregular room does not survive a phone, so below 960px the shelves
+// square up into scrollable rows, the depth grading flattens, and the
+// decoration steps aside. Every card stays reachable.
+@media (max-width: 960px) {
+  .sscene {
+    --unit: clamp(78px, 23vw, 108px);
+
+    width: 100%;
+    margin: 0;
+  }
+
+  .sscene__beam {
+    display: none;
+  }
+
+  .standard .sscene .sshelf {
+    align-self: stretch;
+    margin-left: 0;
+    margin-bottom: calc(var(--unit) * 0.34);
+  }
+
+  .standard .sscene .sshelf__items {
+    justify-content: flex-start;
+    gap: 14px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 0 10px;
+  }
+
+  .standard .sscene .sitem {
+    margin-left: 0;
+    margin-bottom: 0;
+  }
+
+  .standard .sscene .sitem .sleeve {
+    width: var(--unit);
+  }
+
+  .sitem--back {
+    --bright: 0.8;
+    --sat: 0.85;
+  }
+
+  .sprop,
+  .sshelf__bracket {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sscene__beam {
+    animation: none;
+    opacity: 1;
+  }
+
+  .pr__sway,
+  .pr__hang {
+    animation: none !important;
+  }
+
+  .sitem__pool,
+  .sitem__cast,
+  .sprop,
+  .standard .sitem .art {
+    transition: none !important;
+  }
+}
