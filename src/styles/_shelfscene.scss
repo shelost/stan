@@ -28,10 +28,14 @@
 .sscene {
   // longest roomy board — the crown, at ~10.0 units — plus a little headroom
   --span: 10.1;
-  // three shelves stack to 7.93 units plus 33px of boards; 12.4vh − 17px is
-  // that budget solved for one unit, with slack for the lift-and-scale a
-  // selected card animates into
-  --unit: clamp(44px, min(calc(100cqw / var(--span)), calc(12.4vh - 17px)), 92px);
+  // The height budget has to cover more than the three card rows: the lamp
+  // rises above the top shelf and the dropped props hang below the bottom
+  // board, so the room's real extent runs from the lamp's finial to the lowest
+  // prop. Measured against the stage's own padding box, that whole extent fits
+  // when one unit stays under 12vh − 32px — a couple of px inside the true
+  // limit, which leaves room for the lift-and-scale a selected card animates
+  // into. Loosening this is what clips the top shelf.
+  --unit: clamp(44px, min(calc(100cqw / var(--span)), calc(12vh - 32px)), 92px);
 
   position: relative;
   width: min(940px, 100%);
@@ -496,7 +500,7 @@
 // as a small island with dead space either side of it.
 @media (min-width: 1600px) {
   .sscene {
-    --unit: clamp(44px, min(calc(100cqw / var(--span)), calc(12.4vh - 17px)), 112px);
+    --unit: clamp(44px, min(calc(100cqw / var(--span)), calc(12vh - 32px)), 112px);
 
     width: min(1140px, 100%);
   }

@@ -15,6 +15,7 @@ export default function StandardApp() {
   const fillRef = useRef(null);
   const scardRef = useRef(null);
   const deviceRef = useRef(null);
+  const hasSelected = useRef(false);
   const edition = editions[active];
   const tone = toneOf(edition);
 
@@ -233,6 +234,15 @@ export default function StandardApp() {
     if (window.location.hash.replace('#', '') !== edition.id) {
       history.replaceState(null, '', `#${edition.id}`);
     }
+
+    // Reveal the card the visitor just chose. Skipped on the first run: on the
+    // stacked mobile layout the shelves sit below a full-height hero, so
+    // scrolling to a card at mount would open the page part-way down it.
+    if (!hasSelected.current) {
+      hasSelected.current = true;
+      return;
+    }
+
     document.getElementById(`card-${edition.id}`)?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
