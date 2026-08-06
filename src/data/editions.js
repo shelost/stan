@@ -33,7 +33,9 @@ export const editions = [
     icon: 'auto_awesome',
     tone: 'violet',
     tagline: 'Build Faster with AI',
-    blurb: 'Work less. Create more. Meet your new co-founder.',
+    // U+2011 non-breaking hyphen: the hero column is narrow enough at most
+    // widths that a plain hyphen breaks the word across two lines.
+    blurb: 'Work less. Create more. Meet your new co\u2011founder.',
     story:
       'Stanley is the first edition that lives inside the store instead of beside it. Ask for a product page, a sharper price, a reply to a DM — it answers in your voice, with your links already attached.',
     highlights: ['One Prompt, One Store', 'Themes That Feel Like Yours', 'No Borders'],
