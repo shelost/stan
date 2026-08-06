@@ -38,10 +38,15 @@
   --unit: clamp(44px, min(calc(100cqw / var(--span)), calc(12vh - 32px)), 92px);
 
   position: relative;
-  width: min(940px, 100%);
+  // Sized to exactly what the longest board needs rather than to the whole
+  // stage. When the height cap is the binding constraint the room is narrower
+  // than the space it was given, and a full-width box would leave every bit of
+  // that slack on one side; taking only the width it uses lets the auto margins
+  // below split the slack evenly and centre the room against the hero.
+  width: min(940px, 100%, calc(var(--unit) * var(--span)));
   max-width: 100%;
   margin-block: auto;
-  margin-inline: 0 auto;
+  margin-inline: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -532,8 +537,12 @@
     margin-inline: 0;
   }
 
+  // Narrow enough that the cone's box stays inside the stage even at full
+  // swing. The corners are transparent either way, but an element hanging past
+  // its container is a scrollbar waiting to happen the next time an ancestor
+  // gains `overflow: auto`.
   .sscene__beam {
-    width: calc(var(--unit) * 6.5);
+    width: calc(var(--unit) * 4.4);
     opacity: 0.75;
   }
 

@@ -73,10 +73,10 @@ body {
     align-items: center;
 
     strong {
-      font-family: $serif;
-      font-size: 22px;
-      font-weight: 400;
-      letter-spacing: -0.02em;
+      font-family: $display-font;
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
       line-height: 1;
     }
   }
@@ -100,9 +100,9 @@ body {
   border-radius: 999px;
   background: $accent;
   color: #fff;
-  font-family: inherit;
+  font-family: $display-font;
   font-size: 12.5px;
-  font-weight: 500;
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
   box-shadow: 0 6px 22px rgba(99, 85, 255, 0.35);
@@ -259,46 +259,67 @@ body {
   border-right: 1px solid rgba(243, 242, 251, 0.18);
 }
 
+// The line under the headline, tracked wide open like the reference's
+// "S E A S O N   O N E". The tracking is the whole effect, so this is the one
+// place the type is allowed to run this loose.
 .scard__meta {
+  margin-top: 11px;
   display: flex;
   align-items: center;
-  gap: 9px;
-  @include label;
+  gap: 11px;
+  font-family: $display-font;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  line-height: 1;
+  text-transform: uppercase;
   color: $chalk-2;
 
   em {
     font-style: normal;
-    padding: 3px 8px;
+    padding: 4px 9px;
     border-radius: 999px;
     background: $chalk;
     color: $night;
-    font-size: 10px;
-    letter-spacing: -0.01em;
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
   }
 }
 
-// the edition's own name, set as the label above the headline
+// The edition's own name, set as the label above the headline. Wide tracking
+// and heavy weight, the way the season pages set "A NEW SEASON FOR CREATORS".
 .scard__kicker {
   margin-top: 0;
-  font-size: 12.5px;
-  font-weight: 600;
-  letter-spacing: 0.13em;
+  font-family: $display-font;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.17em;
   line-height: 1;
   text-transform: uppercase;
   color: var(--soft);
   text-shadow: 0 0 22px color-mix(in srgb, var(--tone) 45%, transparent);
 }
 
+// The covers carry the same heavy grotesque as the headline, so an edition
+// reads the same on the shelf as it does in the hero. Scoped to `.standard`
+// because `_art.scss` is shared with every other version page.
+.standard .art__name {
+  font-family: $display-font;
+  font-weight: 700;
+}
+
 // The headline is the tagline, so it has to hold two or three words on more
 // than one line — smaller than a one-word edition name would need, and
-// balanced so it never breaks to a lonely last word.
+// balanced so it never breaks to a lonely last word. Set in the heavy
+// grotesque the season pages use for "BUILD", not a serif: the weight is
+// what carries the line, so the tracking closes right up under it.
 .scard__name {
-  margin-top: 10px;
-  font-family: $serif;
-  font-size: clamp(30px, 3.3vw, 46px);
-  font-weight: 400;
-  letter-spacing: -0.028em;
-  line-height: 1.02;
+  margin-top: 12px;
+  font-family: $display-font;
+  font-size: clamp(29px, 3.2vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.06;
   text-wrap: balance;
   color: $chalk;
 }
@@ -378,9 +399,9 @@ body {
   border-radius: 999px;
   background: var(--tone);
   color: #17151f;
-  font-family: inherit;
+  font-family: $display-font;
   font-size: 13.5px;
-  font-weight: 540;
+  font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
   box-shadow: 0 10px 30px color-mix(in srgb, var(--tone) 34%, transparent);
@@ -794,16 +815,18 @@ body {
 // pastel `base` that works on the dark shelf would vanish here.
 .nmodal__kicker {
   margin-bottom: 8px;
+  font-family: $display-font;
   font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.15em;
+  font-weight: 700;
+  letter-spacing: 0.17em;
   text-transform: uppercase;
   color: var(--deep, #{$accent});
 }
 
 .nmodal__title {
+  font-family: $display-font;
   font-size: clamp(32px, 4vw, 42px);
-  font-weight: 600;
+  font-weight: 800;
   letter-spacing: -0.045em;
   line-height: 1.05;
 }

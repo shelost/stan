@@ -294,12 +294,14 @@ export default function StandardApp() {
               it — the release is already on screen as artwork, so the line worth
               setting in serif is the one that says what it does for you. */}
           <p className="scard__kicker">{edition.name}</p>
+          <h1 className="scard__name">{edition.tagline ?? edition.name}</h1>
+          {/* Sits under the headline in wide tracking, the way the season pages
+              set "S E A S O N   O N E" beneath their display word. */}
           <p className="scard__meta">
             <span className="scard__idx">{num(active)}</span>
             {edition.quarter} {edition.year}
             {edition.isNew && <em>New</em>}
           </p>
-          <h1 className="scard__name">{edition.tagline ?? edition.name}</h1>
           {edition.creator && (
             <p className="scard__creator">
               <span>{edition.creator.name}</span>

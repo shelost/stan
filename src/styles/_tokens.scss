@@ -5,6 +5,10 @@
 $font: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 $mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 $serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+// The heavy geometric grotesque the Stan season pages set their headlines in.
+// Only The Standard uses it — the other version pages keep Inter and the
+// serif, so this is an addition to the system rather than a change to it.
+$display-font: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
 // the single highlight — interactive and active states only
 $accent: #6355ff;
