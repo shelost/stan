@@ -63,18 +63,12 @@ a {
   text-decoration: none;
 }
 
-.ch {
-  display: inline-block;
-  font-style: normal;
-  will-change: transform;
-}
-
 @mixin futura($size) {
   font-family: $display;
   font-size: $size;
   font-weight: 800;
-  letter-spacing: -0.06em;
-  line-height: 0.84;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
   text-transform: uppercase;
 }
 
@@ -91,12 +85,12 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 28px;
-  border: 1.5px solid transparent;
+  padding: 12px 26px;
+  border: 1px solid transparent;
   font-family: $display;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   transition:
     background 0.16s ease,
@@ -129,56 +123,53 @@ a {
   }
 }
 
-// ---- top bar (floating pill) ----
+// ---- top bar (Nike.com edge bar) ----
 .nbar {
   position: fixed;
-  top: 14px;
-  left: 50%;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 90;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  width: min(920px, calc(100% - 28px));
-  height: 54px;
-  padding: 0 10px 0 18px;
-  border: 1px solid rgba(244, 244, 244, 0.14);
-  border-radius: 999px;
-  background: rgba(10, 10, 10, 0.72);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
-  transform: translateX(-50%);
+  height: 60px;
+  padding: 0 clamp(16px, 3vw, 36px);
+  background: rgba(0, 0, 0, 0.55);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
 
   &__logo img {
     display: block;
-    height: 20px;
+    height: 22px;
     width: auto;
   }
 
   &__links {
     display: flex;
     align-items: center;
-    gap: 22px;
+    gap: 28px;
     font-family: $body;
-    font-size: 11px;
-    letter-spacing: 0.12em;
+    font-size: 12px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: $mute;
+    color: rgba(255, 255, 255, 0.72);
 
     a:hover {
-      color: $chalk;
+      color: #fff;
     }
   }
 
   &__cta {
     font-family: $display;
     font-size: 12px;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    padding: 10px 16px;
+    padding: 10px 18px;
     border-radius: 999px;
-    background: $chalk;
-    color: $ink;
+    background: #fff;
+    color: #111;
     transition:
       background 0.16s ease,
       color 0.16s ease;
@@ -190,221 +181,436 @@ a {
   }
 }
 
-// ---- hero ----
+// ---- hero (Nike.com full-bleed) ----
 .hero {
   position: relative;
-  min-height: 100svh;
+  height: 100svh;
+  min-height: 640px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-  align-items: center;
-  gap: clamp(20px, 3vw, 40px);
-  padding: clamp(96px, 12vh, 120px) clamp(18px, 5vw, 72px) clamp(32px, 6vh, 56px);
+  place-items: center;
   overflow: hidden;
   background: #000;
-  color: $chalk;
+  color: #fff;
+  box-shadow: inset 0 0 140px 60px rgba(99, 85, 255, 0.28);
 }
 
-.hero__left {
+.hero__media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+  transform: scale(1.06);
+  transition:
+    opacity 1.1s ease,
+    transform 6s ease;
+  filter: grayscale(0.15) contrast(1.05) brightness(0.78);
+
+  &--on {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.15) 40%, rgba(0, 0, 0, 0.55) 100%),
+    radial-gradient(ellipse 70% 55% at 50% 45%, transparent 0%, rgba(0, 0, 0, 0.35) 100%);
+  box-shadow: inset 0 0 100px 40px rgba(99, 85, 255, 0.22);
+}
+
+.hero__body {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  justify-self: start;
-  width: 100%;
-  max-width: 560px;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-}
-
-.hero__logo {
-  display: block;
-  height: clamp(22px, 2.4vw, 30px);
-  width: auto;
-  margin: 0 0 clamp(18px, 2.6vh, 28px) 0;
-  padding: 0;
-  align-self: flex-start;
-  object-fit: contain;
-  object-position: left center;
+  align-items: center;
+  gap: clamp(22px, 4vh, 36px);
+  padding: 0 24px;
+  text-align: center;
 }
 
 .hero__title {
-  @include futura(clamp(72px, 13.5vw, 168px));
-  margin: 0;
-  padding: 0;
-  color: #fff;
-  letter-spacing: -0.07em;
-  text-align: left;
+  @include futura(clamp(48px, 9vw, 120px));
+  letter-spacing: -0.03em;
+  text-shadow: 0 8px 48px rgba(0, 0, 0, 0.55);
 
   span {
     display: block;
-    margin: 0;
-    padding: 0;
-    text-align: left;
     white-space: nowrap;
   }
 }
 
-.hero__sub {
-  margin: clamp(16px, 2.6vh, 24px) 0 0;
-  max-width: 28ch;
-  font-size: clamp(15px, 1.5vw, 18px);
-  line-height: 1.45;
-  letter-spacing: -0.02em;
-  text-align: left;
-  color: rgba(244, 244, 244, 0.68);
-}
-
-.hero__right {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: min(100%, 420px);
-  min-width: 0;
-  justify-self: end;
-}
-
-// ---- static phone (color + links stay; photo swaps) ----
-.phone {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 3 / 4.15;
-  display: grid;
-  place-items: center;
-}
-
-.phone__shell {
-  position: absolute;
-  left: 50%;
-  top: 6%;
-  z-index: 1;
-  width: min(54%, 200px);
-  aspect-ratio: 9 / 19;
-  border-radius: 30px;
-  background: var(--tone);
-  border: 2px solid rgba(255, 255, 255, 0.22);
-  box-shadow:
-    0 22px 50px rgba(0, 0, 0, 0.45),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
-  overflow: hidden;
-  transform: translateX(-50%);
-  transition: background 0.35s ease;
-}
-
-.phone__notch {
-  position: absolute;
-  top: 9px;
-  left: 50%;
-  z-index: 2;
-  width: 36%;
-  height: 10px;
+.hero__cta {
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-  transform: translateX(-50%);
 }
 
-.phone__screen {
-  position: absolute;
-  inset: 22px 14px 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  padding-top: 14px;
-}
-
-.phone__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  flex-shrink: 0;
-}
-
-.phone__bars {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-}
-
-.phone__bar {
-  display: block;
-  height: 18px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(6px);
-}
-
-.phone__cutout {
+.hero__ticks {
   position: absolute;
   left: 50%;
-  bottom: 0;
+  bottom: 28px;
   z-index: 3;
-  width: min(92%, 340px);
-  height: 80%;
-  object-fit: contain;
-  object-position: center bottom;
+  display: flex;
+  gap: 8px;
   transform: translateX(-50%);
-  filter: contrast(1.05);
-  pointer-events: none;
-  user-select: none;
-  animation: phone-cut-in 0.35s ease;
 }
 
-@keyframes phone-cut-in {
+.hero__tick {
+  width: 36px;
+  height: 3px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  cursor: pointer;
+  transition: background 0.2s ease, width 0.2s ease;
+
+  &--on {
+    width: 48px;
+    background: #fff;
+  }
+}
+
+// ---- creator spotlight ----
+.spot {
+  position: relative;
+  background: #000;
+  color: #fff;
+  padding: clamp(72px, 12vh, 120px) clamp(18px, 5vw, 72px) clamp(48px, 8vh, 80px);
+  text-align: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 120px 50px rgba(99, 85, 255, 0.2);
+}
+
+.spot__stage {
+  position: relative;
+  width: min(420px, 78vw);
+  margin: 0 auto;
+  min-height: clamp(320px, 52vh, 480px);
+  display: grid;
+  place-items: end center;
+}
+
+.spot__glow {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  width: 70%;
+  height: 55%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(99, 85, 255, 0.65) 0%, rgba(99, 85, 255, 0.18) 45%, transparent 70%);
+  filter: blur(22px);
+  pointer-events: none;
+}
+
+.spot__figure {
+  position: relative;
+  z-index: 1;
+  width: min(280px, 62vw);
+  animation: spot-in 0.45s ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: grayscale(1) contrast(1.08) drop-shadow(0 0 36px rgba(99, 85, 255, 0.4));
+  }
+}
+
+@keyframes spot-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(10px);
+    transform: translateY(16px);
   }
 
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 
-.phone__seg {
-  display: inline-flex;
+.spot__meta {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  z-index: 2;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  background: rgba(244, 244, 244, 0.08);
-  border: 1px solid rgba(244, 244, 244, 0.14);
+  gap: 12px;
+  transform: translateX(-10%);
 }
 
-.phone__dot {
-  width: 28px;
-  height: 8px;
+.spot__who {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+
+  strong {
+    font-family: $display;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+.spot__follow,
+.proof__follow {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-family: $display;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background 0.16s ease, color 0.16s ease;
+
+  &:hover {
+    background: $volt;
+    color: #fff;
+  }
+}
+
+.spot__copy {
+  max-width: 640px;
+  margin: clamp(28px, 5vh, 48px) auto 0;
+  animation: spot-in 0.45s ease;
+}
+
+.spot__title {
+  @include futura(clamp(32px, 5.5vw, 64px));
+  letter-spacing: -0.025em;
+
+  span {
+    display: block;
+  }
+}
+
+.spot__blurb {
+  margin: 18px auto 0;
+  max-width: 42ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.spot__ticks {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: clamp(28px, 5vh, 40px);
+}
+
+.spot__tick {
+  width: 44px;
+  height: 3px;
   padding: 0;
   border: none;
   border-radius: 999px;
-  background: rgba(244, 244, 244, 0.22);
+  background: rgba(255, 255, 255, 0.22);
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    width 0.2s ease,
-    transform 0.2s ease;
-
-  &:hover {
-    background: rgba(244, 244, 244, 0.4);
-  }
+  transition: background 0.2s ease, width 0.2s ease;
 
   &--on {
-    width: 36px;
-    background: var(--tone);
+    width: 56px;
+    background: #fff;
+  }
+}
+
+// ---- social proof ----
+.proof {
+  background: #000;
+  color: #fff;
+  padding: clamp(64px, 12vh, 110px) clamp(18px, 4vw, 56px);
+  box-shadow: inset 0 0 100px 40px rgba(99, 85, 255, 0.16);
+}
+
+.proof__title {
+  @include futura(clamp(28px, 4.5vw, 52px));
+  text-align: center;
+  margin-bottom: clamp(28px, 5vh, 48px);
+  letter-spacing: -0.02em;
+}
+
+.proof__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 22px);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.proof__card {
+  position: relative;
+  aspect-ratio: 3 / 4.2;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--tone);
+  box-shadow: inset 0 0 48px 14px rgba(99, 85, 255, 0.28);
+}
+
+.proof__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  filter: grayscale(1) contrast(1.08);
+}
+
+.proof__foot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 16px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.72) 100%);
+
+  strong {
+    display: block;
+    font-family: $display;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  em {
+    display: block;
+    margin-top: 2px;
+    font-style: normal;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+// ---- 3D orbit / new way ----
+.orbit {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(24px, 5vh, 48px);
+  padding: clamp(64px, 10vh, 100px) 24px;
+  background: #000;
+  overflow: hidden;
+  box-shadow: inset 0 0 140px 60px rgba(99, 85, 255, 0.3);
+}
+
+.orbit__stage {
+  position: relative;
+  width: min(520px, 86vw);
+  height: min(420px, 52vh);
+
+  .fam3d {
+    position: absolute;
+    inset: 0;
+
+    canvas {
+      display: block;
+    }
+  }
+}
+
+.orbit__title {
+  @include futura(clamp(36px, 6.5vw, 80px));
+  text-align: center;
+  letter-spacing: -0.03em;
+}
+
+// ---- purple CTA band ----
+.band {
+  background: #000;
+  padding: clamp(40px, 8vh, 72px) clamp(16px, 4vw, 48px) clamp(64px, 10vh, 100px);
+}
+
+.band__inner {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  min-height: clamp(220px, 36vh, 320px);
+  border-radius: 28px;
+  background: $volt;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 60px 20px rgba(0, 0, 0, 0.18),
+    0 24px 60px rgba(99, 85, 255, 0.35);
+  display: grid;
+  place-items: center;
+}
+
+.band__silhouettes {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(4px, 1.5vw, 18px);
+  padding: 0 4% 0;
+  opacity: 0.92;
+  pointer-events: none;
+
+  img {
+    display: block;
+    height: 78%;
+    width: auto;
+    max-width: 18%;
+    object-fit: contain;
+    object-position: center bottom;
+    filter: brightness(0) contrast(1.2);
+    mix-blend-mode: multiply;
+  }
+}
+
+.band__mark {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  padding: 24px;
+
+  img {
+    height: 28px;
+    width: auto;
+    filter: brightness(0) invert(1);
+  }
+
+  p {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(28px, 4.5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #fff;
   }
 }
 
@@ -430,16 +636,17 @@ a {
 }
 
 .funnel__title {
-  @include futura(clamp(42px, 8vw, 96px));
-  letter-spacing: -0.045em;
+  @include futura(clamp(34px, 5.5vw, 68px));
+  letter-spacing: -0.035em;
 }
 
 .funnel__sub {
   margin-top: 16px;
-  max-width: 36ch;
-  font-size: 15px;
-  line-height: 1.5;
-  color: rgba(244, 244, 244, 0.68);
+  max-width: 40ch;
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: rgba(244, 244, 244, 0.58);
 }
 
 .funnel__chart {
@@ -502,24 +709,24 @@ a {
 
   strong {
     font-family: $display;
-    font-size: clamp(18px, 2.4vw, 28px);
-    letter-spacing: 0.04em;
+    font-size: clamp(15px, 1.8vw, 21px);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
   }
 
   span {
     max-width: 18ch;
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 12px;
+    line-height: 1.5;
     color: $mute;
   }
 }
 
 .funnel__icon {
   display: block;
-  width: clamp(64px, 8vw, 88px);
-  height: clamp(64px, 8vw, 88px);
-  border-radius: 20px;
+  width: clamp(56px, 6.5vw, 76px);
+  height: clamp(56px, 6.5vw, 76px);
+  border-radius: 18px;
   box-shadow: 0 0 0 1px rgba(99, 85, 255, 0.35), 0 12px 40px rgba(99, 85, 255, 0.18);
   transform-origin: center;
   will-change: transform, opacity;
@@ -535,8 +742,9 @@ a {
   position: relative;
   overflow: hidden;
   height: 100svh;
-  min-height: 640px;
+  min-height: 560px;
   background: #000;
+  box-shadow: inset 0 0 100px 40px rgba(99, 85, 255, 0.28);
 }
 
 .wall__cols {
@@ -577,8 +785,8 @@ a {
   }
 
   &--focal .wall__photo {
-    width: 118%;
-    height: 92%;
+    width: 104%;
+    height: 78%;
   }
 }
 
@@ -586,8 +794,8 @@ a {
   position: relative;
   z-index: 1;
   display: block;
-  width: 108%;
-  height: 86%;
+  width: 94%;
+  height: 72%;
   object-fit: contain;
   object-position: center bottom;
   filter: grayscale(1) contrast(1.08);
@@ -623,126 +831,13 @@ a {
 }
 
 .wall__title {
-  @include futura(clamp(52px, 12vw, 152px));
+  @include futura(clamp(30px, 5.8vw, 72px));
   color: #fff;
   text-align: center;
-  letter-spacing: -0.06em;
-  line-height: 0.8;
+  letter-spacing: -0.04em;
+  line-height: 0.86;
   white-space: nowrap;
   text-shadow: 0 2px 28px rgba(0, 0, 0, 0.4);
-}
-
-// ---- pace strip ----
-.pace {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 18px clamp(18px, 5vw, 72px);
-  border-top: 1px solid $line;
-  border-bottom: 1px solid $line;
-  background: $ink;
-}
-
-.pace__track {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  font-family: $display;
-  font-size: 14px;
-  letter-spacing: 0.18em;
-  color: $mute;
-
-  i {
-    width: 48px;
-    height: 1px;
-    background: $line;
-  }
-}
-
-.pace__note {
-  @include label;
-  color: rgba(244, 244, 244, 0.35);
-}
-
-// ---- creed ----
-.creed {
-  position: relative;
-  height: 100svh;
-  overflow: hidden;
-  background: $ink;
-  color: $chalk;
-}
-
-.creed__eyebrow {
-  position: absolute;
-  top: 88px;
-  left: clamp(18px, 5vw, 72px);
-  @include label;
-  color: $volt;
-}
-
-.creed__meter {
-  position: absolute;
-  top: 96px;
-  right: clamp(18px, 5vw, 72px);
-  width: min(220px, 30vw);
-  height: 2px;
-  background: $line;
-}
-
-.creed__tick {
-  position: absolute;
-  top: -4px;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: $volt;
-  transform: translateX(-50%);
-}
-
-.creed__act {
-  position: absolute;
-  left: clamp(18px, 5vw, 72px);
-  right: clamp(18px, 10vw, 140px);
-  bottom: clamp(56px, 14vh, 120px);
-  max-width: 860px;
-  will-change: transform, opacity;
-}
-
-.creed__mark {
-  margin-bottom: 14px;
-  font-family: $display;
-  font-size: 14px;
-  letter-spacing: 0.2em;
-  color: $volt;
-}
-
-.creed__lead {
-  @include futura(clamp(52px, 10vw, 128px));
-  overflow: hidden;
-  padding-bottom: 0.08em;
-  white-space: nowrap;
-}
-
-.creed__line {
-  margin-top: 18px;
-  max-width: 34ch;
-  font-size: clamp(16px, 1.7vw, 21px);
-  line-height: 1.4;
-  color: $mute;
-}
-
-.creed__hint {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  @include label;
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  color: rgba(244, 244, 244, 0.35);
 }
 
 // ---- roster / product cards ----
@@ -759,17 +854,18 @@ a {
 }
 
 .roster__title {
-  @include futura(clamp(48px, 9vw, 110px));
-  letter-spacing: -0.045em;
+  @include futura(clamp(36px, 6vw, 78px));
+  letter-spacing: -0.035em;
   color: $ink;
 }
 
 .roster__sub {
   margin: 18px auto 0;
-  max-width: 36ch;
-  font-size: 15px;
-  line-height: 1.45;
-  color: rgba(10, 10, 10, 0.55);
+  max-width: 40ch;
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: rgba(10, 10, 10, 0.5);
 }
 
 .roster__grid {
@@ -826,8 +922,8 @@ a {
     top: 16%;
     z-index: 3;
     max-width: 54%;
-    @include futura(clamp(28px, 3.6vw, 52px));
-    letter-spacing: -0.045em;
+    @include futura(clamp(18px, 2.3vw, 32px));
+    letter-spacing: -0.03em;
     color: #fff;
     pointer-events: none;
 
@@ -838,22 +934,23 @@ a {
 
   &__panel {
     position: absolute;
-    right: 6%;
-    top: 14%;
-    bottom: 8%;
-    width: min(46%, 240px);
-    border-radius: clamp(14px, 1.6vw, 22px);
+    right: 8%;
+    top: 18%;
+    bottom: 12%;
+    width: min(40%, 200px);
+    border-radius: clamp(12px, 1.4vw, 18px);
     z-index: 1;
+    box-shadow: inset 0 0 36px 10px rgba(99, 85, 255, 0.25);
   }
 
   &__photo {
     position: absolute;
-    right: -2%;
+    right: 2%;
     bottom: 0;
     z-index: 2;
-    height: 96%;
+    height: 82%;
     width: auto;
-    max-width: 62%;
+    max-width: 52%;
     object-fit: contain;
     object-position: center bottom;
     filter: contrast(1.05);
@@ -917,265 +1014,160 @@ a {
 .mq__item {
   flex-shrink: 0;
   padding: 0 0.35em;
-  @include futura(clamp(42px, 8vw, 96px));
+  @include futura(clamp(32px, 5.5vw, 68px));
   color: $chalk;
   white-space: nowrap;
 
   &--slash {
     color: transparent;
-    -webkit-text-stroke: 1.5px rgba(244, 244, 244, 0.35);
+    -webkit-text-stroke: 1px rgba(244, 244, 244, 0.3);
   }
 }
 
-// ---- bridge ----
-.bridge {
-  background: $chalk;
-  color: $ink;
-  padding: clamp(72px, 14vh, 140px) clamp(18px, 5vw, 72px);
-  text-align: center;
-}
-
-.bridge__mark {
-  @include label;
-  color: rgba(10, 10, 10, 0.4);
-  margin-bottom: 18px;
-}
-
-.bridge__title {
-  @include futura(clamp(48px, 9vw, 120px));
-}
-
-.bridge__sub {
-  margin: 18px auto 0;
-  max-width: 34ch;
-  font-size: 15px;
-  line-height: 1.45;
-  color: rgba(10, 10, 10, 0.55);
-}
-
-// ---- kit / 3D ----
-.kit {
+// ---- posters (Just Do It full screens) ----
+.poster {
   position: relative;
   height: 100svh;
   overflow: hidden;
-  background: $ink;
-  color: $chalk;
-}
-
-.fam3d {
-  position: absolute;
-  inset: 0;
-
-  canvas {
-    display: block;
-  }
-}
-
-.kit__count {
-  position: absolute;
-  top: 50%;
-  right: clamp(16px, 4vw, 60px);
-  transform: translateY(-50%);
-  height: 1em;
-  overflow: hidden;
-  font-family: $display;
-  font-size: clamp(80px, 14vw, 200px);
-  line-height: 1;
-  color: rgba(244, 244, 244, 0.12);
-  pointer-events: none;
-
-  i {
-    display: block;
-    font-style: normal;
-    will-change: transform;
-  }
-
-  b {
-    display: block;
-    font-weight: 800;
-  }
-}
-
-.kit__act {
-  position: absolute;
-  left: clamp(18px, 5vw, 72px);
-  bottom: clamp(40px, 10vh, 96px);
-  max-width: 520px;
-  will-change: transform, opacity;
-}
-
-.kit__lead {
-  @include futura(clamp(48px, 7vw, 104px));
-  overflow: hidden;
-  padding-bottom: 0.1em;
-  white-space: nowrap;
-}
-
-.kit__tag {
-  margin-top: 12px;
-  font-size: clamp(15px, 1.5vw, 19px);
-  color: $volt;
-}
-
-.kit__copy {
-  margin-top: 10px;
-  max-width: 40ch;
-  font-size: 15px;
-  line-height: 1.45;
-  color: $mute;
-}
-
-.kit__hint {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  @include label;
-  font-size: 10px;
-  letter-spacing: 0.28em;
-  color: rgba(244, 244, 244, 0.35);
-}
-
-// ---- billboards (Nike ad frames) ----
-.bill {
-  position: relative;
-  height: 100svh;
-  overflow: hidden;
-  background: #000;
+  background: #05040c;
   color: #fff;
+  box-shadow: inset 0 0 110px 44px rgba(99, 85, 255, 0.34);
 }
 
-.bill__media {
+.poster__media {
   position: absolute;
   inset: 0;
-  display: grid;
-  place-items: center;
 }
 
-.bill__wash {
+.poster__photo {
   position: absolute;
-  left: 50%;
-  top: 12%;
-  width: min(42vw, 420px);
-  height: 70%;
-  border-radius: 36px;
-  transform: translateX(-50%);
-  opacity: 0.45;
-  filter: blur(2px);
-}
-
-.bill__photo {
-  position: relative;
-  z-index: 1;
-  width: min(70vw, 720px);
-  height: 78%;
+  top: 8%;
+  right: 4%;
+  bottom: 8%;
+  width: min(42vw, 520px);
+  height: auto;
+  max-height: 84%;
+  margin: auto 0;
   object-fit: contain;
-  object-position: center bottom;
-  filter: contrast(1.06);
-  transform: none;
+  object-position: center center;
+  filter: grayscale(1) contrast(1.1) brightness(0.92) drop-shadow(0 0 40px rgba(99, 85, 255, 0.35));
 }
 
-.bill--alt .bill__photo {
-  transform: none;
+.poster--left .poster__photo {
+  right: auto;
+  left: 4%;
 }
 
-.bill__tint {
+.poster__atmos {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 70% at 78% 42%, rgba(99, 85, 255, 0.22) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 50% at 20% 70%, rgba(99, 85, 255, 0.1) 0%, transparent 70%),
+    linear-gradient(90deg, #05040c 0%, rgba(5, 4, 12, 0.55) 38%, transparent 68%),
+    linear-gradient(180deg, rgba(5, 4, 12, 0.55) 0%, transparent 35%, rgba(5, 4, 12, 0.35) 65%, rgba(5, 4, 12, 0.92) 100%);
+}
+
+.poster--left .poster__atmos {
+  background:
+    radial-gradient(ellipse 55% 70% at 22% 42%, rgba(99, 85, 255, 0.22) 0%, transparent 62%),
+    radial-gradient(ellipse 40% 50% at 80% 70%, rgba(99, 85, 255, 0.1) 0%, transparent 70%),
+    linear-gradient(270deg, #05040c 0%, rgba(5, 4, 12, 0.55) 38%, transparent 68%),
+    linear-gradient(180deg, rgba(5, 4, 12, 0.55) 0%, transparent 35%, rgba(5, 4, 12, 0.35) 65%, rgba(5, 4, 12, 0.92) 100%);
+}
+
+.poster__copy {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.4) 0%, transparent 30%, rgba(0, 0, 0, 0.45) 58%, rgba(0, 0, 0, 0.9) 100%),
-    radial-gradient(ellipse at 50% 42%, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  pointer-events: none;
-}
-
-.bill__copy {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: clamp(72px, 12vh, 120px) clamp(18px, 5vw, 64px) clamp(36px, 8vh, 72px);
   text-align: center;
+  padding: 0 clamp(20px, 4vw, 48px);
+  pointer-events: none;
 }
 
-.bill__title {
-  @include futura(clamp(44px, 7.5vw, 96px));
-  max-width: 16ch;
-  letter-spacing: -0.045em;
-  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.45);
+.poster__logo {
+  display: block;
+  height: clamp(14px, 1.4vw, 18px);
+  width: auto;
+  margin-bottom: clamp(16px, 2.6vh, 24px);
+  filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.65));
+}
+
+.poster__title {
+  @include futura(clamp(28px, 5vw, 64px));
+  letter-spacing: 0.01em;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.75);
 
   span {
     display: block;
   }
 }
 
-.bill__context {
-  margin-top: clamp(16px, 3vh, 28px);
-  max-width: 36ch;
-  font-size: clamp(13px, 1.3vw, 16px);
-  line-height: 1.45;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.bill__foot {
-  position: absolute;
-  left: 50%;
-  bottom: clamp(28px, 6vh, 48px);
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-
-  img {
-    display: block;
-    height: 18px;
-    width: auto;
-    opacity: 0.9;
-  }
-
-  span {
-    @include label;
-    font-size: 10px;
-    letter-spacing: 0.22em;
-    color: rgba(255, 255, 255, 0.55);
-  }
-}
-
-// ---- manifesto ----
+// ---- manifesto (closing poster) ----
 .manif {
   position: relative;
   height: 100svh;
-  display: grid;
-  place-items: center;
-  text-align: center;
   overflow: hidden;
-  background: $ink;
+  background: #05040c;
+  color: #fff;
+}
+
+.manif__media {
+  position: absolute;
+  inset: 0;
+}
+
+.manif__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  filter: grayscale(1) contrast(1.08) brightness(0.55);
+}
+
+.manif__atmos {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 40%, rgba(99, 85, 255, 0.28) 0%, transparent 65%),
+    linear-gradient(180deg, rgba(5, 4, 12, 0.7) 0%, rgba(5, 4, 12, 0.35) 40%, rgba(5, 4, 12, 0.88) 100%);
+}
+
+.manif__copy {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   padding: 80px 24px;
 }
 
-.manif__halo {
-  position: absolute;
-  width: min(70vw, 640px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(99, 85, 255, 0.22) 0%, transparent 68%);
-  pointer-events: none;
+.manif__logo {
+  display: block;
+  height: 18px;
+  width: auto;
+  margin-bottom: 24px;
 }
 
 .manif__title {
-  position: relative;
-  z-index: 1;
   max-width: 14ch;
-  @include futura(clamp(42px, 8vw, 96px));
+  @include futura(clamp(30px, 5.5vw, 68px));
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.18em 0.28em;
+  gap: 0.16em 0.28em;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.7);
 
   span {
     display: inline-block;
@@ -1183,9 +1175,8 @@ a {
 }
 
 .manif__cta {
-  position: relative;
-  z-index: 1;
-  margin-top: 36px;
+  margin-top: 40px;
+  pointer-events: auto;
 }
 
 // ---- footer ----
@@ -1197,20 +1188,21 @@ a {
 }
 
 .nfoot__mark {
-  @include futura(clamp(42px, 8vw, 96px));
-  margin-bottom: 48px;
+  @include futura(clamp(30px, 5vw, 60px));
+  margin-bottom: 56px;
 }
 
 .nfoot__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 28px;
-  margin-bottom: 48px;
+  margin-bottom: 56px;
 
   a {
     display: block;
-    margin-top: 8px;
-    font-size: 14px;
+    margin-top: 10px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
     color: $mute;
 
     &:hover {
@@ -1251,41 +1243,42 @@ a {
   }
 
   .hero {
-    grid-template-columns: 1fr;
-    min-height: auto;
-    padding-top: 96px;
-    gap: 28px;
-  }
-
-  .hero__left {
-    max-width: none;
-  }
-
-  .hero__right {
-    justify-self: stretch;
-  }
-
-  .hero__title {
-    font-size: clamp(64px, 18vw, 110px);
-    letter-spacing: -0.06em;
-  }
-
-  .wall__stage {
     min-height: 560px;
   }
 
+  .hero__title {
+    font-size: clamp(40px, 11vw, 72px);
+    letter-spacing: -0.03em;
+  }
+
+  .proof__grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+  }
+
+  .spot__meta {
+    position: static;
+    transform: none;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  .wall__stage {
+    min-height: 480px;
+  }
+
   .wall__photo {
-    width: 120%;
-    height: 80%;
+    width: 100%;
+    height: 68%;
   }
 
   .wall__col--focal .wall__photo {
-    width: 132%;
-    height: 88%;
+    width: 108%;
+    height: 74%;
   }
 
   .wall__title {
-    font-size: clamp(40px, 12vw, 88px);
+    font-size: clamp(24px, 7vw, 48px);
   }
 
   .roster__grid {
@@ -1297,16 +1290,12 @@ a {
   }
 
   .pcard__slogan {
-    font-size: clamp(28px, 7vw, 44px);
+    font-size: clamp(16px, 4.2vw, 26px);
     max-width: 58%;
   }
 
   .nfoot__grid {
     grid-template-columns: 1fr;
-  }
-
-  .kit__count {
-    display: none;
   }
 }
 
@@ -1324,20 +1313,29 @@ a {
   }
 
   .wall__photo {
-    width: 140%;
-    height: 74%;
+    width: 110%;
+    height: 64%;
   }
 
   .wall__col--focal .wall__photo {
-    width: 150%;
-    height: 80%;
+    width: 118%;
+    height: 70%;
   }
 
   .wall__title {
-    font-size: clamp(32px, 11vw, 56px);
+    font-size: clamp(22px, 7vw, 36px);
   }
 
-  .bill__title {
-    font-size: clamp(40px, 11vw, 72px);
+  .poster__photo {
+    width: min(58vw, 420px);
+    opacity: 0.9;
+  }
+
+  .poster__title {
+    font-size: clamp(24px, 7vw, 42px);
+  }
+
+  .manif__title {
+    font-size: clamp(26px, 7.5vw, 48px);
   }
 }

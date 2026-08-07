@@ -5,16 +5,30 @@ import FamilyScene from '../stan/FamilyScene';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const BACKDROPS = [
+  '/alexander-dummer-aS4Duj2j7r4-unsplash.jpg',
+  '/keagan-henman-pPxJTtxfV1A-unsplash.jpg',
+  '/jonatan-pie-h8nxGssjQXs-unsplash.jpg',
+  '/luca-micheli-ruWkmt3nU58-unsplash.jpg',
+  '/sheng-l-q2dUSl9S4Xg-unsplash.jpg',
+  '/tianshu-liu-aqZ3UAjs_M4-unsplash.jpg',
+  '/ignacio-correia-1_yycyoMT6g-unsplash.jpg',
+  '/computer.jpg',
+];
+
 const BUILDERS = [
   {
     id: 'jt',
     name: 'JT Barnett',
     handle: '@jtbarnett',
     tag: 'Content Strategy',
+    role: 'Creator',
     number: '01',
     img: '/ch_2.png',
     color: '#c45a3e',
     headline: ['RETIRED', 'WITH', 'NOTHING.'],
+    spotlight: ['RETIRED WITH', 'NOTHING.'],
+    blurb: 'Left the rink with zero. Built the playbook brands still steal — under a name that stays yours.',
     context: 'Left pro hockey with $0. Built the playbook brands still steal.',
     line: 'Start over at zero.',
   },
@@ -23,10 +37,13 @@ const BUILDERS = [
     name: 'Steven Bartlett',
     handle: '@steven',
     tag: 'Podcaster',
+    role: 'Creator',
     number: '02',
     img: '/ch_1.png',
     color: '#2f6fdb',
     headline: ['START BEFORE', "YOU'RE READY."],
+    spotlight: ['FROM NOTHING', 'BUT A CAMERA.'],
+    blurb: "Stan's integrated creation tools help you superpower your workflow by connecting your existing third-party tools.",
     context: 'From a Manchester estate to the chair across from every founder.',
     line: 'Own the mic.',
   },
@@ -35,10 +52,13 @@ const BUILDERS = [
     name: 'Roy Lee',
     handle: '@itsroylee',
     tag: 'Entrepreneur',
+    role: 'Creator',
     number: '03',
     img: '/ch_4.png',
     color: '#1a9d4b',
     headline: ['BUILD', 'ANYWAY.'],
+    spotlight: ['GET REJECTED.', 'GET FUNDED.'],
+    blurb: 'Ship the company anyway. The stack stays under your name — not rented from someone else.',
     context: 'Suspended. Dropped out. Still shipped the company.',
     line: 'Get rejected. Get funded.',
   },
@@ -47,17 +67,18 @@ const BUILDERS = [
     name: 'Sarah Perl',
     handle: '@hothighpriestess',
     tag: 'Social Media',
+    role: 'Creator',
     number: '04',
     img: '/ch_5.png',
     color: '#d478a8',
     headline: ['POST', 'THE FIRST', 'ONE.'],
-    quote: 'They said the dream was crazy. She posted anyway.',
+    spotlight: ['POST THE', 'FIRST ONE.'],
+    blurb: 'One video. Then a storefront with your name on the door. Keep the relationship yours.',
     context: 'One tarot video. Then a seven-figure storefront.',
     line: 'Rewire everything.',
   },
 ];
 
-// Five-person wall — Nike campaign stripes (coral · blue · black · green · tan).
 const WALL = [
   { id: 'ch3', img: '/ch_3.png', color: '#e86a54', href: '#roster', name: 'Builder' },
   { id: 'ch2', img: '/ch_2.png', color: '#2e88d6', href: '#jt', name: 'JT Barnett' },
@@ -67,63 +88,10 @@ const WALL = [
 ];
 
 const PRODUCTS = [
-  {
-    id: 'stanley',
-    icon: '/icon_stanley.svg',
-    name: 'Stanley',
-    tag: 'A second brain that sounds like you',
-  },
-  {
-    id: 'store',
-    icon: '/icon_store.svg',
-    name: 'Store',
-    tag: 'Where your work meets money',
-  },
-  {
-    id: 'stories',
-    icon: '/icon_stories.svg',
-    name: 'Stories',
-    tag: 'Proof it is possible',
-  },
-  {
-    id: 'studio',
-    icon: '/icon_studio.svg',
-    name: 'Studio',
-    tag: 'Ship the cut. Keep going.',
-  },
-];
-
-const KIT = [
-  {
-    id: 'roof',
-    lead: 'The roof.',
-    tag: 'One place with your name on it',
-    copy: 'Everything you make, sell, and say — under one mark. Not rented. Yours.',
-  },
-  {
-    id: 'pace',
-    lead: 'The pace.',
-    tag: 'A second brain that keeps up',
-    copy: 'Drafts, replies, pages that move while you stay in the work only you can do.',
-  },
-  {
-    id: 'door',
-    lead: 'The door.',
-    tag: 'Where the work meets the room',
-    copy: 'One link. Live when you are. The relationship stays on your side of the glass.',
-  },
-  {
-    id: 'proof',
-    lead: 'The proof.',
-    tag: 'Builders already in motion',
-    copy: 'How they started. What they own. What they wish they knew sooner.',
-  },
-  {
-    id: 'cut',
-    lead: 'The cut.',
-    tag: 'Ship it. Keep going.',
-    copy: 'Rough to posted without losing the week. Protect the craft. Release the take.',
-  },
+  { id: 'stanley', icon: '/icon_stanley.svg', name: 'Stanley', tag: 'A second brain that sounds like you' },
+  { id: 'store', icon: '/icon_store.svg', name: 'Store', tag: 'Where your work meets money' },
+  { id: 'stories', icon: '/icon_stories.svg', name: 'Stories', tag: 'Proof it is possible' },
+  { id: 'studio', icon: '/icon_studio.svg', name: 'Studio', tag: 'Ship the cut. Keep going.' },
 ];
 
 const MARQUEE = [
@@ -137,18 +105,21 @@ const MARQUEE = [
 
 const MANIFESTO = ['NOBODY', 'HANDS', 'YOU', 'A', 'BUSINESS.', 'YOU', 'BUILD', 'YOUR', 'OWN.'];
 
-const LINK_SLOTS = [72, 58, 64, 48];
+const POSTERS = [
+  { id: 'poster-own', img: '/ch_3.png', side: 'right', headline: ['BUILD', 'YOUR OWN.'] },
+  { id: 'jt', img: '/ch_2.png', side: 'left', headline: ['RETIRED', 'WITH', 'NOTHING.'], name: 'JT Barnett' },
+  { id: 'steven', img: '/ch_1.png', side: 'right', headline: ['START BEFORE', "YOU'RE READY."], name: 'Steven Bartlett' },
+  { id: 'poster-fail', img: '/ch_1.png', side: 'left', headline: ['FAIL', 'FORWARD.'] },
+  { id: 'roy', img: '/ch_4.png', side: 'right', headline: ['BUILD', 'ANYWAY.'], name: 'Roy Lee' },
+  { id: 'sarah', img: '/ch_5.png', side: 'left', headline: ['POST', 'THE FIRST', 'ONE.'], name: 'Sarah Perl' },
+  { id: 'poster-work', img: '/ch_5.png', side: 'right', headline: ['STOP DREAMING.', 'START WORKING.'] },
+];
 
-const Chars = ({ text }) =>
-  text.split('').map((c, i) =>
-    c === ' ' ? (
-      ' '
-    ) : (
-      <i className="ch" key={i}>
-        {c}
-      </i>
-    )
-  );
+const PROOF = [
+  { id: 'p1', img: '/ch_3.png', color: '#6f5478', name: 'Sarah Chen', tag: 'Creator' },
+  { id: 'p2', img: '/ch_5.png', color: '#8a6a4a', name: 'Maya Ortiz', tag: 'Founder' },
+  { id: 'p3', img: '/ch_1.png', color: '#3d5a80', name: 'Steven Bartlett', tag: 'Creator' },
+];
 
 function BuilderCard({ builder }) {
   return (
@@ -177,30 +148,26 @@ function BuilderCard({ builder }) {
   );
 }
 
-function PhoneStage({ builder }) {
-  return (
-    <div className="phone" style={{ '--tone': builder.color }}>
-      <div className="phone__shell" aria-hidden="true">
-        <div className="phone__notch" />
-        <div className="phone__screen">
-          <div className="phone__avatar" />
-          <div className="phone__bars">
-            {LINK_SLOTS.map((w, i) => (
-              <span key={i} className="phone__bar" style={{ width: `${w}%` }} />
-            ))}
-          </div>
-        </div>
-      </div>
-      <img className="phone__cutout" key={builder.id} src={builder.img} alt={builder.name} />
-    </div>
-  );
-}
-
 export default function NikeApp() {
-  const kitProgress = useRef(0);
   const root = useRef(null);
-  const [phoneIndex, setPhoneIndex] = useState(0);
-  const activeBuilder = BUILDERS[phoneIndex];
+  const kitProgress = useRef(0);
+  const [heroIndex, setHeroIndex] = useState(0);
+  const [spotIndex, setSpotIndex] = useState(1); // steven first, matches mock
+  const spot = BUILDERS[spotIndex];
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setHeroIndex((i) => (i + 1) % BACKDROPS.length);
+    }, 5200);
+    return () => window.clearInterval(id);
+  }, []);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setSpotIndex((i) => (i + 1) % BUILDERS.length);
+    }, 6400);
+    return () => window.clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
@@ -212,13 +179,54 @@ export default function NikeApp() {
       mm.add('(prefers-reduced-motion: no-preference)', () => {
         const q = gsap.utils.selector(root);
 
-        gsap.from('.nbar', { y: -28, duration: 0.7, ease: 'power3.out', delay: 0.05 });
-        gsap.from('.hero__logo, .hero__title span, .hero__sub, .hero__right', {
-          y: 28,
-          duration: 0.85,
-          stagger: 0.06,
+        gsap.from('.nbar', { y: -24, duration: 0.7, ease: 'power3.out', delay: 0.05 });
+        gsap.from('.hero__title span, .hero__cta', {
+          y: 36,
+          duration: 0.95,
+          stagger: 0.08,
           ease: 'power4.out',
-          delay: 0.1,
+          delay: 0.15,
+        });
+
+        gsap.from('.spot__figure, .spot__meta, .spot__title span, .spot__blurb, .spot__ticks', {
+          scrollTrigger: { trigger: '.spot', start: 'top 75%' },
+          y: 28,
+          duration: 0.8,
+          stagger: 0.06,
+          ease: 'power3.out',
+        });
+
+        gsap.from('.proof__title, .proof__card', {
+          scrollTrigger: { trigger: '.proof', start: 'top 78%' },
+          y: 32,
+          duration: 0.8,
+          stagger: 0.08,
+          ease: 'power3.out',
+        });
+
+        gsap.from('.orbit__copy, .orbit__stage', {
+          scrollTrigger: { trigger: '.orbit', start: 'top 72%' },
+          y: 28,
+          duration: 0.9,
+          stagger: 0.1,
+          ease: 'power3.out',
+        });
+
+        // Drive the coin figure (act 0 of FamilyScene) gently while in view.
+        ScrollTrigger.create({
+          trigger: '.orbit',
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            kitProgress.current = self.progress * 0.15;
+          },
+        });
+
+        gsap.from('.band__inner', {
+          scrollTrigger: { trigger: '.band', start: 'top 80%' },
+          y: 40,
+          duration: 0.85,
+          ease: 'power3.out',
         });
 
         gsap.from('.wall__col', {
@@ -253,51 +261,6 @@ export default function NikeApp() {
           delay: 0.18,
         });
 
-        const acts = q('.kit__act');
-        const N = acts.length;
-        const kitTl = gsap.timeline({
-          scrollTrigger: {
-            trigger: '.kit',
-            start: 'top top',
-            end: `+=${N * 115}%`,
-            scrub: true,
-            pin: true,
-            onUpdate: (st) => {
-              kitProgress.current = st.progress * (N - 1);
-            },
-          },
-        });
-
-        acts.forEach((act, i) => {
-          const at = i * 1;
-          gsap.set(act, { autoAlpha: i === 0 ? 1 : 0 });
-          if (i > 0) {
-            kitTl.to(act, { autoAlpha: 1, duration: 0.16 }, at - 0.16);
-            kitTl.fromTo(
-              act.querySelectorAll('.kit__lead .ch'),
-              { yPercent: 115 },
-              { yPercent: 0, stagger: 0.03, ease: 'power3.out', duration: 0.3 },
-              at - 0.1
-            );
-            kitTl.fromTo(
-              [act.querySelector('.kit__tag'), act.querySelector('.kit__copy')],
-              { y: 20, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, stagger: 0.05, duration: 0.24 },
-              at - 0.06
-            );
-          }
-          if (i < N - 1) {
-            kitTl.to(act, { autoAlpha: 0, yPercent: -6, duration: 0.18 }, at + 0.64);
-            kitTl.set(act, { yPercent: 0 }, at + 0.86);
-          }
-          kitTl.to(
-            '.kit__count i',
-            { yPercent: -i * 100, ease: 'power2.inOut', duration: 0.28 },
-            Math.max(0, at - 0.1)
-          );
-        });
-        kitTl.set({}, {}, N - 1 + 0.35);
-
         gsap.from('.funnel__apex, .funnel__title, .funnel__sub', {
           scrollTrigger: { trigger: '.funnel', start: 'top 75%' },
           y: 24,
@@ -305,7 +268,6 @@ export default function NikeApp() {
           stagger: 0.08,
           ease: 'power3.out',
         });
-
         gsap.fromTo(
           '.funnel__edge',
           { strokeDashoffset: 120 },
@@ -318,7 +280,6 @@ export default function NikeApp() {
             delay: 0.12,
           }
         );
-
         gsap.from('.funnel__icon', {
           scrollTrigger: { trigger: '.funnel', start: 'top 70%' },
           scale: 0.4,
@@ -329,15 +290,6 @@ export default function NikeApp() {
           ease: 'back.out(1.6)',
           delay: 0.2,
         });
-        gsap.from('.funnel__item strong, .funnel__item span', {
-          scrollTrigger: { trigger: '.funnel', start: 'top 70%' },
-          y: 16,
-          autoAlpha: 0,
-          duration: 0.55,
-          stagger: 0.05,
-          ease: 'power3.out',
-          delay: 0.45,
-        });
 
         gsap.from('.roster__head, .pcard', {
           scrollTrigger: { trigger: '.roster', start: 'top 78%' },
@@ -347,38 +299,36 @@ export default function NikeApp() {
           ease: 'power3.out',
         });
 
-        q('.bill').forEach((sec) => {
+        q('.poster').forEach((sec) => {
           gsap
             .timeline({
-              scrollTrigger: { trigger: sec, start: 'top top', end: '+=110%', scrub: true, pin: true },
+              scrollTrigger: { trigger: sec, start: 'top top', end: '+=100%', scrub: true, pin: true },
             })
-            .fromTo(sec.querySelector('.bill__photo'), { scale: 1.1 }, { scale: 1, ease: 'none', duration: 1 }, 0)
             .fromTo(
-              sec.querySelector('.bill__title'),
-              { y: 36, autoAlpha: 0.35 },
-              { y: 0, autoAlpha: 1, ease: 'power2.out', duration: 0.35 },
-              0.15
+              sec.querySelector('.poster__photo'),
+              { scale: 1.08, xPercent: 4 },
+              { scale: 1, xPercent: 0, ease: 'none', duration: 1 },
+              0
             )
             .fromTo(
-              [sec.querySelector('.bill__context'), sec.querySelector('.bill__foot')],
-              { y: 20, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, stagger: 0.06, ease: 'power2.out', duration: 0.28 },
-              0.35
+              [sec.querySelector('.poster__logo'), sec.querySelector('.poster__title')],
+              { y: 28 },
+              { y: 0, stagger: 0.06, ease: 'power2.out', duration: 0.4 },
+              0.1
             );
         });
 
         gsap
           .timeline({
-            scrollTrigger: { trigger: '.manif', start: 'top top', end: '+=130%', scrub: true, pin: true },
+            scrollTrigger: { trigger: '.manif', start: 'top top', end: '+=120%', scrub: true, pin: true },
           })
-          .fromTo('.manif__halo', { scale: 0.4, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.65 }, 0)
+          .fromTo('.manif__photo', { scale: 1.1 }, { scale: 1, ease: 'none', duration: 1 }, 0)
           .fromTo(
-            q('.manif__title span'),
-            { autoAlpha: 0.12, y: 16 },
-            { autoAlpha: 1, y: 0, stagger: 0.07, ease: 'power2.out', duration: 0.45 },
-            0
-          )
-          .fromTo('.manif__cta', { autoAlpha: 0, y: 20 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.6);
+            ['.manif__logo', '.manif__title', '.manif__cta'],
+            { y: 24 },
+            { y: 0, stagger: 0.08, ease: 'power2.out', duration: 0.4 },
+            0.15
+          );
 
         const track = q('.mq__track')[0];
         let tickFn = null;
@@ -430,48 +380,145 @@ export default function NikeApp() {
           <img src="/stan_logo.svg" alt="Stan" />
         </a>
         <nav className="nbar__links">
-          <a href="#wall">Roster</a>
-          <a href="#kit">The kit</a>
-          <a href="#phones">Creators</a>
+          <a href="#spot">Creators</a>
+          <a href="#proof">Roster</a>
           <a href="#products">Products</a>
         </nav>
         <a className="nbar__cta" href="https://stan.store" target="_blank" rel="noreferrer">
-          Start building
+          Sign up
         </a>
       </header>
 
       <main id="top">
-        <section className="hero" id="phones">
-          <div className="hero__left">
-            <img className="hero__logo" src="/stan_logo.svg" alt="Stan" />
+        {/* ---- Nike.com-style full-bleed hero ---- */}
+        <section className="hero" aria-label="Build your own">
+          <div className="hero__media" aria-hidden="true">
+            {BACKDROPS.map((src, i) => (
+              <img
+                key={src}
+                className={`hero__bg${i === heroIndex ? ' hero__bg--on' : ''}`}
+                src={src}
+                alt=""
+              />
+            ))}
+            <div className="hero__scrim" />
+          </div>
+          <div className="hero__body">
             <h1 className="hero__title">
               <span>BUILD</span>
-              <span>YOUR</span>
-              <span>OWN.</span>
+              <span>YOUR OWN.</span>
             </h1>
-            <p className="hero__sub">The platform for creators who put their name on the work.</p>
+            <a className="nbtn nbtn--light hero__cta" href="https://stan.store" target="_blank" rel="noreferrer">
+              Start building
+            </a>
+          </div>
+          <div className="hero__ticks" aria-hidden="true">
+            {BACKDROPS.map((src, i) => (
+              <button
+                key={src}
+                type="button"
+                className={`hero__tick${i === heroIndex ? ' hero__tick--on' : ''}`}
+                onClick={() => setHeroIndex(i)}
+                aria-label={`Backdrop ${i + 1}`}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* ---- Creator spotlight carousel ---- */}
+        <section className="spot" id="spot">
+          <div className="spot__stage">
+            <div className="spot__glow" aria-hidden="true" />
+            <div className="spot__figure" key={spot.id}>
+              <img src={spot.img} alt={spot.name} />
+            </div>
+            <div className="spot__meta">
+              <div className="spot__who">
+                <strong>{spot.name}</strong>
+                <span>/ {spot.role}</span>
+              </div>
+              <a className="spot__follow" href="https://stan.store" target="_blank" rel="noreferrer">
+                Follow
+              </a>
+            </div>
           </div>
 
-          <div className="hero__right">
-            <PhoneStage builder={activeBuilder} />
-
-            <div className="phone__seg" role="tablist" aria-label="Creators">
-              {BUILDERS.map((b, i) => (
-                <button
-                  key={b.id}
-                  type="button"
-                  role="tab"
-                  aria-label={b.name}
-                  aria-selected={i === phoneIndex}
-                  className={`phone__dot${i === phoneIndex ? ' phone__dot--on' : ''}`}
-                  style={{ '--tone': b.color }}
-                  onClick={() => setPhoneIndex(i)}
-                />
+          <div className="spot__copy" key={`${spot.id}-copy`}>
+            <h2 className="spot__title">
+              {spot.spotlight.map((line) => (
+                <span key={line}>{line}</span>
               ))}
+            </h2>
+            <p className="spot__blurb">{spot.blurb}</p>
+          </div>
+
+          <div className="spot__ticks" role="tablist" aria-label="Creators">
+            {BUILDERS.map((b, i) => (
+              <button
+                key={b.id}
+                type="button"
+                role="tab"
+                aria-label={b.name}
+                aria-selected={i === spotIndex}
+                className={`spot__tick${i === spotIndex ? ' spot__tick--on' : ''}`}
+                onClick={() => setSpotIndex(i)}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* ---- Social proof grid ---- */}
+        <section className="proof" id="proof">
+          <h2 className="proof__title">The best entrepreneurs use Stan</h2>
+          <div className="proof__grid">
+            {PROOF.map((p) => (
+              <article className="proof__card" key={p.id} style={{ '--tone': p.color }}>
+                <img className="proof__photo" src={p.img} alt={p.name} />
+                <div className="proof__foot">
+                  <div>
+                    <strong>{p.name}</strong>
+                    <em>{p.tag}</em>
+                  </div>
+                  <a className="proof__follow" href="https://stan.store" target="_blank" rel="noreferrer">
+                    Follow
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* ---- 3D coin / new way ---- */}
+        <section className="orbit" id="orbit">
+          <div className="orbit__stage" aria-hidden="true">
+            <FamilyScene progressRef={kitProgress} />
+          </div>
+          <div className="orbit__copy">
+            <h2 className="orbit__title">
+              A new way
+              <br />
+              to work.
+            </h2>
+          </div>
+        </section>
+
+        {/* ---- Purple CTA band ---- */}
+        <section className="band">
+          <div className="band__inner">
+            <div className="band__silhouettes" aria-hidden="true">
+              {BUILDERS.map((b) => (
+                <img key={b.id} src={b.img} alt="" />
+              ))}
+              <img src="/ch_3.png" alt="" />
+            </div>
+            <div className="band__mark">
+              <img src="/stan_logo.svg" alt="Stan" />
+              <p>Build Your Own.</p>
             </div>
           </div>
         </section>
 
+        {/* ---- Existing: wall ---- */}
         <section className="wall" id="wall" aria-label="Builders">
           <div className="wall__stage">
             <div className="wall__cols">
@@ -494,29 +541,7 @@ export default function NikeApp() {
           </div>
         </section>
 
-        <section className="kit" id="kit">
-          <FamilyScene progressRef={kitProgress} />
-          <div className="kit__count" aria-hidden="true">
-            <i>
-              {KIT.map((k, n) => (
-                <b key={k.id}>0{n + 1}</b>
-              ))}
-            </i>
-          </div>
-          {KIT.map((k) => (
-            <article className="kit__act" key={k.id}>
-              <h2 className="kit__lead">
-                <Chars text={k.lead} />
-              </h2>
-              <p className="kit__tag">{k.tag}</p>
-              <p className="kit__copy">{k.copy}</p>
-            </article>
-          ))}
-          <p className="kit__hint" aria-hidden="true">
-            Keep scrolling
-          </p>
-        </section>
-
+        {/* ---- Existing: products funnel ---- */}
         <section className="funnel" id="products">
           <header className="funnel__head">
             <img className="funnel__logo" src="/stan_logo.svg" alt="Stan" />
@@ -532,14 +557,12 @@ export default function NikeApp() {
             <div className="funnel__apex">
               <img src="/stan_logo.svg" alt="" />
             </div>
-
             <svg className="funnel__edges" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
               <path className="funnel__edge" d="M50 2 L12.5 38" />
               <path className="funnel__edge" d="M50 2 L37.5 38" />
               <path className="funnel__edge" d="M50 2 L62.5 38" />
               <path className="funnel__edge" d="M50 2 L87.5 38" />
             </svg>
-
             <ul className="funnel__row">
               {PRODUCTS.map((p) => (
                 <li className="funnel__item" key={p.id}>
@@ -552,6 +575,7 @@ export default function NikeApp() {
           </div>
         </section>
 
+        {/* ---- Existing: roster cards ---- */}
         <section className="roster" id="roster">
           <header className="roster__head">
             <h2 className="roster__title">
@@ -582,38 +606,39 @@ export default function NikeApp() {
           </div>
         </section>
 
-        {BUILDERS.map((b, i) => (
-          <section className={`bill${i % 2 ? ' bill--alt' : ''}`} key={b.id} id={b.id}>
-            <div className="bill__media">
-              <div className="bill__wash" style={{ background: b.color }} aria-hidden="true" />
-              <img className="bill__photo" src={b.img} alt={b.name} />
-              <div className="bill__tint" />
+        {POSTERS.map((p) => (
+          <section className={`poster${p.side === 'left' ? ' poster--left' : ''}`} key={p.id} id={p.id}>
+            <div className="poster__media" aria-hidden="true">
+              <img className="poster__photo" src={p.img} alt="" />
+              <div className="poster__atmos" />
             </div>
-            <div className="bill__copy">
-              <h2 className="bill__title">
-                {b.headline.map((line) => (
+            <div className="poster__copy">
+              <img className="poster__logo" src="/stan_logo.svg" alt="Stan" />
+              <h2 className="poster__title">
+                {p.headline.map((line) => (
                   <span key={line}>{line}</span>
                 ))}
               </h2>
-              <p className="bill__context">{b.context}</p>
-              <div className="bill__foot">
-                <img src="/stan_logo.svg" alt="Stan" />
-                <span>{b.name}</span>
-              </div>
             </div>
           </section>
         ))}
 
         <section className="manif">
-          <div className="manif__halo" aria-hidden="true" />
-          <h2 className="manif__title">
-            {MANIFESTO.map((w, i) => (
-              <span key={i}>{w}</span>
-            ))}
-          </h2>
-          <a className="nbtn nbtn--light manif__cta" href="https://stan.store" target="_blank" rel="noreferrer">
-            Start building
-          </a>
+          <div className="manif__media" aria-hidden="true">
+            <img className="manif__photo" src="/ch_4.png" alt="" />
+            <div className="manif__atmos" />
+          </div>
+          <div className="manif__copy">
+            <img className="manif__logo" src="/stan_logo.svg" alt="Stan" />
+            <h2 className="manif__title">
+              {MANIFESTO.map((w, i) => (
+                <span key={i}>{w}</span>
+              ))}
+            </h2>
+            <a className="nbtn nbtn--light manif__cta" href="https://stan.store" target="_blank" rel="noreferrer">
+              Start building
+            </a>
+          </div>
         </section>
       </main>
 
@@ -622,10 +647,9 @@ export default function NikeApp() {
         <div className="nfoot__grid">
           <div>
             <p className="nfoot__label">Explore</p>
-            <a href="#phones">Creators</a>
+            <a href="#spot">Creators</a>
             <a href="#wall">Roster</a>
             <a href="#products">Products</a>
-            <a href="#kit">The kit</a>
           </div>
           <div>
             <p className="nfoot__label">Roster</p>
