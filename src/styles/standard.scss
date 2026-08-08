@@ -20,18 +20,17 @@ body {
   // `.sstage` is a full-bleed absolute layer, so the only thing keeping the
   // shelves clear of the panel is the stage's left inset — deriving it from
   // these two values means the two can never collide at any width.
-  --hero-x: clamp(20px, 3.4vw, 52px);
-  --hero-w: min(430px, 31vw);
-  --hero-gutter: clamp(24px, 2.6vw, 56px);
+  --hero-x: clamp(18px, 2.8vw, 44px);
+  --hero-w: min(420px, 36vw);
+  --hero-gutter: clamp(18px, 2vw, 40px);
 
   position: relative;
   height: 100vh;
   overflow: hidden;
   background: $night;
 
-  // Ambient room light: a warm pocket up where the lamp hangs, a cool one in
-  // the far corner. Kept at page level rather than inside the scene so it can
-  // never show its own box edge against the night background.
+  // Ambient room light: a warm pocket up where the lamp hangs, plus a wash
+  // of the active edition's hue so the room shifts with selection.
   &::before {
     content: '';
     position: fixed;
@@ -39,8 +38,10 @@ body {
     z-index: 0;
     pointer-events: none;
     background:
-      radial-gradient(38% 34% at 82% 4%, rgba(255, 206, 150, 0.1) 0%, transparent 72%),
-      radial-gradient(48% 46% at 12% 88%, rgba(112, 124, 198, 0.07) 0%, transparent 76%);
+      radial-gradient(42% 36% at 78% 2%, rgba(255, 206, 150, 0.12) 0%, transparent 72%),
+      radial-gradient(46% 50% at 14% 48%, var(--wash, rgba(160, 120, 240, 0.16)) 0%, transparent 70%),
+      radial-gradient(48% 46% at 8% 92%, rgba(112, 124, 198, 0.08) 0%, transparent 76%);
+    transition: background 0.55s ease;
   }
 }
 
@@ -126,232 +127,309 @@ body {
   }
 }
 
-// —— Floating hero: a real phone over bare copy ———————————————
-// No panel behind any of this: the phone and the type sit straight on the
-// night background so the hero reads as one piece, not a card with a tray.
+// —— Floating hero: one large informative poster card ——————————
+// Artwork, copy and CTA all live inside a single pastel panel. The shelves
+// stay as phone sleeves; the featured edition is the poster that explains
+// itself. Centred in the free band below the header so it reads with the
+// room rather than floating beside it.
 
-// Centred against the shelving rather than dropped into the bottom corner, so
-// the left column and the scene read as one band instead of a card floating
-// beside it. `margin-block: auto` between a top and bottom of 0 centres it
-// without a transform, which GSAP owns for the selection animation.
-// The band runs below the header and above the bottom edge rather than the
-// full height, so `margin-block: auto` centres the panel in the space that is
-// actually free — on a short window it can no longer ride up under the lockup.
 .scard {
   position: fixed;
   left: var(--hero-x);
   top: 74px;
-  bottom: 26px;
+  bottom: 22px;
   z-index: 8;
   width: var(--hero-w);
   height: max-content;
+  max-height: calc(100% - 96px);
   margin-block: auto;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: clamp(14px, 2.4vh, 26px);
+  align-items: stretch;
   pointer-events: none;
 }
 
 .scard__glow {
   position: absolute;
-  inset: -14% -24%;
-  background: radial-gradient(
-    50% 42% at 38% 30%,
-    color-mix(in srgb, var(--tone) 38%, transparent) 0%,
-    transparent 72%
-  );
-  filter: blur(4px);
+  inset: -18% -28% -12%;
+  background:
+    radial-gradient(
+      48% 40% at 42% 28%,
+      color-mix(in srgb, var(--tone) 48%, transparent) 0%,
+      transparent 72%
+    ),
+    radial-gradient(
+      56% 48% at 60% 78%,
+      color-mix(in srgb, var(--soft) 28%, transparent) 0%,
+      transparent 74%
+    );
+  filter: blur(6px);
   pointer-events: none;
   z-index: 0;
 }
 
-// the device itself: bezel, punch-hole camera, glass edge, cursor tilt
+// Perspective host for the pointer tilt. Width fills the hero column; height
+// is owned by the panel's content so short windows can compress the figure
+// without clipping the copy.
 .scard__device {
   position: relative;
   z-index: 1;
-  // The 9/19 device is 2.11× as tall as it is wide, so the viewport-height
-  // term is what actually sizes it — the px and vw terms only stop it running
-  // away on a short-and-wide or very large window.
-  width: min(272px, 21vw, 24.5vh);
-  aspect-ratio: 9 / 19;
-  padding: 0;
-  border: none;
-  background: none;
-  perspective: 950px;
+  width: 100%;
+  max-height: 100%;
+  perspective: 1100px;
   pointer-events: auto;
-  cursor: pointer;
 }
 
-.scard__screen {
-  position: absolute;
-  inset: 0;
-  display: block;
-  border-radius: 30px;
+.scard__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: min(640px, calc(100vh - 110px));
+  max-height: min(720px, calc(100vh - 100px));
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--tone) 34%, rgba(255, 255, 255, 0.22));
+  border-radius: 32px;
   overflow: hidden;
-  background: linear-gradient(180deg, #17161e 0%, #0d0c12 100%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  background:
+    radial-gradient(
+      90% 70% at 18% 8%,
+      color-mix(in srgb, var(--soft) 55%, transparent) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      80% 60% at 88% 92%,
+      color-mix(in srgb, var(--tone) 22%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(
+      168deg,
+      color-mix(in srgb, var(--soft) 42%, var(--paper)) 0%,
+      var(--paper) 46%,
+      color-mix(in srgb, var(--tone) 10%, var(--paper)) 100%
+    );
+  color: $ink;
+  text-align: left;
+  cursor: pointer;
+  transform-style: preserve-3d;
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    0 22px 48px rgba(0, 0, 0, 0.5),
-    0 48px 90px rgba(0, 0, 0, 0.34),
-    0 0 52px color-mix(in srgb, var(--tone) 24%, transparent);
+    0 1px 2px rgba(0, 0, 0, 0.35),
+    0 24px 56px rgba(0, 0, 0, 0.42),
+    0 52px 100px rgba(0, 0, 0, 0.28),
+    0 0 64px color-mix(in srgb, var(--tone) 28%, transparent);
   transition:
     border-color 0.35s ease,
     box-shadow 0.35s ease;
 
-  @include art.art-phone(24px);
+  &:hover {
+    border-color: color-mix(in srgb, var(--tone) 42%, rgba(255, 255, 255, 0.34));
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.35),
+      0 28px 64px rgba(0, 0, 0, 0.48),
+      0 60px 112px rgba(0, 0, 0, 0.32),
+      0 0 80px color-mix(in srgb, var(--tone) 40%, transparent);
 
-  // the artwork is inset so the dark body shows as a slim bezel
-  .art {
-    inset: 6px;
+    .scard__cta span {
+      transform: translateX(3px);
+    }
+
+    .scard__spark {
+      opacity: 0.9;
+      transform: scale(1.08);
+    }
   }
 }
 
-.scard__device:hover .scard__screen {
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.5),
-    0 26px 54px rgba(0, 0, 0, 0.54),
-    0 54px 98px rgba(0, 0, 0, 0.38),
-    0 0 64px color-mix(in srgb, var(--tone) 38%, transparent);
-}
-
-.scard__edge {
-  position: absolute;
-  inset: 6px;
-  border-radius: 24px;
-  pointer-events: none;
-  z-index: 3;
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.13),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.32),
-    inset 0 -1.5px 0 rgba(0, 0, 0, 0.3);
-}
-
-.scard__cam {
-  position: absolute;
-  top: 13px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #0d0c12;
-  box-shadow:
-    inset 0 0 0 2px rgba(255, 255, 255, 0.09),
-    0 0 0 2px rgba(13, 12, 18, 0.65);
-  pointer-events: none;
-  z-index: 4;
-}
-
-.scard__info {
+// Full-bleed Cover field. Mast/foot chrome is suppressed so the poster can
+// carry its own type; the figure stays large and centred in the upper half.
+.scard__canvas {
   position: relative;
+  flex: 1 1 auto;
+  min-height: 210px;
+  overflow: hidden;
+
+  .art {
+    position: absolute;
+    inset: 0;
+    border-radius: 0;
+  }
+
+  .art__top,
+  .art__foot {
+    display: none;
+  }
+
+  .art__stage {
+    padding: 0;
+    justify-content: center;
+  }
+
+  .art__figure {
+    width: 72%;
+    height: 72%;
+    max-width: 280px;
+    max-height: 280px;
+    margin: 0 auto;
+  }
+}
+
+// Soft drifting bloom over the figure — the "dynamic" beat of the poster.
+.scard__spark {
+  position: absolute;
   z-index: 1;
+  left: 18%;
+  top: 10%;
+  width: 64%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(
+      circle at 40% 40%,
+      color-mix(in srgb, var(--soft) 70%, transparent) 0%,
+      color-mix(in srgb, var(--tone) 28%, transparent) 42%,
+      transparent 70%
+    );
+  filter: blur(18px);
+  opacity: 0.65;
+  pointer-events: none;
+  animation: scard-spark 7s ease-in-out infinite;
+  transition:
+    opacity 0.4s ease,
+    transform 0.55s ease;
+}
+
+// Fades the artwork into the copy band so type stays readable on every hue,
+// while keeping the edition's pastel alive under the type.
+.scard__veil {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 74%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in srgb, var(--soft) 28%, transparent) 26%,
+    color-mix(in srgb, var(--paper) 78%, var(--soft)) 54%,
+    color-mix(in srgb, var(--paper) 90%, var(--soft)) 100%
+  );
+  pointer-events: none;
+}
+
+.scard__body {
+  position: relative;
+  z-index: 3;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  padding: 8px 26px 26px;
+  margin-top: -42%;
 }
 
-.scard__idx {
-  color: $chalk-3;
-  padding-right: 9px;
-  border-right: 1px solid rgba(243, 242, 251, 0.18);
-}
-
-// The line under the headline, tracked wide open like the reference's
-// "S E A S O N   O N E". The tracking is the whole effect, so this is the one
-// place the type is allowed to run this loose.
-.scard__meta {
-  margin-top: 11px;
-  display: flex;
+.scard__badge {
+  display: inline-flex;
   align-items: center;
-  gap: 11px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--deep) 88%, #000);
+  color: #fff;
   font-family: $display-font;
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 700;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.12em;
   line-height: 1;
   text-transform: uppercase;
-  color: $chalk-2;
-
-  em {
-    font-style: normal;
-    padding: 4px 9px;
-    border-radius: 999px;
-    background: $chalk;
-    color: $night;
-    font-size: 9.5px;
-    letter-spacing: 0.1em;
-  }
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--deep) 28%, transparent);
 }
 
-// The edition's own name, set as the label above the headline. Wide tracking
-// and heavy weight, the way the season pages set "A NEW SEASON FOR CREATORS".
 .scard__kicker {
-  margin-top: 0;
+  margin-top: 14px;
   font-family: $display-font;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.17em;
+  letter-spacing: 0.18em;
   line-height: 1;
   text-transform: uppercase;
-  color: var(--soft);
-  text-shadow: 0 0 22px color-mix(in srgb, var(--tone) 45%, transparent);
+  color: color-mix(in srgb, var(--deep) 72%, var(--tone));
 }
 
-// The covers carry the same heavy grotesque as the headline, so an edition
-// reads the same on the shelf as it does in the hero. Scoped to `.standard`
-// because `_art.scss` is shared with every other version page.
-.standard .art__name {
-  font-family: $display-font;
-  font-weight: 700;
-}
-
-// The headline is the tagline, so it has to hold two or three words on more
-// than one line — smaller than a one-word edition name would need, and
-// balanced so it never breaks to a lonely last word. Set in the heavy
-// grotesque the season pages use for "BUILD", not a serif: the weight is
-// what carries the line, so the tracking closes right up under it.
 .scard__name {
-  margin-top: 12px;
+  margin-top: 10px;
   font-family: $display-font;
-  font-size: clamp(29px, 3.2vw, 44px);
+  font-size: clamp(28px, 2.9vw, 40px);
   font-weight: 800;
-  letter-spacing: -0.04em;
-  line-height: 1.06;
+  letter-spacing: -0.045em;
+  line-height: 1.04;
   text-wrap: balance;
-  color: $chalk;
+  color: $ink;
 }
 
-// the release in one breath — the hero's job is to inform, not tease
+.scard__meta {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: $display-font;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--deep) 55%, transparent);
+}
+
+.scard__idx {
+  padding-right: 10px;
+  border-right: 1px solid color-mix(in srgb, var(--deep) 22%, transparent);
+  color: color-mix(in srgb, var(--deep) 70%, transparent);
+}
+
+.scard__creator {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: color-mix(in srgb, $ink 62%, transparent);
+
+  em {
+    font-style: normal;
+    font-size: 11.5px;
+    color: var(--deep);
+  }
+}
+
 .scard__blurb {
   margin-top: 12px;
-  max-width: 34ch;
-  font-size: 14.5px;
+  max-width: 32ch;
+  font-size: 14px;
   font-weight: 420;
   letter-spacing: -0.016em;
-  line-height: 1.45;
-  color: $chalk-2;
+  line-height: 1.42;
+  color: color-mix(in srgb, $ink 68%, transparent);
 }
 
-// the three quick hits, each anchored by a dot in the edition's own hue
 .scard__points {
   list-style: none;
-  margin-top: 16px;
+  margin-top: 14px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 
   li {
     position: relative;
-    padding-left: 17px;
-    max-width: 34ch;
-    font-size: 13px;
-    font-weight: 450;
+    padding-left: 16px;
+    max-width: 30ch;
+    font-size: 12.5px;
+    font-weight: 500;
     letter-spacing: -0.016em;
-    line-height: 1.3;
-    color: $chalk-2;
+    line-height: 1.28;
+    color: color-mix(in srgb, $ink 72%, transparent);
 
     &::before {
       content: '';
@@ -362,67 +440,71 @@ body {
       height: 6px;
       border-radius: 50%;
       background: var(--tone);
-      box-shadow: 0 0 10px color-mix(in srgb, var(--tone) 75%, transparent);
+      box-shadow: 0 0 10px color-mix(in srgb, var(--tone) 70%, transparent);
     }
   }
 }
 
-// Partnerships hook: only rendered when an edition carries `creator`.
-.scard__creator {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
-  margin-top: 9px;
-  font-size: 12.5px;
-  font-weight: 450;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: $chalk-2;
-
-  em {
-    font-style: normal;
-    font-size: 11.5px;
-    color: var(--tone);
-  }
-}
-
-// Filled in the edition's own hue, like the reference's primary buttons. The
-// pastel is light enough that the label has to be ink rather than white.
+// Visual CTA inside the poster button — not a nested control.
 .scard__cta {
-  pointer-events: auto;
-  margin-top: 20px;
+  margin-top: 18px;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 13px 21px;
-  border: none;
+  gap: 8px;
+  padding: 12px 18px;
   border-radius: 999px;
-  background: var(--tone);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--tone) 88%, #fff) 0%,
+    var(--tone) 48%,
+    color-mix(in srgb, var(--deep) 42%, var(--tone)) 100%
+  );
   color: #17151f;
   font-family: $display-font;
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1;
-  box-shadow: 0 10px 30px color-mix(in srgb, var(--tone) 34%, transparent);
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--tone) 36%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
 
   span {
-    color: rgba(23, 21, 31, 0.6);
+    color: rgba(23, 21, 31, 0.55);
     transition: transform 0.2s ease;
   }
+}
 
-  &:hover {
-    background: color-mix(in srgb, var(--tone) 82%, #fff);
-    transform: translateY(-1px);
-    box-shadow: 0 14px 36px color-mix(in srgb, var(--tone) 44%, transparent);
+.scard__edge {
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  pointer-events: none;
+  z-index: 4;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.42),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1.5px 0 rgba(0, 0, 0, 0.06);
+}
 
-    span {
-      transform: translateX(3px);
-    }
+// The covers carry the same heavy grotesque as the headline, so an edition
+// reads the same on the shelf as it does in the hero. Scoped to `.standard`
+// because `_art.scss` is shared with every other version page.
+.standard .art__name {
+  font-family: $display-font;
+  font-weight: 700;
+}
+
+@keyframes scard-spark {
+  0%,
+  100% {
+    transform: scale(1) translate(0, 0);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.06) translate(2%, -3%);
+    opacity: 0.8;
   }
 }
 
@@ -637,12 +719,12 @@ body {
   }
 
   .sleeve--active .sleeve__inner {
-    border-color: rgba(243, 242, 251, 0.46);
+    border-color: color-mix(in srgb, var(--soft, #f3f2fb) 55%, rgba(243, 242, 251, 0.5));
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.45),
       0 22px 48px rgba(0, 0, 0, 0.55),
       0 46px 82px rgba(0, 0, 0, 0.38),
-      0 0 46px color-mix(in srgb, var(--tone) 40%, transparent);
+      0 0 52px color-mix(in srgb, var(--tone) 48%, transparent);
   }
 
   // brighter lip on the dark page than the light /editions shelves want
@@ -671,9 +753,15 @@ body {
   .standard .sleeve,
   .standard .sleeve::before,
   .standard .sleeve::after,
-  .standard .sleeve__inner {
+  .standard .sleeve__inner,
+  .scard__spark {
     animation: none !important;
     transition: none !important;
+  }
+
+  .scard__spark {
+    opacity: 0.6;
+    transform: none;
   }
 }
 
@@ -929,36 +1017,69 @@ body {
   }
 }
 
-// Short windows: shrink the device before the copy has to give way. These are
-// height-only, so they also catch a laptop at 1440×720 — and they are declared
-// above the width queries so the phone layout below can override them.
+// Short windows: compress the figure band before the copy has to give way.
 @media (max-height: 820px) {
-  .scard__device {
-    width: min(215px, 19vw, 22vh);
+  .scard__panel {
+    min-height: min(560px, calc(100vh - 100px));
+    max-height: calc(100vh - 96px);
+  }
+
+  .scard__canvas {
+    min-height: 160px;
+  }
+
+  .scard__canvas .art__figure {
+    width: 62%;
+    height: 62%;
+  }
+
+  .scard__body {
+    margin-top: -36%;
+    padding: 6px 22px 20px;
   }
 
   .scard__name {
-    font-size: clamp(30px, 3.1vw, 40px);
+    font-size: clamp(26px, 2.7vw, 34px);
   }
 
   .scard__points {
-    margin-top: 13px;
-    gap: 7px;
+    margin-top: 10px;
+    gap: 6px;
   }
 }
 
 @media (max-height: 700px) {
-  .scard__device {
-    width: min(160px, 20.5vh);
+  .scard__panel {
+    min-height: 0;
+    border-radius: 26px;
+  }
+
+  .scard__edge {
+    border-radius: 26px;
+  }
+
+  .scard__canvas {
+    min-height: 120px;
+  }
+
+  .scard__body {
+    margin-top: -28%;
+    padding: 4px 18px 16px;
+  }
+
+  .scard__badge {
+    padding: 4px 8px;
+    font-size: 9px;
   }
 
   .scard__kicker {
-    font-size: 11.5px;
+    margin-top: 10px;
+    font-size: 11px;
   }
 
   .scard__name {
-    margin-top: 8px;
-    font-size: clamp(25px, 2.8vw, 33px);
+    margin-top: 7px;
+    font-size: clamp(22px, 2.4vw, 28px);
   }
 
   .scard__blurb {
@@ -967,24 +1088,29 @@ body {
   }
 
   .scard__points {
-    margin-top: 12px;
-    gap: 6px;
+    margin-top: 9px;
+    gap: 5px;
 
     li {
-      font-size: 12px;
+      font-size: 11.5px;
     }
   }
 
   .scard__cta {
-    margin-top: 13px;
-    padding: 10px 17px;
-    font-size: 12.5px;
+    margin-top: 12px;
+    padding: 10px 15px;
+    font-size: 12px;
   }
 }
 
 @media (max-height: 560px) {
-  .scard__blurb {
+  .scard__blurb,
+  .scard__points {
     display: none;
+  }
+
+  .scard__canvas {
+    min-height: 90px;
   }
 }
 
@@ -1015,43 +1141,33 @@ body {
     left: auto;
     top: auto;
     bottom: auto;
-    width: min(560px, calc(100% - 40px));
+    width: min(480px, calc(100% - 40px));
     height: auto;
-    margin: 96px auto 4px;
-    align-items: center;
-    text-align: center;
+    max-height: none;
+    margin: 92px auto 8px;
     pointer-events: auto;
   }
 
-  .scard__info {
-    align-items: center;
-  }
-
-  .scard__device {
-    width: min(240px, 46vw);
+  .scard__panel {
+    min-height: 560px;
+    max-height: none;
   }
 
   .scard__blurb {
-    max-width: 44ch;
-  }
-
-  // the bullets stay left-aligned inside a centred column, so their dots line
-  // up instead of ragging down the middle
-  .scard__points {
-    align-items: flex-start;
-    text-align: left;
+    max-width: 36ch;
   }
 
   .srail {
     display: none;
   }
 
-  // enough clearance that the CTA's glow never touches the top shelf
+  // Stage is relative on the stack so the room sits under the poster. Still
+  // not a scroller — `--span` keeps every board inside the measured width.
   .sstage {
     position: relative;
     inset: auto;
-    padding: 34px 14px 64px;
-    overflow: visible;
+    padding: 28px 16px 72px;
+    overflow: hidden;
   }
 }
 
@@ -1067,43 +1183,72 @@ body {
     }
 
     &__lockup strong {
-      font-size: 20px;
+      font-size: 18px;
     }
   }
 
   .snew {
     top: 16px;
-    right: 14px;
-    padding: 9px 14px;
-    font-size: 12px;
+    right: 12px;
+    padding: 9px 12px;
+    font-size: 11.5px;
   }
 
   .scard {
-    width: calc(100% - 32px);
-    margin-top: 76px;
-    gap: 16px;
+    width: calc(100% - 24px);
+    margin: 70px auto 0;
   }
 
-  // Deliberately short of half the screen: the hero owns the first view, but
-  // the top of the shelving should still peek above the fold so it is obvious
-  // there is a room to scroll into.
-  .scard__device {
-    width: min(186px, 48vw);
+  .scard__panel {
+    min-height: 0;
+    max-height: none;
+    border-radius: 28px;
+  }
+
+  .scard__edge {
+    border-radius: 28px;
+  }
+
+  .scard__canvas {
+    min-height: 168px;
+    height: 42vw;
+    max-height: 210px;
+    flex: 0 0 auto;
+  }
+
+  .scard__canvas .art__figure {
+    width: 58%;
+    height: 58%;
+  }
+
+  .scard__spark {
+    width: 58%;
+    left: 20%;
+    top: 6%;
+  }
+
+  .scard__veil {
+    height: 78%;
+  }
+
+  .scard__body {
+    margin-top: -28%;
+    padding: 6px 20px 20px;
   }
 
   .scard__name {
-    font-size: clamp(36px, 12vw, 52px);
+    font-size: clamp(28px, 8.2vw, 36px);
   }
 
   .scard__blurb {
     margin-top: 10px;
-    font-size: 14px;
-    max-width: 32ch;
+    font-size: 13.5px;
+    max-width: 30ch;
   }
 
   .scard__points {
-    margin-top: 14px;
-    gap: 8px;
+    margin-top: 12px;
+    gap: 7px;
 
     li {
       font-size: 12.5px;
@@ -1111,6 +1256,13 @@ body {
   }
 
   .scard__cta {
-    margin-top: 18px;
+    margin-top: 15px;
+  }
+
+  // Room sits fully inside the stage width — no sideways scroll on phones.
+  .sstage {
+    padding: 18px 8px 64px;
+    overflow: hidden;
+    overflow-x: clip;
   }
 }

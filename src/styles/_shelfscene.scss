@@ -123,16 +123,20 @@
 
 .sshelf__top {
   height: 4px;
-  background: linear-gradient(180deg, #4d4a5c 0%, #333040 100%);
+  background: linear-gradient(180deg, #575368 0%, #383544 100%);
   border-radius: 1px 1px 0 0;
-  box-shadow: inset 0 1px 0 rgba(255, 226, 190, 0.16);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 226, 190, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
 .sshelf__front {
-  height: 8px;
-  background: linear-gradient(180deg, #2c2a39 0%, #1c1b25 100%);
+  height: 9px;
+  background: linear-gradient(180deg, #302e3d 0%, #1a1922 100%);
   border-radius: 0 0 2px 2px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 // short stubs of upright under each board, so the shelves read as one
@@ -255,13 +259,18 @@
   background:
     radial-gradient(
       44% 44% at 50% 58%,
-      color-mix(in srgb, var(--tone, #ffd6a2) 50%, transparent) 0%,
+      color-mix(in srgb, var(--tone, #ffd6a2) 62%, transparent) 0%,
       transparent 74%
     ),
     radial-gradient(
+      38% 38% at 50% 60%,
+      color-mix(in srgb, var(--soft, #ffe8c8) 40%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
       50% 50% at 50% 60%,
-      rgba(255, 214, 162, 0.44) 0%,
-      rgba(255, 198, 144, 0.16) 42%,
+      rgba(255, 214, 162, 0.38) 0%,
+      rgba(255, 198, 144, 0.14) 42%,
       transparent 74%
     );
   filter: blur(12px);
@@ -329,21 +338,21 @@
 }
 
 .standard .sitem--lit .sleeve__inner {
-  border-color: rgba(255, 228, 194, 0.38);
+  border-color: color-mix(in srgb, var(--soft, #ffe4c2) 55%, rgba(255, 255, 255, 0.35));
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.45),
     0 18px 40px rgba(0, 0, 0, 0.5),
     0 40px 74px rgba(0, 0, 0, 0.34),
-    0 0 48px rgba(255, 206, 152, 0.26);
+    0 0 48px color-mix(in srgb, var(--tone, #ffce98) 34%, transparent);
 }
 
 .standard .sitem--hero .sleeve__inner {
-  border-color: rgba(255, 232, 204, 0.5);
+  border-color: color-mix(in srgb, var(--soft, #ffe8cc) 65%, rgba(255, 255, 255, 0.4));
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.45),
     0 22px 48px rgba(0, 0, 0, 0.55),
     0 48px 88px rgba(0, 0, 0, 0.38),
-    0 0 64px rgba(255, 206, 152, 0.36);
+    0 0 64px color-mix(in srgb, var(--tone, #ffce98) 44%, transparent);
 }
 
 // —— props ——————————————————————————————————————————————————————
@@ -530,11 +539,14 @@
 // `--span` is what guarantees it.
 @media (max-width: 720px) {
   .sscene {
-    --span: 5.2;
-    --unit: clamp(52px, calc(100cqw / var(--span)), 96px);
+    // Slightly wider span so boards and props never nudge past the stage.
+    --span: 5.35;
+    --unit: clamp(50px, calc(100cqw / var(--span)), 88px);
 
     width: 100%;
+    max-width: 100%;
     margin-inline: 0;
+    overflow: visible;
   }
 
   // Narrow enough that the cone's box stays inside the stage even at full

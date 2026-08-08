@@ -19,11 +19,11 @@ export default function StandardApp() {
   const edition = editions[active];
   const tone = toneOf(edition);
 
-  // The hero phone follows the cursor like the shelf sleeves do; the aside
+  // The hero panel follows the cursor like the shelf sleeves do; the aside
   // remounts per edition (key below), so the hook rebinds on selection.
   usePointerTilt(
     deviceRef,
-    { inner: '.scard__screen', tiltX: 9, tiltY: 11, shiftX: 10, shiftY: 8 },
+    { inner: '.scard__panel', tiltX: 7, tiltY: 9, shiftX: 12, shiftY: 10 },
     [edition.id],
   );
 
@@ -115,11 +115,9 @@ export default function StandardApp() {
   }, [edition.id]);
 
   // Hero panel entrance, replayed on every selection because the aside is
-  // keyed by edition id and therefore remounts. The copy arrives as a stagger
-  // — kicker, meta, name, blurb, then the highlights one at a time — while the
-  // device swings in underneath it and its artwork settles out of a slight
-  // over-scale, so the cover reads as a physical object being set down rather
-  // than a picture being swapped.
+  // keyed by edition id and therefore remounts. The poster arrives as one
+  // object; copy then staggers up through the veil so the card feels alive
+  // rather than swapped.
   useEffect(() => {
     const card = scardRef.current;
     if (!card) return;
@@ -128,8 +126,10 @@ export default function StandardApp() {
     const q = gsap.utils.selector(card);
     const glow = q('.scard__glow');
     const device = q('.scard__device');
-    const art = q('.scard__screen .art');
-    const figure = q('.scard__screen .art__figure');
+    const art = q('.scard__canvas .art');
+    const figure = q('.scard__canvas .art__figure');
+    const body = q('.scard__body');
+    const badge = q('.scard__badge');
     const kicker = q('.scard__kicker');
     const meta = q('.scard__meta');
     const name = q('.scard__name');
@@ -144,6 +144,8 @@ export default function StandardApp() {
       ...device,
       ...art,
       ...figure,
+      ...body,
+      ...badge,
       ...kicker,
       ...meta,
       ...name,
@@ -156,38 +158,45 @@ export default function StandardApp() {
 
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     tl.fromTo(card, { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 })
-      .fromTo(glow, { scale: 0.55, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.6 }, 0.04)
+      .fromTo(glow, { scale: 0.55, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7 }, 0.04)
       .fromTo(
         device,
-        { y: 34, rotate: -3.5, scale: 0.9, autoAlpha: 0 },
-        { y: 0, rotate: 0, scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(1.7)' },
+        { y: 28, rotate: -2.4, scale: 0.94, autoAlpha: 0 },
+        { y: 0, rotate: 0, scale: 1, autoAlpha: 1, duration: 0.72, ease: 'back.out(1.55)' },
         0.05,
       )
-      .fromTo(art, { scale: 1.16, y: 8 }, { scale: 1, y: 0, duration: 0.85 }, 0.08)
-      .fromTo(figure, { scale: 0.84, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.8, ease: 'back.out(2.2)' }, 0.16)
-      .fromTo(kicker, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.18)
-      .fromTo(meta, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38 }, 0.22)
-      .fromTo(name, { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5 }, 0.25)
-      .fromTo(creator, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.3)
-      .fromTo(blurb, { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.42 }, 0.33)
+      .fromTo(art, { scale: 1.12 }, { scale: 1, duration: 0.9 }, 0.08)
+      .fromTo(
+        figure,
+        { scale: 0.82, autoAlpha: 0 },
+        { scale: 1, autoAlpha: 1, duration: 0.85, ease: 'back.out(2)' },
+        0.14,
+      )
+      .fromTo(body, { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.45 }, 0.2)
+      .fromTo(badge, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35 }, 0.24)
+      .fromTo(kicker, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38 }, 0.26)
+      .fromTo(name, { y: 20, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.48 }, 0.3)
+      .fromTo(meta, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.36 }, 0.34)
+      .fromTo(creator, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.34 }, 0.36)
+      .fromTo(blurb, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.38)
       .fromTo(
         points,
-        { x: -10, autoAlpha: 0 },
-        { x: 0, autoAlpha: 1, duration: 0.36, stagger: 0.075 },
-        0.38,
+        { x: -8, autoAlpha: 0 },
+        { x: 0, autoAlpha: 1, duration: 0.34, stagger: 0.07 },
+        0.42,
       )
-      .fromTo(cta, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4 }, 0.5);
+      .fromTo(cta, { y: 10, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.38 }, 0.52);
 
     // Idle float, so the hero never sits completely dead between selections.
     // Held as its own tween rather than started from a timeline callback, so
     // the cleanup below can reliably kill it.
     const float = gsap.to(device, {
-      y: -7,
-      duration: 3.4,
+      y: -6,
+      duration: 3.6,
       ease: 'sine.inOut',
       yoyo: true,
       repeat: -1,
-      delay: 1.1,
+      delay: 1.15,
     });
 
     return () => {
@@ -251,7 +260,17 @@ export default function StandardApp() {
   }, [edition.id]);
 
   return (
-    <div className="standard" ref={rootRef}>
+    <div
+      className="standard"
+      ref={rootRef}
+      style={{
+        '--tone': tone.base,
+        '--soft': tone.soft,
+        '--deep': tone.deep,
+        '--paper': tone.paper,
+        '--wash': tone.wash,
+      }}
+    >
       <header className="shead">
         <span className="shead__coin">$</span>
         <div className="shead__lockup">
@@ -264,61 +283,50 @@ export default function StandardApp() {
         <span aria-hidden="true">→</span>
       </button>
 
-      <aside
-        className="scard"
-        ref={scardRef}
-        key={edition.id}
-        style={{
-          '--tone': tone.base,
-          '--soft': tone.soft,
-          '--deep': tone.deep,
-          '--paper': tone.paper,
-        }}
-      >
+      <aside className="scard" ref={scardRef} key={edition.id}>
         <span className="scard__glow" aria-hidden="true" />
-        <button
-          className="scard__device"
-          ref={deviceRef}
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label={`Learn more about ${edition.name}`}
-        >
-          <span className="scard__screen">
-            <Cover edition={edition} index={active} />
+        <div className="scard__device" ref={deviceRef}>
+          <button
+            className="scard__panel"
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label={`Learn more about ${edition.name}`}
+          >
+            <span className="scard__canvas" aria-hidden="true">
+              <Cover edition={edition} index={active} />
+              <span className="scard__spark" />
+              <span className="scard__veil" />
+            </span>
+
+            <span className="scard__body">
+              <span className="scard__badge">{edition.isNew ? 'New' : `${edition.quarter} ${edition.year}`}</span>
+              <p className="scard__kicker">{edition.name}</p>
+              <h1 className="scard__name">{edition.tagline ?? edition.name}</h1>
+              <p className="scard__meta">
+                <span className="scard__idx">{num(active)}</span>
+                {edition.quarter} {edition.year}
+              </p>
+              {edition.creator && (
+                <p className="scard__creator">
+                  <span>{edition.creator.name}</span>
+                  {edition.creator.handle && <em>{edition.creator.handle}</em>}
+                </p>
+              )}
+              <p className="scard__blurb">{edition.blurb}</p>
+              {edition.highlights && (
+                <ul className="scard__points">
+                  {edition.highlights.slice(0, 3).map((h) => (
+                    <li key={h}>{h}</li>
+                  ))}
+                </ul>
+              )}
+              <span className="scard__cta">
+                Explore the edition
+                <span aria-hidden="true">→</span>
+              </span>
+            </span>
+
             <span className="scard__edge" aria-hidden="true" />
-            <span className="scard__cam" aria-hidden="true" />
-          </span>
-        </button>
-        <div className="scard__info">
-          {/* The tagline is the headline and the edition name is the label above
-              it — the release is already on screen as artwork, so the line worth
-              setting in serif is the one that says what it does for you. */}
-          <p className="scard__kicker">{edition.name}</p>
-          <h1 className="scard__name">{edition.tagline ?? edition.name}</h1>
-          {/* Sits under the headline in wide tracking, the way the season pages
-              set "S E A S O N   O N E" beneath their display word. */}
-          <p className="scard__meta">
-            <span className="scard__idx">{num(active)}</span>
-            {edition.quarter} {edition.year}
-            {edition.isNew && <em>New</em>}
-          </p>
-          {edition.creator && (
-            <p className="scard__creator">
-              <span>{edition.creator.name}</span>
-              {edition.creator.handle && <em>{edition.creator.handle}</em>}
-            </p>
-          )}
-          <p className="scard__blurb">{edition.blurb}</p>
-          {edition.highlights && (
-            <ul className="scard__points">
-              {edition.highlights.slice(0, 3).map((h) => (
-                <li key={h}>{h}</li>
-              ))}
-            </ul>
-          )}
-          <button className="scard__cta" type="button" onClick={() => setOpen(true)}>
-            Explore the edition
-            <span aria-hidden="true">→</span>
           </button>
         </div>
       </aside>
