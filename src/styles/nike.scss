@@ -1,31 +1,15 @@
-@font-face {
-  font-family: 'Futura Condensed ExtraBold';
-  src: url('/fonts/FuturaCondensedExtraBold.woff2') format('woff2');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Futura Medium';
-  src: url('/fonts/FuturaMedium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
 // ---------------------------------------------------------------
-// Nike — 2010s aspirational cut of Build Your Own.
-// Futura Condensed ExtraBold, black field, white type, roster cards.
+// Brand home — Nike energy, Apple restraint.
+// Inter ExtraBold display, glass pill nav, quiet motion.
 // ---------------------------------------------------------------
 
 $ink: #0a0a0a;
-$chalk: #f4f4f4;
-$mute: rgba(244, 244, 244, 0.55);
-$line: rgba(244, 244, 244, 0.14);
+$chalk: #f5f5f7;
+$mute: rgba(245, 245, 247, 0.55);
+$line: rgba(245, 245, 247, 0.12);
 $volt: #6355ff;
-$display: 'Futura Condensed ExtraBold', 'Oswald', 'Arial Narrow', Impact, sans-serif;
-$body: 'Futura Medium', 'Futura', Helvetica, Arial, sans-serif;
+$display: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+$body: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
 
 *,
 *::before,
@@ -40,8 +24,13 @@ body {
   height: 100%;
 }
 
-html {
-  scroll-behavior: smooth;
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
 body {
@@ -63,21 +52,108 @@ a {
   text-decoration: none;
 }
 
-@mixin futura($size) {
+@mixin display($size) {
   font-family: $display;
   font-size: $size;
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.9;
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
   text-transform: uppercase;
 }
 
 @mixin label {
   font-family: $body;
   font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+// screen-reader text for split headlines
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// per-character split (headline chars rise out of masked words)
+.chars {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: inherit;
+  gap: 0 0.24em;
+}
+
+.chars__word {
+  display: inline-flex;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+
+.chars__ch {
+  display: inline-block;
+  will-change: transform;
+}
+
+// shared numbered section head
+.shead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(10px, 1.8vh, 16px);
+  margin-bottom: clamp(28px, 5vh, 48px);
+}
+
+.shead__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  @include label;
+  color: rgba(245, 245, 247, 0.5);
+
+  span {
+    font-weight: 800;
+    color: $volt;
+  }
+}
+
+.shead__title {
+  @include display(clamp(26px, 4vw, 46px));
+
+  .chars {
+    justify-content: center;
+  }
+}
+
+.shead__sub {
+  max-width: 44ch;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: $mute;
+}
+
+.shead--light {
+  .shead__eyebrow {
+    color: rgba(10, 10, 10, 0.45);
+  }
+
+  .shead__title {
+    color: $ink;
+  }
+
+  .shead__sub {
+    color: rgba(10, 10, 10, 0.55);
+  }
 }
 
 // ---- buttons ----
@@ -85,18 +161,18 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 26px;
+  padding: 11px 22px;
   border: 1px solid transparent;
+  border-radius: 980px;
   font-family: $display;
   font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   transition:
-    background 0.16s ease,
-    color 0.16s ease,
-    border-color 0.16s ease,
-    transform 0.16s ease;
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
 
   &:hover {
     transform: translateY(-1px);
@@ -113,48 +189,53 @@ a {
   }
 
   &--ghost {
-    border-color: rgba(244, 244, 244, 0.45);
+    border-color: rgba(245, 245, 247, 0.35);
     color: $chalk;
 
     &:hover {
       border-color: $chalk;
-      background: rgba(244, 244, 244, 0.06);
+      background: rgba(245, 245, 247, 0.06);
     }
   }
 }
 
-// ---- top bar (Nike.com edge bar) ----
+// ---- glass pill nav ----
 .nbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 14px;
+  left: 50%;
   z-index: 90;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  height: 60px;
-  padding: 0 clamp(16px, 3vw, 36px);
-  background: rgba(0, 0, 0, 0.55);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
+  gap: 18px;
+  width: min(720px, calc(100% - 28px));
+  height: 52px;
+  padding: 0 10px 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(22, 22, 26, 0.55);
+  backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  transform: translateX(-50%);
 
   &__logo img {
     display: block;
-    height: 22px;
+    height: 18px;
     width: auto;
   }
 
   &__links {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 20px;
     font-family: $body;
     font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.72);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.68);
 
     a:hover {
       color: #fff;
@@ -164,15 +245,15 @@ a {
   &__cta {
     font-family: $display;
     font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 10px 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding: 9px 15px;
     border-radius: 999px;
     background: #fff;
     color: #111;
     transition:
-      background 0.16s ease,
-      color 0.16s ease;
+      background 0.2s ease,
+      color 0.2s ease;
 
     &:hover {
       background: $volt;
@@ -240,18 +321,61 @@ a {
 }
 
 .hero__title {
-  @include futura(clamp(48px, 9vw, 120px));
-  letter-spacing: -0.03em;
-  text-shadow: 0 8px 48px rgba(0, 0, 0, 0.55);
+  @include display(clamp(40px, 6.5vw, 84px));
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+}
 
-  span {
-    display: block;
-    white-space: nowrap;
-  }
+.hero__line {
+  display: flex;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.hero__sub {
+  max-width: 46ch;
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.72);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
 }
 
 .hero__cta {
   border-radius: 999px;
+}
+
+.hero__cue {
+  position: absolute;
+  left: 50%;
+  bottom: 64px;
+  z-index: 3;
+  width: 1px;
+  height: 44px;
+  transform: translateX(-50%);
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.16);
+
+  span {
+    position: absolute;
+    left: 0;
+    top: -40%;
+    width: 100%;
+    height: 40%;
+    background: #fff;
+    animation: cue-drop 2.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+}
+
+@keyframes cue-drop {
+  0% {
+    top: -40%;
+  }
+
+  60%,
+  100% {
+    top: 105%;
+  }
 }
 
 .hero__ticks {
@@ -280,94 +404,113 @@ a {
   }
 }
 
-// ---- creator spotlight ----
+// ---- creator spotlight (image behind text) ----
 .spot {
   position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: #000;
   color: #fff;
-  padding: clamp(72px, 12vh, 120px) clamp(18px, 5vw, 72px) clamp(48px, 8vh, 80px);
+  padding: clamp(96px, 14vh, 140px) clamp(18px, 5vw, 72px) clamp(48px, 8vh, 72px);
   text-align: center;
   overflow: hidden;
-  box-shadow: inset 0 0 120px 50px rgba(99, 85, 255, 0.2);
+  box-shadow: inset 0 0 120px 48px rgba(99, 85, 255, 0.18);
 }
 
-.spot__stage {
-  position: relative;
-  width: min(420px, 78vw);
-  margin: 0 auto;
-  min-height: clamp(320px, 52vh, 480px);
-  display: grid;
-  place-items: end center;
+.spot__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-.spot__glow {
+.spot__photo {
   position: absolute;
   left: 50%;
-  top: 30%;
-  width: 70%;
-  height: 55%;
+  bottom: 0;
+  width: min(520px, 70vw);
+  height: 92%;
+  object-fit: contain;
+  object-position: center bottom;
   transform: translateX(-50%);
-  border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(99, 85, 255, 0.65) 0%, rgba(99, 85, 255, 0.18) 45%, transparent 70%);
-  filter: blur(22px);
-  pointer-events: none;
+  opacity: 0.34;
+  filter: grayscale(1) contrast(1.06);
+  animation: spot-fade 0.55s ease;
 }
 
-.spot__figure {
-  position: relative;
-  z-index: 1;
-  width: min(280px, 62vw);
-  animation: spot-in 0.45s ease;
-
-  img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    filter: grayscale(1) contrast(1.08) drop-shadow(0 0 36px rgba(99, 85, 255, 0.4));
-  }
+.spot__mask {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.2) 35%, rgba(0, 0, 0, 0.72) 100%),
+    radial-gradient(ellipse 55% 60% at 50% 42%, rgba(99, 85, 255, 0.18) 0%, transparent 70%);
+  box-shadow: inset 0 0 90px 36px rgba(0, 0, 0, 0.45);
 }
 
-@keyframes spot-in {
+@keyframes spot-fade {
   from {
     opacity: 0;
-    transform: translateY(16px);
   }
 
   to {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0.34;
   }
 }
 
-.spot__meta {
+.spot__floats {
   position: absolute;
-  left: 50%;
-  top: 12%;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transform: translateX(-10%);
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
 }
 
-.spot__who {
+.spot__float {
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 3px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(20, 20, 24, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
   text-align: left;
+  opacity: 0.55;
+  transform: translateY(0);
 
   strong {
-    font-family: $display;
-    font-size: 13px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  em {
+    font-style: normal;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.55);
   }
 
   span {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.55);
+    margin-top: 4px;
+    display: inline-flex;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #111;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  &--on {
+    opacity: 1;
+    border-color: rgba(99, 85, 255, 0.45);
+    box-shadow:
+      0 14px 36px rgba(0, 0, 0, 0.35),
+      inset 0 0 24px rgba(99, 85, 255, 0.16);
   }
 }
 
@@ -375,15 +518,15 @@ a {
 .proof__follow {
   display: inline-flex;
   align-items: center;
-  padding: 7px 14px;
+  padding: 7px 13px;
   border-radius: 999px;
   background: #fff;
   color: #111;
   font-family: $display;
   font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  transition: background 0.16s ease, color 0.16s ease;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background 0.2s ease, color 0.2s ease;
 
   &:hover {
     background: $volt;
@@ -392,14 +535,43 @@ a {
 }
 
 .spot__copy {
-  max-width: 640px;
-  margin: clamp(28px, 5vh, 48px) auto 0;
-  animation: spot-in 0.45s ease;
+  position: relative;
+  z-index: 2;
+  max-width: 580px;
+  margin: 0 auto;
+  animation: spot-copy-in 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes spot-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+    filter: blur(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.spot__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  @include label;
+  color: rgba(245, 245, 247, 0.5);
+
+  span {
+    font-weight: 800;
+    color: $volt;
+  }
 }
 
 .spot__title {
-  @include futura(clamp(32px, 5.5vw, 64px));
-  letter-spacing: -0.025em;
+  @include display(clamp(30px, 4.6vw, 52px));
 
   span {
     display: block;
@@ -407,23 +579,27 @@ a {
 }
 
 .spot__blurb {
-  margin: 18px auto 0;
-  max-width: 42ch;
-  font-size: 14px;
+  margin: 16px auto 0;
+  max-width: 44ch;
+  font-size: 13px;
+  font-weight: 400;
   line-height: 1.6;
+  letter-spacing: -0.01em;
   color: rgba(255, 255, 255, 0.62);
 }
 
 .spot__ticks {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   margin-top: clamp(28px, 5vh, 40px);
 }
 
 .spot__tick {
-  width: 44px;
-  height: 3px;
+  width: 36px;
+  height: 2px;
   padding: 0;
   border: none;
   border-radius: 999px;
@@ -432,7 +608,7 @@ a {
   transition: background 0.2s ease, width 0.2s ease;
 
   &--on {
-    width: 56px;
+    width: 48px;
     background: #fff;
   }
 }
@@ -443,13 +619,6 @@ a {
   color: #fff;
   padding: clamp(64px, 12vh, 110px) clamp(18px, 4vw, 56px);
   box-shadow: inset 0 0 100px 40px rgba(99, 85, 255, 0.16);
-}
-
-.proof__title {
-  @include futura(clamp(28px, 4.5vw, 52px));
-  text-align: center;
-  margin-bottom: clamp(28px, 5vh, 48px);
-  letter-spacing: -0.02em;
 }
 
 .proof__grid {
@@ -467,16 +636,29 @@ a {
   overflow: hidden;
   background: var(--tone);
   box-shadow: inset 0 0 48px 14px rgba(99, 85, 255, 0.28);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow:
+      inset 0 0 48px 14px rgba(99, 85, 255, 0.28),
+      0 28px 60px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.proof__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
 .proof__photo {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 18%;
   filter: grayscale(1) contrast(1.08);
+  will-change: transform;
 }
 
 .proof__foot {
@@ -496,8 +678,8 @@ a {
     display: block;
     font-family: $display;
     font-size: 13px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: -0.01em;
   }
 
   em {
@@ -537,12 +719,6 @@ a {
       display: block;
     }
   }
-}
-
-.orbit__title {
-  @include futura(clamp(36px, 6.5vw, 80px));
-  text-align: center;
-  letter-spacing: -0.03em;
 }
 
 // ---- purple CTA band ----
@@ -622,33 +798,6 @@ a {
   border-top: 1px solid $line;
 }
 
-.funnel__head {
-  max-width: 1080px;
-  margin: 0 auto 48px;
-  text-align: left;
-}
-
-.funnel__logo {
-  display: block;
-  height: 22px;
-  width: auto;
-  margin-bottom: 18px;
-}
-
-.funnel__title {
-  @include futura(clamp(34px, 5.5vw, 68px));
-  letter-spacing: -0.035em;
-}
-
-.funnel__sub {
-  margin-top: 16px;
-  max-width: 40ch;
-  font-size: 13px;
-  line-height: 1.6;
-  letter-spacing: 0.01em;
-  color: rgba(244, 244, 244, 0.58);
-}
-
 .funnel__chart {
   position: relative;
   max-width: 1080px;
@@ -709,9 +858,9 @@ a {
 
   strong {
     font-family: $display;
-    font-size: clamp(15px, 1.8vw, 21px);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: clamp(14px, 1.5vw, 17px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   span {
@@ -805,17 +954,6 @@ a {
   will-change: transform;
 }
 
-.wall__bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  height: clamp(88px, 16vh, 148px);
-  background: #000;
-  pointer-events: none;
-}
-
 .wall__copy {
   position: absolute;
   left: 0;
@@ -823,177 +961,72 @@ a {
   bottom: clamp(28px, 5.5vh, 56px);
   z-index: 3;
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   padding: 0 12px;
   pointer-events: none;
   text-align: center;
 }
 
 .wall__title {
-  @include futura(clamp(30px, 5.8vw, 72px));
+  @include display(clamp(26px, 4.2vw, 48px));
   color: #fff;
   text-align: center;
-  letter-spacing: -0.04em;
-  line-height: 0.86;
   white-space: nowrap;
   text-shadow: 0 2px 28px rgba(0, 0, 0, 0.4);
+
+  .chars {
+    justify-content: center;
+  }
 }
 
-// ---- roster / product cards ----
-.roster {
-  background: #e8e8e8;
+.wall__sub {
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.66);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+}
+
+// ---- white brand statement ----
+.way {
+  background: #f5f5f7;
   color: $ink;
-  padding: clamp(64px, 12vh, 120px) clamp(16px, 3vw, 40px) clamp(72px, 12vh, 120px);
-}
-
-.roster__head {
-  max-width: 720px;
-  margin: 0 auto 48px;
+  min-height: 85svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(32px, 6vh, 56px);
+  padding: clamp(96px, 14vh, 140px) 24px;
   text-align: center;
 }
 
-.roster__title {
-  @include futura(clamp(36px, 6vw, 78px));
-  letter-spacing: -0.035em;
-  color: $ink;
-}
-
-.roster__sub {
-  margin: 18px auto 0;
-  max-width: 40ch;
-  font-size: 13px;
-  line-height: 1.6;
-  letter-spacing: 0.01em;
-  color: rgba(10, 10, 10, 0.5);
-}
-
-.roster__grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(18px, 3vw, 36px);
-  max-width: 1180px;
-  margin: 0 auto;
-}
-
-.pcard {
+.way__logo {
   display: block;
-  transition: transform 0.2s ease;
+  width: min(420px, 62vw);
+  height: auto;
+  filter: brightness(0);
+  will-change: transform;
+}
 
-  &:hover {
-    transform: translateY(-4px);
+.way__title {
+  @include display(clamp(26px, 4vw, 48px));
+  color: $ink;
+
+  .chars {
+    justify-content: center;
   }
+}
 
-  &__frame {
-    position: relative;
-    aspect-ratio: 16 / 11;
-    background: #000;
-    overflow: hidden;
-    color: #fff;
-  }
-
-  &__brand {
-    position: absolute;
-    top: 5.5%;
-    left: 4.5%;
-    z-index: 3;
-
-    img {
-      display: block;
-      height: clamp(14px, 1.6vw, 20px);
-      width: auto;
-    }
-  }
-
-  &__num {
-    position: absolute;
-    top: 5.5%;
-    right: 4.5%;
-    z-index: 3;
-    font-family: $display;
-    font-size: clamp(12px, 1.3vw, 16px);
-    letter-spacing: 0.08em;
-    color: rgba(255, 255, 255, 0.45);
-  }
-
-  &__slogan {
-    position: absolute;
-    left: 4%;
-    top: 16%;
-    z-index: 3;
-    max-width: 54%;
-    @include futura(clamp(18px, 2.3vw, 32px));
-    letter-spacing: -0.03em;
-    color: #fff;
-    pointer-events: none;
-
-    span {
-      display: block;
-    }
-  }
-
-  &__panel {
-    position: absolute;
-    right: 8%;
-    top: 18%;
-    bottom: 12%;
-    width: min(40%, 200px);
-    border-radius: clamp(12px, 1.4vw, 18px);
-    z-index: 1;
-    box-shadow: inset 0 0 36px 10px rgba(99, 85, 255, 0.25);
-  }
-
-  &__photo {
-    position: absolute;
-    right: 2%;
-    bottom: 0;
-    z-index: 2;
-    height: 82%;
-    width: auto;
-    max-width: 52%;
-    object-fit: contain;
-    object-position: center bottom;
-    filter: contrast(1.05);
-    transform: none;
-  }
-
-  &__meta {
-    position: absolute;
-    right: 4.5%;
-    bottom: 6%;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-    text-align: right;
-
-    strong {
-      font-family: $display;
-      font-size: clamp(13px, 1.35vw, 18px);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    em {
-      font-style: normal;
-      font-size: clamp(11px, 1vw, 13px);
-      color: rgba(255, 255, 255, 0.7);
-    }
-  }
-
-  &__pill {
-    margin-top: 8px;
-    display: inline-flex;
-    align-items: center;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #fff;
-    color: #000;
-    font-family: $body;
-    font-size: 11px;
-    letter-spacing: 0.02em;
-  }
+.way__sub {
+  font-size: 13px;
+  font-weight: 450;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: rgba(10, 10, 10, 0.55);
 }
 
 // ---- marquee ----
@@ -1003,6 +1036,15 @@ a {
   overflow: hidden;
   border-top: 1px solid $line;
   border-bottom: 1px solid $line;
+
+  &--top {
+    padding: clamp(20px, 4vh, 34px) 0;
+
+    .mq__item {
+      @include display(clamp(16px, 2.2vw, 24px));
+      letter-spacing: -0.03em;
+    }
+  }
 }
 
 .mq__track {
@@ -1014,7 +1056,7 @@ a {
 .mq__item {
   flex-shrink: 0;
   padding: 0 0.35em;
-  @include futura(clamp(32px, 5.5vw, 68px));
+  @include display(clamp(28px, 4.5vw, 56px));
   color: $chalk;
   white-space: nowrap;
 
@@ -1100,7 +1142,7 @@ a {
 }
 
 .poster__title {
-  @include futura(clamp(28px, 5vw, 64px));
+  @include display(clamp(28px, 5vw, 64px));
   letter-spacing: 0.01em;
   text-shadow: 0 4px 40px rgba(0, 0, 0, 0.75);
 
@@ -1162,7 +1204,7 @@ a {
 
 .manif__title {
   max-width: 14ch;
-  @include futura(clamp(30px, 5.5vw, 68px));
+  @include display(clamp(32px, 5.8vw, 72px));
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -1171,6 +1213,7 @@ a {
 
   span {
     display: inline-block;
+    will-change: opacity;
   }
 }
 
@@ -1188,7 +1231,7 @@ a {
 }
 
 .nfoot__mark {
-  @include futura(clamp(30px, 5vw, 60px));
+  @include display(clamp(30px, 5vw, 60px));
   margin-bottom: 56px;
 }
 
@@ -1247,8 +1290,16 @@ a {
   }
 
   .hero__title {
-    font-size: clamp(40px, 11vw, 72px);
-    letter-spacing: -0.03em;
+    font-size: clamp(38px, 10.5vw, 72px);
+  }
+
+  .hero__sub {
+    max-width: 34ch;
+    font-size: 12px;
+  }
+
+  .hero__cue {
+    display: none;
   }
 
   .proof__grid {
@@ -1256,11 +1307,30 @@ a {
     max-width: 420px;
   }
 
-  .spot__meta {
-    position: static;
-    transform: none;
-    justify-content: center;
-    margin-top: 16px;
+  .spot__float {
+    padding: 7px 9px;
+    border-radius: 11px;
+
+    strong {
+      font-size: 10px;
+    }
+
+    em {
+      font-size: 9px;
+    }
+
+    span {
+      padding: 3px 7px;
+      font-size: 8px;
+    }
+  }
+
+  .spot__floats {
+    opacity: 0.85;
+  }
+
+  .shead__title {
+    font-size: clamp(24px, 7.5vw, 34px);
   }
 
   .wall__stage {
@@ -1281,19 +1351,6 @@ a {
     font-size: clamp(24px, 7vw, 48px);
   }
 
-  .roster__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pcard__frame {
-    aspect-ratio: 5 / 4;
-  }
-
-  .pcard__slogan {
-    font-size: clamp(16px, 4.2vw, 26px);
-    max-width: 58%;
-  }
-
   .nfoot__grid {
     grid-template-columns: 1fr;
   }
@@ -1306,10 +1363,6 @@ a {
 
   .funnel__edges {
     display: none;
-  }
-
-  .wall__bar {
-    height: clamp(56px, 12vh, 88px);
   }
 
   .wall__photo {

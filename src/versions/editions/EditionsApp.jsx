@@ -56,7 +56,7 @@ export default function EditionsApp() {
         Every quarter.
       </p>
 
-      <VersionSwitcher current="editions" tone="light" />
+      <VersionSwitcher current="gallery" tone="light" />
 
       <main className="gstage">
         {shelves.map((row, i) => (

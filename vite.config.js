@@ -13,6 +13,7 @@ export default defineConfig({
         options: resolve(__dirname, 'options.html'),
         books: resolve(__dirname, 'books.html'),
         editions: resolve(__dirname, 'editions.html'),
+        gallery: resolve(__dirname, 'gallery.html'),
         phone: resolve(__dirname, 'phone.html'),
         atlas: resolve(__dirname, 'atlas.html'),
         press: resolve(__dirname, 'press.html'),

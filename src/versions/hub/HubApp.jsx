@@ -6,7 +6,7 @@ export default function HubApp() {
     <div className="hub">
       <header className="hub__head">
         <p className="hub__eyebrow">
-          <a href="/">Stan · The Standard</a> · Options
+          <a href="/editions">Stan · The Standard</a> · Options
         </p>
         <h1 className="hub__title">Pick a presentation</h1>
       </header>
@@ -40,7 +40,7 @@ export default function HubApp() {
         <span>
           {editions.length} editions · {versions.length} presentations · one data set
         </span>
-        <a href="/">← Back to The Standard</a>
+        <a href="/editions">← Back to The Standard</a>
       </footer>
     </div>
   );

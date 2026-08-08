@@ -642,7 +642,7 @@ export default function StanApp() {
           </div>
           <div>
             <p className="bfoot__label">Company</p>
-            <a href="/">Editions</a>
+            <a href="/editions">Editions</a>
             <a href="https://stan.store" target="_blank" rel="noreferrer">
               stan.store
             </a>

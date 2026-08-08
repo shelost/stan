@@ -11,10 +11,18 @@ export const versions = [
   },
   {
     id: 'editions',
-    name: 'Editions',
+    name: 'The Standard',
+    tagline: 'Everything new across Stan, every quarter',
+    note: 'Shelf showcase with covers and props',
+    path: '/editions',
+    accent: '#6355ff',
+  },
+  {
+    id: 'gallery',
+    name: 'Gallery',
     tagline: 'Album covers on a gallery shelf',
     note: 'The Shopify Editions layout, closely',
-    path: '/editions',
+    path: '/gallery',
     accent: '#30ffb4',
   },
   {
