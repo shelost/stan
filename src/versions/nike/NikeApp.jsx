@@ -25,11 +25,6 @@ const BUILDERS = [
     tag: 'Founder, Cluely',
     img: '/ch_4.png',
     color: '#1a9d4b',
-    headline: ['BUILD', 'ANYWAY.'],
-    spotlight: ['KICKED OUT.', 'FUNDED ANYWAY.'],
-    blurb:
-      'Suspended by Columbia for the AI tool he built. Months later, Cluely raised $15M from a16z. He shipped anyway — under his own name.',
-    float: { x: '8%', y: '22%', depth: 1.4, delay: 0 },
   },
   {
     id: 'steven',
@@ -38,11 +33,6 @@ const BUILDERS = [
     tag: 'The Diary of a CEO',
     img: '/ch_1.png',
     color: '#2f6fdb',
-    headline: ['START BEFORE', "YOU'RE READY."],
-    spotlight: ['FROM NOTHING', 'BUT A CAMERA.'],
-    blurb:
-      'Dropped out at 18. Built Social Chain, then the biggest business podcast in the world. Every episode ships under his name.',
-    float: { x: '62%', y: '18%', depth: 0.8, delay: 0.35 },
   },
   {
     id: 'emma',
@@ -51,11 +41,6 @@ const BUILDERS = [
     tag: 'CEO, Good American',
     img: '/ch_5.png',
     color: '#8a6a86',
-    headline: ['THE ROOM', 'STAYS YOURS.'],
-    spotlight: ['THE ROOM', 'STAYS YOURS.'],
-    blurb:
-      'The largest denim launch in history. Founding partner of Skims. Shark on Shark Tank. She builds brands — and keeps the room.',
-    float: { x: '13%', y: '58%', depth: 1.1, delay: 0.7 },
   },
   {
     id: 'sarah',
@@ -64,11 +49,6 @@ const BUILDERS = [
     tag: 'Manifestation Coach',
     img: '/ch_3.png',
     color: '#d478a8',
-    headline: ['POST', 'THE FIRST', 'ONE.'],
-    spotlight: ['ONE VIDEO.', 'ONE MILLION.'],
-    blurb:
-      'One tarot video at 150 followers. A seven-figure manifestation business on Stan by 23 — one of its highest-earning creators.',
-    float: { x: '68%', y: '54%', depth: 1.6, delay: 1.05 },
   },
   {
     id: 'jt',
@@ -77,27 +57,13 @@ const BUILDERS = [
     tag: 'Founder, BarnettX',
     img: '/ch_2.png',
     color: '#c45a3e',
-    headline: ['RETIRED', 'WITH', 'NOTHING.'],
-    spotlight: ['RETIRED WITH', 'NOTHING.'],
-    blurb:
-      'Left pro hockey with zero. Now the strategist Fortune 500 brands call before they post. The playbook stays his.',
-    float: { x: '40%', y: '74%', depth: 0.6, delay: 1.4 },
   },
-];
-
-const WALL = [
-  { id: 'ch3', img: '/ch_5.png', color: '#e86a54', href: '#spot', name: 'Emma Grede' },
-  { id: 'ch2', img: '/ch_2.png', color: '#2e88d6', href: '#spot', name: 'JT Barnett' },
-  { id: 'ch1', img: '/ch_1.png', color: '#000000', href: '#spot', name: 'Steven Bartlett', focal: true },
-  { id: 'ch4', img: '/ch_4.png', color: '#2da566', href: '#spot', name: 'Roy Lee' },
-  { id: 'ch5', img: '/ch_3.png', color: '#d1a56c', href: '#spot', name: 'Sarah Perl' },
 ];
 
 const PRODUCTS = [
   { id: 'stanley', icon: '/icon_stanley.svg', name: 'Stanley', tag: 'A second brain that sounds like you' },
-  { id: 'store', icon: '/icon_store.svg', name: 'Store', tag: 'Where your work meets money' },
-  { id: 'stories', icon: '/icon_stories.svg', name: 'Stories', tag: 'Proof it is possible' },
   { id: 'studio', icon: '/icon_studio.svg', name: 'Studio', tag: 'Ship the cut. Keep going.' },
+  { id: 'store', icon: '/icon_store.svg', name: 'Store', tag: 'Where your work meets money' },
 ];
 
 const MARQUEE = [
@@ -121,17 +87,9 @@ const POSTERS = [
   { id: 'poster-work', img: '/ch_5.png', side: 'right', headline: ['STOP DREAMING.', 'START WORKING.'] },
 ];
 
-const PROOF = BUILDERS.filter((b) => ['emma', 'sarah', 'steven'].includes(b.id)).map((b) => ({
-  id: b.id,
-  img: b.img,
-  color: b.color,
-  name: b.name,
-  tag: b.tag,
-}));
-
-// Splits a line into per-character spans so headlines can rise out of
-// masked word wrappers. The visually-split copy is aria-hidden; a
-// screen-reader-only span carries the real text.
+// Splits a line into per-character spans inside word wrappers so
+// headlines can animate word by word. The split copy is aria-hidden;
+// a screen-reader-only span carries the real text.
 function Chars({ text }) {
   return (
     <>
@@ -184,16 +142,9 @@ export default function NikeApp() {
   const root = useRef(null);
   const kitProgress = useRef(0);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [spotIndex, setSpotIndex] = useState(1);
-  const spot = BUILDERS[spotIndex];
 
   useEffect(() => {
     const id = window.setInterval(() => setHeroIndex((i) => (i + 1) % BACKDROPS.length), 5600);
-    return () => window.clearInterval(id);
-  }, []);
-
-  useEffect(() => {
-    const id = window.setInterval(() => setSpotIndex((i) => (i + 1) % BUILDERS.length), 7000);
     return () => window.clearInterval(id);
   }, []);
 
@@ -234,20 +185,32 @@ export default function NikeApp() {
         const q = gsap.utils.selector(root);
         const cleanups = [];
 
+        // Words slam down from above the screen plane — heavy stamp,
+        // slight overshoot squash, then settle.
+        const pound = (targets, vars = {}) =>
+          gsap.fromTo(
+            targets,
+            { scale: 2.6, autoAlpha: 0, filter: 'blur(10px)' },
+            {
+              keyframes: [
+                { scale: 0.94, autoAlpha: 1, filter: 'blur(0px)', duration: 0.34, ease: 'power4.in' },
+                { scale: 1, duration: 0.24, ease: 'back.out(4)' },
+              ],
+              stagger: 0.14,
+              ...vars,
+            }
+          );
+
         // ---- nav + hero entrance ----
         gsap.from('.nbar', { y: -18, autoAlpha: 0, duration: 1, ease: 'expo.out', delay: 0.1 });
-        gsap.fromTo(
-          '.hero .chars__ch',
-          { yPercent: 120 },
-          { yPercent: 0, duration: 1.25, stagger: 0.024, ease: 'expo.out', delay: 0.2 }
-        );
+        pound(q('.hero .chars__word'), { delay: 0.25, stagger: 0.2 });
         gsap.from('.hero__sub, .hero__cta, .hero__ticks, .hero__cue', {
           y: 24,
           autoAlpha: 0,
           duration: 1.1,
           stagger: 0.09,
           ease: 'expo.out',
-          delay: 0.7,
+          delay: 1.1,
         });
 
         // ---- hero scroll parallax: media sinks slower, copy lifts away ----
@@ -284,77 +247,32 @@ export default function NikeApp() {
         heroEl.addEventListener('pointermove', onHeroMove);
         cleanups.push(() => heroEl.removeEventListener('pointermove', onHeroMove));
 
-        // ---- spotlight: floats rise in, drift idle, and drift again on scroll ----
-        gsap.from('.spot__float', {
-          scrollTrigger: { trigger: '.spot', start: 'top 68%' },
-          y: 56,
-          autoAlpha: 0,
-          duration: 1.3,
-          stagger: 0.12,
-          ease: 'expo.out',
+        // ---- cards: title pounds, cards shear up with photo counter-zoom ----
+        pound(q('.proof .chars__word'), {
+          stagger: 0.1,
+          scrollTrigger: { trigger: '.proof', start: 'top 72%' },
         });
-        gsap.to('.spot__float', {
-          y: '-=12',
-          duration: 3.2,
-          ease: 'sine.inOut',
-          yoyo: true,
-          repeat: -1,
-          stagger: { each: 0.4, from: 'random' },
-        });
-        q('.spot__float').forEach((el) => {
-          const depth = parseFloat(el.dataset.depth || '1');
-          gsap.fromTo(
-            el,
-            { yPercent: 30 * depth },
-            {
-              yPercent: -30 * depth,
-              ease: 'none',
-              scrollTrigger: { trigger: '.spot', start: 'top bottom', end: 'bottom top', scrub: true },
-            }
-          );
-        });
-        gsap.fromTo(
-          '.spot__photo',
-          { yPercent: 8 },
-          {
-            yPercent: -4,
-            ease: 'none',
-            scrollTrigger: { trigger: '.spot', start: 'top bottom', end: 'bottom top', scrub: true },
-          }
-        );
-
-        // ---- proof: title chars, then cards shear up with photo counter-zoom ----
-        gsap.fromTo(
-          '.proof .chars__ch',
-          { yPercent: 120 },
-          {
-            yPercent: 0,
-            duration: 1,
-            stagger: 0.018,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: '.proof', start: 'top 74%' },
-          }
-        );
         gsap.from('.proof .shead__eyebrow, .proof .shead__sub', {
-          scrollTrigger: { trigger: '.proof', start: 'top 74%' },
+          scrollTrigger: { trigger: '.proof', start: 'top 72%' },
           y: 18,
           autoAlpha: 0,
           duration: 0.9,
           stagger: 0.08,
           ease: 'expo.out',
+          delay: 0.4,
         });
         q('.proof__card').forEach((card, i) => {
           gsap.fromTo(
             card,
-            { y: 110, rotate: (i - 1) * 1.6, autoAlpha: 0 },
+            { y: 110, rotate: (i - 2) * 1.4, autoAlpha: 0 },
             {
               y: 0,
               rotate: 0,
               autoAlpha: 1,
               duration: 1.3,
               ease: 'expo.out',
-              delay: i * 0.12,
-              scrollTrigger: { trigger: '.proof__grid', start: 'top 82%' },
+              delay: i * 0.1,
+              scrollTrigger: { trigger: '.proof__grid', start: 'top 84%' },
             }
           );
           const photo = card.querySelector('.proof__photo');
@@ -379,27 +297,21 @@ export default function NikeApp() {
             kitProgress.current = self.progress * 0.15;
           },
         });
+        pound(q('.orbit .chars__word'), {
+          stagger: 0.1,
+          scrollTrigger: { trigger: '.orbit', start: 'top 70%' },
+        });
         gsap.from('.orbit .shead__eyebrow, .orbit .shead__sub', {
-          scrollTrigger: { trigger: '.orbit', start: 'top 72%' },
+          scrollTrigger: { trigger: '.orbit', start: 'top 70%' },
           y: 18,
           autoAlpha: 0,
           duration: 0.9,
           stagger: 0.08,
           ease: 'expo.out',
+          delay: 0.4,
         });
-        gsap.fromTo(
-          '.orbit .chars__ch',
-          { yPercent: 120 },
-          {
-            yPercent: 0,
-            duration: 1,
-            stagger: 0.018,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: '.orbit', start: 'top 72%' },
-          }
-        );
         gsap.from('.orbit__stage', {
-          scrollTrigger: { trigger: '.orbit', start: 'top 66%' },
+          scrollTrigger: { trigger: '.orbit', start: 'top 64%' },
           y: 40,
           autoAlpha: 0,
           scale: 0.94,
@@ -407,62 +319,37 @@ export default function NikeApp() {
           ease: 'expo.out',
         });
 
-        // ---- band ----
-        gsap.from('.band__inner', {
-          scrollTrigger: { trigger: '.band', start: 'top 80%' },
-          y: 48,
-          autoAlpha: 0,
-          scale: 0.97,
-          duration: 1.2,
-          ease: 'expo.out',
-        });
-
-        // ---- wall: columns settle, photos parallax at their own speeds ----
-        gsap.from('.wall__col', {
-          scrollTrigger: { trigger: '.wall', start: 'top 70%' },
-          yPercent: 12,
-          autoAlpha: 0,
-          duration: 1.3,
-          stagger: 0.07,
-          ease: 'expo.out',
-        });
-        const wallSpeeds = [1.5, 0.7, 0.4, 1.1, 1.8];
-        q('.wall__photo').forEach((ph, i) => {
-          const s = wallSpeeds[i % wallSpeeds.length];
-          gsap.fromTo(
-            ph,
-            { yPercent: 5 * s },
-            {
-              yPercent: -5 * s,
-              ease: 'none',
-              scrollTrigger: { trigger: '.wall', start: 'top bottom', end: 'bottom top', scrub: true },
-            }
-          );
-        });
-        gsap.fromTo(
-          '.wall .chars__ch',
-          { yPercent: 120 },
-          {
-            yPercent: 0,
-            duration: 1,
-            stagger: 0.02,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: '.wall', start: 'top 55%' },
-          }
-        );
-        gsap.from('.wall__sub', {
-          scrollTrigger: { trigger: '.wall', start: 'top 55%' },
-          y: 16,
-          autoAlpha: 0,
-          duration: 0.9,
-          ease: 'expo.out',
-          delay: 0.2,
-        });
-
-        // ---- funnel: apex, then edges draw, then items pop in sequence ----
+        // ---- product tree: draw in, then stay alive ----
+        const treeIdle = () => {
+          // Edges become flowing dashed conveyors once drawn.
+          q('.funnel__edge').forEach((edge) => {
+            edge.setAttribute('stroke-dasharray', '2.5 5');
+            gsap.fromTo(
+              edge,
+              { strokeDashoffset: 0 },
+              { strokeDashoffset: -7.5, duration: 0.9, ease: 'none', repeat: -1 }
+            );
+          });
+          gsap.to('.funnel__apex img', {
+            scale: 1.07,
+            duration: 1.9,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+          });
+          gsap.to('.funnel__icon', {
+            y: -9,
+            duration: 2.4,
+            ease: 'sine.inOut',
+            yoyo: true,
+            repeat: -1,
+            stagger: 0.45,
+          });
+        };
         const funnelTl = gsap.timeline({
           scrollTrigger: { trigger: '.funnel', start: 'top 70%' },
           defaults: { ease: 'expo.out' },
+          onComplete: treeIdle,
         });
         funnelTl
           .from('.funnel__apex', { y: 26, autoAlpha: 0, scale: 0.85, duration: 0.8 })
@@ -474,12 +361,12 @@ export default function NikeApp() {
           )
           .from(
             '.funnel__icon',
-            { scale: 0.4, autoAlpha: 0, duration: 0.7, stagger: 0.12, ease: 'back.out(1.6)' },
+            { scale: 0.4, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: 'back.out(1.6)' },
             '-=0.5'
           )
           .from(
             '.funnel__item strong, .funnel__item span',
-            { y: 16, autoAlpha: 0, duration: 0.6, stagger: 0.05 },
+            { y: 16, autoAlpha: 0, duration: 0.6, stagger: 0.06 },
             '-=0.55'
           );
 
@@ -494,27 +381,20 @@ export default function NikeApp() {
             scrollTrigger: { trigger: '.way', start: 'top bottom', end: 'center 55%', scrub: true },
           }
         );
-        gsap.fromTo(
-          '.way .chars__ch',
-          { yPercent: 120 },
-          {
-            yPercent: 0,
-            duration: 1,
-            stagger: 0.02,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: '.way', start: 'top 55%' },
-          }
-        );
+        pound(q('.way .chars__word'), {
+          stagger: 0.1,
+          scrollTrigger: { trigger: '.way', start: 'top 52%' },
+        });
         gsap.from('.way__sub', {
-          scrollTrigger: { trigger: '.way', start: 'top 55%' },
+          scrollTrigger: { trigger: '.way', start: 'top 52%' },
           y: 16,
           autoAlpha: 0,
           duration: 0.9,
           ease: 'expo.out',
-          delay: 0.25,
+          delay: 0.55,
         });
 
-        // ---- posters: pinned, photo settles, headline lines wipe up ----
+        // ---- posters: pinned, photo settles, headline lines slam under scrub ----
         q('.poster').forEach((sec) => {
           const photo = sec.querySelector('.poster__photo');
           const lines = sec.querySelectorAll('.poster__title span');
@@ -528,14 +408,14 @@ export default function NikeApp() {
           if (lines.length) {
             tl.fromTo(
               lines,
-              { yPercent: 60, autoAlpha: 0.2 },
-              { yPercent: 0, autoAlpha: 1, stagger: 0.08, ease: 'power2.out', duration: 0.4 },
-              0.12
+              { scale: 1.7, autoAlpha: 0 },
+              { scale: 1, autoAlpha: 1, stagger: 0.09, ease: 'power3.in', duration: 0.34 },
+              0.1
             );
           }
         });
 
-        // ---- manifesto: pinned scroll-scrub word reveal ----
+        // ---- manifesto: pinned scroll-scrub word slam ----
         const manifTl = gsap.timeline({
           scrollTrigger: { trigger: '.manif', start: 'top top', end: '+=180%', scrub: true, pin: true },
         });
@@ -543,8 +423,8 @@ export default function NikeApp() {
           .fromTo('.manif__photo', { scale: 1.1 }, { scale: 1, ease: 'none', duration: 1 }, 0)
           .fromTo(
             '.manif__title span',
-            { opacity: 0.12 },
-            { opacity: 1, stagger: 0.09, ease: 'none', duration: 0.8 },
+            { opacity: 0.1, scale: 1.55 },
+            { opacity: 1, scale: 1, stagger: 0.09, ease: 'power2.out', duration: 0.8 },
             0.05
           )
           .fromTo('.manif__cta', { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.18 }, 0.86);
@@ -610,8 +490,8 @@ export default function NikeApp() {
           <img src="/stan_logo.svg" alt="Stan" />
         </a>
         <nav className="nbar__links">
-          <a href="#spot">Creators</a>
-          <a href="#proof">Roster</a>
+          <a href="#proof">Creators</a>
+          <a href="#orbit">System</a>
           <a href="#products">Products</a>
         </nav>
         <a className="nbar__cta" href="https://stan.store" target="_blank" rel="noreferrer">
@@ -664,64 +544,15 @@ export default function NikeApp() {
 
         <Marquee variant="top" />
 
-        <section className="spot" id="spot">
-          <div className="spot__media" aria-hidden="true">
-            <img className="spot__photo" key={spot.id} src={spot.img} alt="" />
-            <div className="spot__mask" />
-          </div>
-
-          <div className="spot__floats" aria-hidden="true">
-            {BUILDERS.map((b) => (
-              <div
-                key={b.id}
-                className={`spot__float${b.id === spot.id ? ' spot__float--on' : ''}`}
-                data-depth={b.float.depth}
-                style={{ left: b.float.x, top: b.float.y, animationDelay: `${b.float.delay}s` }}
-              >
-                <strong>{b.name}</strong>
-                <em>{b.handle}</em>
-                <span>{b.tag}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="spot__copy" key={`${spot.id}-copy`}>
-            <p className="spot__eyebrow">
-              <span>01</span>
-              Creators
-            </p>
-            <h2 className="spot__title">
-              {spot.spotlight.map((line) => (
-                <span key={line}>{line}</span>
-              ))}
-            </h2>
-            <p className="spot__blurb">{spot.blurb}</p>
-          </div>
-
-          <div className="spot__ticks" role="tablist" aria-label="Creators">
-            {BUILDERS.map((b, i) => (
-              <button
-                key={b.id}
-                type="button"
-                role="tab"
-                aria-label={b.name}
-                aria-selected={i === spotIndex}
-                className={`spot__tick${i === spotIndex ? ' spot__tick--on' : ''}`}
-                onClick={() => setSpotIndex(i)}
-              />
-            ))}
-          </div>
-        </section>
-
         <section className="proof" id="proof">
           <SectionHead
-            index="02"
+            index="01"
             label="The roster"
             title="THE BEST BUILD ON STAN"
             sub="Founders, podcasters, and coaches — all shipping under their own name."
           />
           <div className="proof__grid">
-            {PROOF.map((p) => (
+            {BUILDERS.map((p) => (
               <article className="proof__card" key={p.id} style={{ '--tone': p.color }}>
                 <div className="proof__frame">
                   <img className="proof__photo" src={p.img} alt={p.name} />
@@ -742,51 +573,13 @@ export default function NikeApp() {
 
         <section className="orbit" id="orbit">
           <SectionHead
-            index="03"
+            index="02"
             label="The system"
             title="ONE STACK. YOURS."
-            sub="Four tools in constant orbit around a single point — you."
+            sub="The tools in constant orbit around a single point — you."
           />
           <div className="orbit__stage" aria-hidden="true">
             <FamilyScene progressRef={kitProgress} />
-          </div>
-        </section>
-
-        <section className="band">
-          <div className="band__inner">
-            <div className="band__silhouettes" aria-hidden="true">
-              {BUILDERS.map((b) => (
-                <img key={b.id} src={b.img} alt="" />
-              ))}
-            </div>
-            <div className="band__mark">
-              <img src="/stan_logo.svg" alt="Stan" />
-              <p>Build your own.</p>
-            </div>
-          </div>
-        </section>
-
-        <section className="wall" id="wall" aria-label="Builders">
-          <div className="wall__stage">
-            <div className="wall__cols">
-              {WALL.map((b) => (
-                <a
-                  className={`wall__col${b.focal ? ' wall__col--focal' : ''}`}
-                  key={b.id}
-                  href={b.href}
-                  style={{ '--tone': b.color }}
-                  aria-label={b.name}
-                >
-                  <img className="wall__photo" src={b.img} alt="" />
-                </a>
-              ))}
-            </div>
-            <div className="wall__copy">
-              <h2 className="wall__title">
-                <Chars text="BUILD YOUR OWN" />
-              </h2>
-              <p className="wall__sub">Five builders. One door. Your name on it.</p>
-            </div>
           </div>
         </section>
 
@@ -796,10 +589,9 @@ export default function NikeApp() {
               <img src="/stan_logo.svg" alt="Stan" />
             </div>
             <svg className="funnel__edges" viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
-              <path className="funnel__edge" d="M50 2 L12.5 38" />
-              <path className="funnel__edge" d="M50 2 L37.5 38" />
-              <path className="funnel__edge" d="M50 2 L62.5 38" />
-              <path className="funnel__edge" d="M50 2 L87.5 38" />
+              <path className="funnel__edge" d="M50 2 L16.5 38" pathLength="100" />
+              <path className="funnel__edge" d="M50 2 L50 38" pathLength="100" />
+              <path className="funnel__edge" d="M50 2 L83.5 38" pathLength="100" />
             </svg>
             <ul className="funnel__row">
               {PRODUCTS.map((p) => (
@@ -864,14 +656,14 @@ export default function NikeApp() {
         <div className="nfoot__grid">
           <div>
             <p className="nfoot__label">Explore</p>
-            <a href="#spot">Creators</a>
-            <a href="#wall">Roster</a>
+            <a href="#proof">Creators</a>
+            <a href="#orbit">System</a>
             <a href="#products">Products</a>
           </div>
           <div>
             <p className="nfoot__label">Creators</p>
             {BUILDERS.map((b) => (
-              <a key={b.id} href="#spot">
+              <a key={b.id} href="#proof">
                 {b.name}
               </a>
             ))}
