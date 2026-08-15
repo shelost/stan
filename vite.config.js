@@ -23,6 +23,7 @@ export default defineConfig({
         grid: resolve(__dirname, 'grid.html'),
         stan: resolve(__dirname, 'stan.html'),
         nike: resolve(__dirname, 'nike.html'),
+        'coming-soon': resolve(__dirname, 'coming-soon.html'),
       },
     },
   },
