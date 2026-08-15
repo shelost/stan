@@ -33,6 +33,7 @@ a {
 
 .soon {
   min-height: 100%;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -45,7 +46,7 @@ a {
 
 .soon__logo {
   position: absolute;
-  top: 28px;
+  top: max(28px, env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
 
@@ -62,9 +63,13 @@ a {
   align-items: center;
   text-align: center;
   gap: 20px;
+  width: min(520px, 100%);
 }
 
 .soon__title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   font-size: clamp(42px, 9vw, 88px);
   font-weight: 900;
   letter-spacing: -0.045em;
@@ -94,6 +99,7 @@ a {
   align-items: center;
   justify-content: center;
   min-width: 160px;
+  min-height: 44px;
   padding: 13px 24px;
   border-radius: 980px;
   border: 1px solid transparent;
@@ -131,13 +137,49 @@ a {
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 720px) {
+  .soon {
+    justify-content: space-between;
+    padding:
+      calc(88px + env(safe-area-inset-top))
+      max(20px, env(safe-area-inset-right))
+      max(28px, env(safe-area-inset-bottom))
+      max(20px, env(safe-area-inset-left));
+  }
+
+  .soon__body {
+    flex: 1;
+    width: 100%;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .soon__title {
+    font-size: clamp(52px, 18vw, 76px);
+  }
+
+  .soon__sub {
+    font-size: 13px;
+    max-width: 28ch;
+  }
+
   .soon__actions {
     width: 100%;
     flex-direction: column;
+    margin-top: auto;
+    padding-top: 28px;
   }
 
   .soon__btn {
     width: 100%;
+    min-height: 52px;
+    font-size: 15px;
+    padding: 16px 24px;
+  }
+}
+
+@media (hover: none) {
+  .soon__btn:hover {
+    transform: none;
   }
 }
